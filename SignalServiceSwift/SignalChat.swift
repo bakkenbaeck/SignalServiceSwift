@@ -58,7 +58,7 @@ public class SignalChat: Equatable, Codable {
 //        }
     }
 
-    init(recipientIdentifier: String) { //, in store: SignalServiceStore) {
+    public init(recipientIdentifier: String) { //, in store: SignalServiceStore) {
         self.recipientIdentifier = recipientIdentifier
         // self.store = store
     }

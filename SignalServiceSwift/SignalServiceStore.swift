@@ -8,14 +8,14 @@
 
 import Foundation
 
-public protocol SignalMessage {
+public protocol SignalMessage: Codable {
     var body: String { get }
     var timestamp: TimeInterval { get }
     var chatId: String { get }
     var uniqueId: String { get }
 }
 
-public struct IncomingSignalMessage: SignalMessage, Codable {
+public struct IncomingSignalMessage: SignalMessage {
     public var body: String
     public var chatId: String
 
@@ -35,7 +35,7 @@ public struct IncomingSignalMessage: SignalMessage, Codable {
     }
 }
 
-public struct OutgoingSignalMessage: SignalMessage, Codable {
+public struct OutgoingSignalMessage: SignalMessage {
     public enum MessageState: Int, Codable {
         case none = -1
         case attemptingOut = 0
