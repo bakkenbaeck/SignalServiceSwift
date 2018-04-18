@@ -22,7 +22,7 @@ public class SessionRecord {
 
         guard session_record_deserialize(&recordPointer, data.bytes.assumingMemoryBound(to: UInt8.self), data.length, signalContext.context) >= 0,
             let record = recordPointer else {
-                print("Could not deserialize session record")
+                NSLog("Could not deserialize session record")
                 return nil
         }
 

@@ -49,14 +49,22 @@ public class SignalClient {
 
         self.socket.connect()
 
+        NSLog("TEST")
+
         RunLoop.main.add(self.keepAliveTimer, forMode: .defaultRunLoopMode)
     }
 
     public func sendMessage(_ body: String, to: SignalAddress) {
         self.networkClient.fetchPreKeyBundle(for: to.name, with: self.sender) { preKeyBundle in
+            NSLog("Fetched pre key bundle")
 
             let sessionBuilder = SignalSessionBuilder(address: to, context: self.sender.signalContext)!
-            guard sessionBuilder.processPreKeyBundle(preKeyBundle) else { fatalError() }
+            guard sessionBuilder.processPreKeyBundle(preKeyBundle) else {
+                NSLog("Could not process prekey bundle!")
+                fatalError()
+            }
+
+            NSLog("Processed pre key bundle")
 
             let sessionCipher = SignalSessionCipher(address: to, context: self.sender.signalContext)
 
@@ -66,6 +74,7 @@ public class SignalClient {
             let chat = SignalChat.fetchOrCreateChat(with: to.name, in: self.store)
             let outgoingMessage = OutgoingSignalMessage(recipientId: recipient.name, chatId: chat.uniqueId, body: body, ciphertext: ciphertext)
 
+            NSLog("Sending…")
             self.networkClient.sendMessage(outgoingMessage, from: self.sender, to: recipient, in: chat) { success in
                 if success {
                     self.store.save(message: outgoingMessage)
@@ -107,7 +116,7 @@ public class SignalClient {
 
         guard let cipherMessage = try? self.cipherMessage(from: content),
             let concreteCipherMessage = cipherMessage else {
-                print("Could not decrypt message! (0)")
+                NSLog("Could not decrypt message! (0)")
                 return
         }
 
@@ -120,7 +129,7 @@ public class SignalClient {
         guard let _decryptedData = try? sessionCipher.decrypt(cipher: concreteCipherMessage),
             let decryptedData = _decryptedData,
             let incomingMessage = IncomingSignalMessage(from: decryptedData, chatId: chat.uniqueId) else {
-                print("Could not decrypt message! (1)")
+                NSLog("Could not decrypt message! (1)")
                 return
         }
 
@@ -131,7 +140,7 @@ public class SignalClient {
         if message.request.path == "/api/v1/message", message.request.verb == "PUT" {
             let payload = Cryptography.decryptAppleMessagePayload(message.request.body, withSignalingKey: self.sender.signalingKey)
             guard let envelope = try? Signalservice_Envelope(serializedData: payload) else {
-                print("No envelope!")
+                NSLog("No envelope!")
                 return
             }
 
@@ -144,7 +153,7 @@ public class SignalClient {
 
 
         } else {
-            print("Unsupported socket request: \(message.request)")
+            NSLog("Unsupported socket request: \(message.request)")
         }
     }
 
@@ -152,20 +161,20 @@ public class SignalClient {
 
 extension SignalClient: WebSocketDelegate {
     public func websocketDidConnect(socket: WebSocketClient) {
-        print("did connect")
+        NSLog("did connect")
     }
 
     public func websocketDidDisconnect(socket: WebSocketClient, error: Error?) {
-        print("did disconnect: \(error?.localizedDescription ?? "No error")")
+        NSLog("did disconnect: \(error?.localizedDescription ?? "No error")")
 
         if self.shouldKeepSocketAlive {
-            print("reconnecting…")
+            NSLog("reconnecting…")
             self.socket.connect()
         }
     }
 
     public func websocketDidReceiveMessage(socket: WebSocketClient, text: String) {
-        print("received: \(text)")
+        NSLog("received: \(text)")
     }
 
     public func websocketDidReceiveData(socket: WebSocketClient, data: Data) {

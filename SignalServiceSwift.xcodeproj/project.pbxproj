@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		9F33523E20862B5500E0F145 /* SignalClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F33523D20862B5500E0F145 /* SignalClient.swift */; };
+		9FD00C7F20875F2300729246 /* SignalInMemoryStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FD00C7E20875F2300729246 /* SignalInMemoryStorage.swift */; };
+		9FD00C812087606A00729246 /* SignalStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FD00C802087606A00729246 /* SignalStore.swift */; };
 		9FFB8B0F208629B60067BCE9 /* SignalServiceSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9FFB8B05208629B60067BCE9 /* SignalServiceSwift.framework */; };
 		9FFB8B14208629B60067BCE9 /* SignalServiceSwiftTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FFB8B13208629B60067BCE9 /* SignalServiceSwiftTests.swift */; };
 		9FFB8B16208629B60067BCE9 /* SignalServiceSwift.h in Headers */ = {isa = PBXBuildFile; fileRef = 9FFB8B08208629B60067BCE9 /* SignalServiceSwift.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -93,6 +95,8 @@
 
 /* Begin PBXFileReference section */
 		9F33523D20862B5500E0F145 /* SignalClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignalClient.swift; sourceTree = "<group>"; };
+		9FD00C7E20875F2300729246 /* SignalInMemoryStorage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignalInMemoryStorage.swift; sourceTree = "<group>"; };
+		9FD00C802087606A00729246 /* SignalStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignalStore.swift; sourceTree = "<group>"; };
 		9FFB8B05208629B60067BCE9 /* SignalServiceSwift.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SignalServiceSwift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9FFB8B08208629B60067BCE9 /* SignalServiceSwift.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SignalServiceSwift.h; sourceTree = "<group>"; };
 		9FFB8B09208629B60067BCE9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -223,7 +227,6 @@
 				9FFD1DDB208630E900FA4626 /* SignalSender.swift */,
 				9FFD1E2C20873DB300FA4626 /* SignalRecipient.swift */,
 				9FFD1E12208645B500FA4626 /* SignalAddress.swift */,
-				9F33523D20862B5500E0F145 /* SignalClient.swift */,
 				9FFD1E2E20873E6F00FA4626 /* SignalSessionBuilder.swift */,
 				9FFD1E3020873EBA00FA4626 /* SignalSessionCipher.swift */,
 				9FFD1DDD2086346600FA4626 /* SignalServiceStore.swift */,
@@ -234,6 +237,7 @@
 				9FFD1E3C208747EB00FA4626 /* SessionRecord.swift */,
 				9FFD1E3220873FDB00FA4626 /* SignalCiphertext.swift */,
 				9FFD1E2120873D0D00FA4626 /* SignalCipherMessageProtocol.swift */,
+				9F33523D20862B5500E0F145 /* SignalClient.swift */,
 				9FFB8B09208629B60067BCE9 /* Info.plist */,
 			);
 			path = SignalServiceSwift;
@@ -243,6 +247,8 @@
 			isa = PBXGroup;
 			children = (
 				9FFB8B13208629B60067BCE9 /* SignalServiceSwiftTests.swift */,
+				9FD00C802087606A00729246 /* SignalStore.swift */,
+				9FD00C7E20875F2300729246 /* SignalInMemoryStorage.swift */,
 				9FFB8B15208629B60067BCE9 /* Info.plist */,
 			);
 			path = SignalServiceSwiftTests;
@@ -535,6 +541,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				9FFB8B14208629B60067BCE9 /* SignalServiceSwiftTests.swift in Sources */,
+				9FD00C812087606A00729246 /* SignalStore.swift in Sources */,
+				9FD00C7F20875F2300729246 /* SignalInMemoryStorage.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -682,7 +690,7 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Build/iOS",
+					"$(SRCROOT)/Carthage/Build/iOS/",
 				);
 				INFOPLIST_FILE = SignalServiceSwift/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
@@ -717,7 +725,7 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Build/iOS",
+					"$(SRCROOT)/Carthage/Build/iOS/",
 				);
 				INFOPLIST_FILE = SignalServiceSwift/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
@@ -752,6 +760,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.bakkenbaeck.SignalServiceSwiftTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_INCLUDE_PATHS = "";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -771,6 +780,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.bakkenbaeck.SignalServiceSwiftTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_INCLUDE_PATHS = "";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};

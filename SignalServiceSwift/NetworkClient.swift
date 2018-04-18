@@ -50,6 +50,7 @@ class NetworkClient {
     func fetchPreKeyBundle(for recipientName: String, with sender: SignalSender, completion: @escaping((SignalPreKeyBundle) -> Void)) {
         self.fetchTimestamp({ timestamp in
             // GET/v2/keys/{eth_address}/{device_id}, always use * wildcard for device_id.
+            NSLog("Prepare to fetch prekey bundle")
 
             let path = "/v2/keys/\(recipientName)/*"
             let fields = self.teapot.basicAuthenticationHeader(username: sender.username, password: sender.password)
@@ -57,8 +58,9 @@ class NetworkClient {
             self.teapot.get(path, headerFields: fields) { result in
                 switch result {
                 case .failure(_, _, _):
-                    print("failed to retrieve pre key bundle for user: \(recipientName)")
+                    NSLog("failed to retrieve pre key bundle for user: \(recipientName)")
                 case let .success(params, _):
+                    NSLog("Fetched prekey bundle")
                     if let dict = params?.dictionary, let preKeyBundle = SignalPreKeyBundle(dict) {
                         completion(preKeyBundle)
                     }
@@ -96,7 +98,7 @@ class NetworkClient {
                 case let .success(params, response):
                     completion(true)
                     print(params)
-                    print(response)
+                    NSLog("%@", response)
 // Send a sync receipt if it's an outgoing message
 //                    if let message = message as? OutgoingMessage {
 //                        let outgoingMessage = OutgoingSentMessageTranscript(message: message)
@@ -106,7 +108,7 @@ class NetworkClient {
 //                    }
                 case .failure(_, _, let error):
                     completion(false)
-                    print(error)
+                    NSLog(error.localizedDescription)
                 }
             }
         })
@@ -180,6 +182,7 @@ class NetworkClient {
                     completion(timestamp)
                 }
             case .failure(_, _, _): //(let json, let response, let error):
+                NSLog("Could not fetch timestamp. Wat.")
                 break
             }
         }
@@ -231,9 +234,9 @@ class NetworkClient {
                 self.teapot.put(path, parameters: parameters, headerFields: fields) { result in
                     switch result {
                     case let .success(params, response):
-                        print(response)
+                        NSLog("%@", response)
                     case let .failure(_, _, error):
-                        print(error)
+                        NSLog(error.localizedDescription)
                     }
                 }
             case .signedOnly:
@@ -252,12 +255,12 @@ class NetworkClient {
                     case let .success(params, response):
                         sender.signalContext.store.signedPreKeyStore.storeCurrentSignedPreKeyId(signedPreKey.preKeyId)
 
-//                        print(response)
-//                        print(params)
+                        NSLog("%@", response)
+//                        NSLog(params)
                     case let .failure(params, response, error):
 //                        print(response)
 //                        print(params)
-                        print(error)
+                        NSLog(error.localizedDescription)
                     }
                 }
             }
