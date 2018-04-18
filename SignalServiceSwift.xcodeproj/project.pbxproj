@@ -7,9 +7,78 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9F33523E20862B5500E0F145 /* SignalClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F33523D20862B5500E0F145 /* SignalClient.swift */; };
 		9FFB8B0F208629B60067BCE9 /* SignalServiceSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9FFB8B05208629B60067BCE9 /* SignalServiceSwift.framework */; };
 		9FFB8B14208629B60067BCE9 /* SignalServiceSwiftTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FFB8B13208629B60067BCE9 /* SignalServiceSwiftTests.swift */; };
 		9FFB8B16208629B60067BCE9 /* SignalServiceSwift.h in Headers */ = {isa = PBXBuildFile; fileRef = 9FFB8B08208629B60067BCE9 /* SignalServiceSwift.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		9FFB8B3820862A2E0067BCE9 /* protocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 9FFB8B2020862A2E0067BCE9 /* protocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		9FFB8B3920862A2E0067BCE9 /* group_session_builder.h in Headers */ = {isa = PBXBuildFile; fileRef = 9FFB8B2120862A2E0067BCE9 /* group_session_builder.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		9FFB8B3A20862A2E0067BCE9 /* utarray.h in Headers */ = {isa = PBXBuildFile; fileRef = 9FFB8B2220862A2E0067BCE9 /* utarray.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		9FFB8B3B20862A2E0067BCE9 /* sender_key.h in Headers */ = {isa = PBXBuildFile; fileRef = 9FFB8B2320862A2E0067BCE9 /* sender_key.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		9FFB8B3C20862A2E0067BCE9 /* signal_protocol_internal.h in Headers */ = {isa = PBXBuildFile; fileRef = 9FFB8B2420862A2E0067BCE9 /* signal_protocol_internal.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		9FFB8B3D20862A2E0067BCE9 /* libsignal-protocol-c.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9FFB8B2520862A2E0067BCE9 /* libsignal-protocol-c.a */; };
+		9FFB8B3E20862A2E0067BCE9 /* hkdf.h in Headers */ = {isa = PBXBuildFile; fileRef = 9FFB8B2620862A2E0067BCE9 /* hkdf.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		9FFB8B3F20862A2E0067BCE9 /* session_state.h in Headers */ = {isa = PBXBuildFile; fileRef = 9FFB8B2720862A2E0067BCE9 /* session_state.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		9FFB8B4020862A2E0067BCE9 /* curve.h in Headers */ = {isa = PBXBuildFile; fileRef = 9FFB8B2820862A2E0067BCE9 /* curve.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		9FFB8B4120862A2E0067BCE9 /* session_record.h in Headers */ = {isa = PBXBuildFile; fileRef = 9FFB8B2920862A2E0067BCE9 /* session_record.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		9FFB8B4220862A2E0067BCE9 /* session_builder.h in Headers */ = {isa = PBXBuildFile; fileRef = 9FFB8B2A20862A2E0067BCE9 /* session_builder.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		9FFB8B4320862A2E0067BCE9 /* signal_protocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 9FFB8B2B20862A2E0067BCE9 /* signal_protocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		9FFB8B4420862A2E0067BCE9 /* session_cipher.h in Headers */ = {isa = PBXBuildFile; fileRef = 9FFB8B2C20862A2E0067BCE9 /* session_cipher.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		9FFB8B4520862A2E0067BCE9 /* sender_key_record.h in Headers */ = {isa = PBXBuildFile; fileRef = 9FFB8B2D20862A2E0067BCE9 /* sender_key_record.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		9FFB8B4620862A2E0067BCE9 /* session_pre_key.h in Headers */ = {isa = PBXBuildFile; fileRef = 9FFB8B2E20862A2E0067BCE9 /* session_pre_key.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		9FFB8B4720862A2E0067BCE9 /* signal_protocol_types.h in Headers */ = {isa = PBXBuildFile; fileRef = 9FFB8B2F20862A2E0067BCE9 /* signal_protocol_types.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		9FFB8B4820862A2E0067BCE9 /* sender_key_state.h in Headers */ = {isa = PBXBuildFile; fileRef = 9FFB8B3020862A2E0067BCE9 /* sender_key_state.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		9FFB8B4920862A2E0067BCE9 /* device_consistency.h in Headers */ = {isa = PBXBuildFile; fileRef = 9FFB8B3120862A2E0067BCE9 /* device_consistency.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		9FFB8B4C20862A2E0067BCE9 /* ratchet.h in Headers */ = {isa = PBXBuildFile; fileRef = 9FFB8B3420862A2E0067BCE9 /* ratchet.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		9FFB8B4D20862A2E0067BCE9 /* fingerprint.h in Headers */ = {isa = PBXBuildFile; fileRef = 9FFB8B3520862A2E0067BCE9 /* fingerprint.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		9FFB8B4E20862A2E0067BCE9 /* group_cipher.h in Headers */ = {isa = PBXBuildFile; fileRef = 9FFB8B3620862A2E0067BCE9 /* group_cipher.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		9FFB8B4F20862A2E0067BCE9 /* key_helper.h in Headers */ = {isa = PBXBuildFile; fileRef = 9FFB8B3720862A2E0067BCE9 /* key_helper.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		9FFD1DD120862EAA00FA4626 /* SignalProtocolCStructures.h in Headers */ = {isa = PBXBuildFile; fileRef = 9FFB8B5020862A640067BCE9 /* SignalProtocolCStructures.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		9FFD1DD72086305B00FA4626 /* Teapot.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9FFD1DD32086305B00FA4626 /* Teapot.framework */; };
+		9FFD1DD82086305B00FA4626 /* CommonCrypto.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9FFD1DD42086305B00FA4626 /* CommonCrypto.framework */; };
+		9FFD1DD92086305B00FA4626 /* SwiftProtobuf.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9FFD1DD52086305B00FA4626 /* SwiftProtobuf.framework */; };
+		9FFD1DDA2086305B00FA4626 /* Starscream.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9FFD1DD62086305B00FA4626 /* Starscream.framework */; };
+		9FFD1DDC208630E900FA4626 /* SignalSender.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FFD1DDB208630E900FA4626 /* SignalSender.swift */; };
+		9FFD1DDE2086346600FA4626 /* SignalServiceStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FFD1DDD2086346600FA4626 /* SignalServiceStore.swift */; };
+		9FFD1DE02086357000FA4626 /* SignalChat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FFD1DDF2086357000FA4626 /* SignalChat.swift */; };
+		9FFD1DE32086410100FA4626 /* SignalKeyHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FFD1DE22086410100FA4626 /* SignalKeyHelper.swift */; };
+		9FFD1DE62086411200FA4626 /* SignalContext.h in Headers */ = {isa = PBXBuildFile; fileRef = 9FFD1DE42086411100FA4626 /* SignalContext.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		9FFD1DE72086411200FA4626 /* SignalContext.m in Sources */ = {isa = PBXBuildFile; fileRef = 9FFD1DE52086411200FA4626 /* SignalContext.m */; };
+		9FFD1DFA2086441F00FA4626 /* Data+Signal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FFD1DF92086441F00FA4626 /* Data+Signal.swift */; };
+		9FFD1DFD208644DE00FA4626 /* SignalCommonCryptoProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = 9FFD1DFB208644DD00FA4626 /* SignalCommonCryptoProvider.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		9FFD1DFE208644DE00FA4626 /* SignalCommonCryptoProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 9FFD1DFC208644DD00FA4626 /* SignalCommonCryptoProvider.m */; };
+		9FFD1E012086450A00FA4626 /* SignalProtocolStore.h in Headers */ = {isa = PBXBuildFile; fileRef = 9FFD1DFF2086450900FA4626 /* SignalProtocolStore.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		9FFD1E022086450A00FA4626 /* SignalProtocolStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 9FFD1E002086450A00FA4626 /* SignalProtocolStore.m */; };
+		9FFD1E0B2086459600FA4626 /* SignalSenderKeyStoreProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FFD1E042086459600FA4626 /* SignalSenderKeyStoreProtocol.swift */; };
+		9FFD1E0C2086459600FA4626 /* SignalSignedPreKeyStoreProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FFD1E052086459600FA4626 /* SignalSignedPreKeyStoreProtocol.swift */; };
+		9FFD1E0D2086459600FA4626 /* SignalPreKeyStoreProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FFD1E062086459600FA4626 /* SignalPreKeyStoreProtocol.swift */; };
+		9FFD1E0E2086459600FA4626 /* SignalSessionStoreProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FFD1E072086459600FA4626 /* SignalSessionStoreProtocol.swift */; };
+		9FFD1E0F2086459600FA4626 /* StorageCFunctions.m in Sources */ = {isa = PBXBuildFile; fileRef = 9FFD1E082086459600FA4626 /* StorageCFunctions.m */; };
+		9FFD1E102086459600FA4626 /* StorageCFunctions.h in Headers */ = {isa = PBXBuildFile; fileRef = 9FFD1E092086459600FA4626 /* StorageCFunctions.h */; };
+		9FFD1E112086459600FA4626 /* SignalIdentityKeyStoreProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FFD1E0A2086459600FA4626 /* SignalIdentityKeyStoreProtocol.swift */; };
+		9FFD1E13208645B600FA4626 /* SignalAddress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FFD1E12208645B500FA4626 /* SignalAddress.swift */; };
+		9FFD1E192086489500FA4626 /* SignalPreKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FFD1E152086489400FA4626 /* SignalPreKey.swift */; };
+		9FFD1E1A2086489500FA4626 /* SignalKeyPair.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FFD1E162086489400FA4626 /* SignalKeyPair.swift */; };
+		9FFD1E1B2086489500FA4626 /* SignalIdentityKeyPair.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FFD1E172086489500FA4626 /* SignalIdentityKeyPair.swift */; };
+		9FFD1E1C2086489500FA4626 /* SignalSignedPreKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FFD1E182086489500FA4626 /* SignalSignedPreKey.swift */; };
+		9FFD1E1E20873A8100FA4626 /* NetworkClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FFD1E1D20873A7F00FA4626 /* NetworkClient.swift */; };
+		9FFD1E2020873C2600FA4626 /* SignalPreKeyBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FFD1E1F20873C2500FA4626 /* SignalPreKeyBundle.swift */; };
+		9FFD1E2220873D0E00FA4626 /* SignalCipherMessageProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FFD1E2120873D0D00FA4626 /* SignalCipherMessageProtocol.swift */; };
+		9FFD1E2620873D4F00FA4626 /* SignalService.proto in Resources */ = {isa = PBXBuildFile; fileRef = 9FFD1E2420873D4F00FA4626 /* SignalService.proto */; };
+		9FFD1E2720873D4F00FA4626 /* SignalService.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FFD1E2520873D4F00FA4626 /* SignalService.pb.swift */; };
+		9FFD1E2A20873D8800FA4626 /* WebSocketResources.proto in Resources */ = {isa = PBXBuildFile; fileRef = 9FFD1E2820873D8700FA4626 /* WebSocketResources.proto */; };
+		9FFD1E2B20873D8800FA4626 /* WebSocketResources.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FFD1E2920873D8700FA4626 /* WebSocketResources.pb.swift */; };
+		9FFD1E2D20873DB400FA4626 /* SignalRecipient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FFD1E2C20873DB300FA4626 /* SignalRecipient.swift */; };
+		9FFD1E2F20873E6F00FA4626 /* SignalSessionBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FFD1E2E20873E6F00FA4626 /* SignalSessionBuilder.swift */; };
+		9FFD1E3120873EBA00FA4626 /* SignalSessionCipher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FFD1E3020873EBA00FA4626 /* SignalSessionCipher.swift */; };
+		9FFD1E3320873FDB00FA4626 /* SignalCiphertext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FFD1E3220873FDB00FA4626 /* SignalCiphertext.swift */; };
+		9FFD1E362087400900FA4626 /* NSData+messagePadding.m in Sources */ = {isa = PBXBuildFile; fileRef = 9FFD1E342087400900FA4626 /* NSData+messagePadding.m */; };
+		9FFD1E372087400900FA4626 /* NSData+messagePadding.h in Headers */ = {isa = PBXBuildFile; fileRef = 9FFD1E352087400900FA4626 /* NSData+messagePadding.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		9FFD1E3A2087414200FA4626 /* Cryptography.h in Headers */ = {isa = PBXBuildFile; fileRef = 9FFD1E382087414200FA4626 /* Cryptography.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		9FFD1E3B2087414200FA4626 /* Cryptography.m in Sources */ = {isa = PBXBuildFile; fileRef = 9FFD1E392087414200FA4626 /* Cryptography.m */; };
+		9FFD1E3D208747EB00FA4626 /* SessionRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FFD1E3C208747EB00FA4626 /* SessionRecord.swift */; };
+		9FFD1E402087487B00FA4626 /* SignalError.m in Sources */ = {isa = PBXBuildFile; fileRef = 9FFD1E3E2087487B00FA4626 /* SignalError.m */; };
+		9FFD1E412087487B00FA4626 /* SignalError.h in Headers */ = {isa = PBXBuildFile; fileRef = 9FFD1E3F2087487B00FA4626 /* SignalError.h */; settings = {ATTRIBUTES = (Public, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -23,12 +92,81 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		9F33523D20862B5500E0F145 /* SignalClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignalClient.swift; sourceTree = "<group>"; };
 		9FFB8B05208629B60067BCE9 /* SignalServiceSwift.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SignalServiceSwift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9FFB8B08208629B60067BCE9 /* SignalServiceSwift.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SignalServiceSwift.h; sourceTree = "<group>"; };
 		9FFB8B09208629B60067BCE9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9FFB8B0E208629B60067BCE9 /* SignalServiceSwiftTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SignalServiceSwiftTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		9FFB8B13208629B60067BCE9 /* SignalServiceSwiftTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignalServiceSwiftTests.swift; sourceTree = "<group>"; };
 		9FFB8B15208629B60067BCE9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		9FFB8B2020862A2E0067BCE9 /* protocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = protocol.h; sourceTree = "<group>"; };
+		9FFB8B2120862A2E0067BCE9 /* group_session_builder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = group_session_builder.h; sourceTree = "<group>"; };
+		9FFB8B2220862A2E0067BCE9 /* utarray.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = utarray.h; sourceTree = "<group>"; };
+		9FFB8B2320862A2E0067BCE9 /* sender_key.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sender_key.h; sourceTree = "<group>"; };
+		9FFB8B2420862A2E0067BCE9 /* signal_protocol_internal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = signal_protocol_internal.h; sourceTree = "<group>"; };
+		9FFB8B2520862A2E0067BCE9 /* libsignal-protocol-c.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libsignal-protocol-c.a"; sourceTree = "<group>"; };
+		9FFB8B2620862A2E0067BCE9 /* hkdf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = hkdf.h; sourceTree = "<group>"; };
+		9FFB8B2720862A2E0067BCE9 /* session_state.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = session_state.h; sourceTree = "<group>"; };
+		9FFB8B2820862A2E0067BCE9 /* curve.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = curve.h; sourceTree = "<group>"; };
+		9FFB8B2920862A2E0067BCE9 /* session_record.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = session_record.h; sourceTree = "<group>"; };
+		9FFB8B2A20862A2E0067BCE9 /* session_builder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = session_builder.h; sourceTree = "<group>"; };
+		9FFB8B2B20862A2E0067BCE9 /* signal_protocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = signal_protocol.h; sourceTree = "<group>"; };
+		9FFB8B2C20862A2E0067BCE9 /* session_cipher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = session_cipher.h; sourceTree = "<group>"; };
+		9FFB8B2D20862A2E0067BCE9 /* sender_key_record.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sender_key_record.h; sourceTree = "<group>"; };
+		9FFB8B2E20862A2E0067BCE9 /* session_pre_key.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = session_pre_key.h; sourceTree = "<group>"; };
+		9FFB8B2F20862A2E0067BCE9 /* signal_protocol_types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = signal_protocol_types.h; sourceTree = "<group>"; };
+		9FFB8B3020862A2E0067BCE9 /* sender_key_state.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sender_key_state.h; sourceTree = "<group>"; };
+		9FFB8B3120862A2E0067BCE9 /* device_consistency.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = device_consistency.h; sourceTree = "<group>"; };
+		9FFB8B3420862A2E0067BCE9 /* ratchet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ratchet.h; sourceTree = "<group>"; };
+		9FFB8B3520862A2E0067BCE9 /* fingerprint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fingerprint.h; sourceTree = "<group>"; };
+		9FFB8B3620862A2E0067BCE9 /* group_cipher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = group_cipher.h; sourceTree = "<group>"; };
+		9FFB8B3720862A2E0067BCE9 /* key_helper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = key_helper.h; sourceTree = "<group>"; };
+		9FFB8B5020862A640067BCE9 /* SignalProtocolCStructures.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; path = SignalProtocolCStructures.h; sourceTree = "<group>"; };
+		9FFD1DD32086305B00FA4626 /* Teapot.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Teapot.framework; path = Carthage/Build/iOS/Teapot.framework; sourceTree = SOURCE_ROOT; };
+		9FFD1DD42086305B00FA4626 /* CommonCrypto.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CommonCrypto.framework; path = Carthage/Build/iOS/CommonCrypto.framework; sourceTree = SOURCE_ROOT; };
+		9FFD1DD52086305B00FA4626 /* SwiftProtobuf.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftProtobuf.framework; path = Carthage/Build/iOS/SwiftProtobuf.framework; sourceTree = SOURCE_ROOT; };
+		9FFD1DD62086305B00FA4626 /* Starscream.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Starscream.framework; path = Carthage/Build/iOS/Starscream.framework; sourceTree = SOURCE_ROOT; };
+		9FFD1DDB208630E900FA4626 /* SignalSender.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignalSender.swift; sourceTree = "<group>"; };
+		9FFD1DDD2086346600FA4626 /* SignalServiceStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignalServiceStore.swift; sourceTree = "<group>"; };
+		9FFD1DDF2086357000FA4626 /* SignalChat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignalChat.swift; sourceTree = "<group>"; };
+		9FFD1DE22086410100FA4626 /* SignalKeyHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignalKeyHelper.swift; sourceTree = "<group>"; };
+		9FFD1DE42086411100FA4626 /* SignalContext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SignalContext.h; sourceTree = "<group>"; };
+		9FFD1DE52086411200FA4626 /* SignalContext.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SignalContext.m; sourceTree = "<group>"; };
+		9FFD1DF92086441F00FA4626 /* Data+Signal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Data+Signal.swift"; sourceTree = "<group>"; };
+		9FFD1DFB208644DD00FA4626 /* SignalCommonCryptoProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SignalCommonCryptoProvider.h; sourceTree = "<group>"; };
+		9FFD1DFC208644DD00FA4626 /* SignalCommonCryptoProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SignalCommonCryptoProvider.m; sourceTree = "<group>"; };
+		9FFD1DFF2086450900FA4626 /* SignalProtocolStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SignalProtocolStore.h; sourceTree = "<group>"; };
+		9FFD1E002086450A00FA4626 /* SignalProtocolStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SignalProtocolStore.m; sourceTree = "<group>"; };
+		9FFD1E042086459600FA4626 /* SignalSenderKeyStoreProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignalSenderKeyStoreProtocol.swift; sourceTree = "<group>"; };
+		9FFD1E052086459600FA4626 /* SignalSignedPreKeyStoreProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignalSignedPreKeyStoreProtocol.swift; sourceTree = "<group>"; };
+		9FFD1E062086459600FA4626 /* SignalPreKeyStoreProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignalPreKeyStoreProtocol.swift; sourceTree = "<group>"; };
+		9FFD1E072086459600FA4626 /* SignalSessionStoreProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignalSessionStoreProtocol.swift; sourceTree = "<group>"; };
+		9FFD1E082086459600FA4626 /* StorageCFunctions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StorageCFunctions.m; sourceTree = "<group>"; };
+		9FFD1E092086459600FA4626 /* StorageCFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StorageCFunctions.h; sourceTree = "<group>"; };
+		9FFD1E0A2086459600FA4626 /* SignalIdentityKeyStoreProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignalIdentityKeyStoreProtocol.swift; sourceTree = "<group>"; };
+		9FFD1E12208645B500FA4626 /* SignalAddress.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignalAddress.swift; sourceTree = "<group>"; };
+		9FFD1E152086489400FA4626 /* SignalPreKey.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignalPreKey.swift; sourceTree = "<group>"; };
+		9FFD1E162086489400FA4626 /* SignalKeyPair.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignalKeyPair.swift; sourceTree = "<group>"; };
+		9FFD1E172086489500FA4626 /* SignalIdentityKeyPair.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignalIdentityKeyPair.swift; sourceTree = "<group>"; };
+		9FFD1E182086489500FA4626 /* SignalSignedPreKey.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignalSignedPreKey.swift; sourceTree = "<group>"; };
+		9FFD1E1D20873A7F00FA4626 /* NetworkClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkClient.swift; sourceTree = "<group>"; };
+		9FFD1E1F20873C2500FA4626 /* SignalPreKeyBundle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignalPreKeyBundle.swift; sourceTree = "<group>"; };
+		9FFD1E2120873D0D00FA4626 /* SignalCipherMessageProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignalCipherMessageProtocol.swift; sourceTree = "<group>"; };
+		9FFD1E2420873D4F00FA4626 /* SignalService.proto */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = SignalService.proto; sourceTree = "<group>"; };
+		9FFD1E2520873D4F00FA4626 /* SignalService.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignalService.pb.swift; sourceTree = "<group>"; };
+		9FFD1E2820873D8700FA4626 /* WebSocketResources.proto */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = WebSocketResources.proto; sourceTree = "<group>"; };
+		9FFD1E2920873D8700FA4626 /* WebSocketResources.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebSocketResources.pb.swift; sourceTree = "<group>"; };
+		9FFD1E2C20873DB300FA4626 /* SignalRecipient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignalRecipient.swift; sourceTree = "<group>"; };
+		9FFD1E2E20873E6F00FA4626 /* SignalSessionBuilder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignalSessionBuilder.swift; sourceTree = "<group>"; };
+		9FFD1E3020873EBA00FA4626 /* SignalSessionCipher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignalSessionCipher.swift; sourceTree = "<group>"; };
+		9FFD1E3220873FDB00FA4626 /* SignalCiphertext.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignalCiphertext.swift; sourceTree = "<group>"; };
+		9FFD1E342087400900FA4626 /* NSData+messagePadding.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+messagePadding.m"; sourceTree = "<group>"; };
+		9FFD1E352087400900FA4626 /* NSData+messagePadding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+messagePadding.h"; sourceTree = "<group>"; };
+		9FFD1E382087414200FA4626 /* Cryptography.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Cryptography.h; sourceTree = "<group>"; };
+		9FFD1E392087414200FA4626 /* Cryptography.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Cryptography.m; sourceTree = "<group>"; };
+		9FFD1E3C208747EB00FA4626 /* SessionRecord.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SessionRecord.swift; sourceTree = "<group>"; };
+		9FFD1E3E2087487B00FA4626 /* SignalError.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SignalError.m; sourceTree = "<group>"; };
+		9FFD1E3F2087487B00FA4626 /* SignalError.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SignalError.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -36,6 +174,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9FFB8B3D20862A2E0067BCE9 /* libsignal-protocol-c.a in Frameworks */,
+				9FFD1DD92086305B00FA4626 /* SwiftProtobuf.framework in Frameworks */,
+				9FFD1DD82086305B00FA4626 /* CommonCrypto.framework in Frameworks */,
+				9FFD1DDA2086305B00FA4626 /* Starscream.framework in Frameworks */,
+				9FFD1DD72086305B00FA4626 /* Teapot.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -71,7 +214,26 @@
 		9FFB8B07208629B60067BCE9 /* SignalServiceSwift */ = {
 			isa = PBXGroup;
 			children = (
+				9FFD1E032086459600FA4626 /* SignalStoreProtocols */,
+				9FFD1DF82086441600FA4626 /* Extensions and Helpers */,
+				9FFD1DE1208640F800FA4626 /* Cryptography and Keys */,
+				9FFD1DD22086304B00FA4626 /* Frameworks */,
+				9FFB8B1F20862A2E0067BCE9 /* SignalProtocolC */,
+				9FFD1E2320873D4F00FA4626 /* Protobufs */,
+				9FFD1DDB208630E900FA4626 /* SignalSender.swift */,
+				9FFD1E2C20873DB300FA4626 /* SignalRecipient.swift */,
+				9FFD1E12208645B500FA4626 /* SignalAddress.swift */,
+				9F33523D20862B5500E0F145 /* SignalClient.swift */,
+				9FFD1E2E20873E6F00FA4626 /* SignalSessionBuilder.swift */,
+				9FFD1E3020873EBA00FA4626 /* SignalSessionCipher.swift */,
+				9FFD1DDD2086346600FA4626 /* SignalServiceStore.swift */,
+				9FFD1DDF2086357000FA4626 /* SignalChat.swift */,
 				9FFB8B08208629B60067BCE9 /* SignalServiceSwift.h */,
+				9FFD1E1D20873A7F00FA4626 /* NetworkClient.swift */,
+				9FFD1E1F20873C2500FA4626 /* SignalPreKeyBundle.swift */,
+				9FFD1E3C208747EB00FA4626 /* SessionRecord.swift */,
+				9FFD1E3220873FDB00FA4626 /* SignalCiphertext.swift */,
+				9FFD1E2120873D0D00FA4626 /* SignalCipherMessageProtocol.swift */,
 				9FFB8B09208629B60067BCE9 /* Info.plist */,
 			);
 			path = SignalServiceSwift;
@@ -86,6 +248,112 @@
 			path = SignalServiceSwiftTests;
 			sourceTree = "<group>";
 		};
+		9FFB8B1F20862A2E0067BCE9 /* SignalProtocolC */ = {
+			isa = PBXGroup;
+			children = (
+				9FFB8B2020862A2E0067BCE9 /* protocol.h */,
+				9FFB8B2120862A2E0067BCE9 /* group_session_builder.h */,
+				9FFB8B2220862A2E0067BCE9 /* utarray.h */,
+				9FFB8B2320862A2E0067BCE9 /* sender_key.h */,
+				9FFB8B2420862A2E0067BCE9 /* signal_protocol_internal.h */,
+				9FFB8B2520862A2E0067BCE9 /* libsignal-protocol-c.a */,
+				9FFB8B2620862A2E0067BCE9 /* hkdf.h */,
+				9FFB8B2720862A2E0067BCE9 /* session_state.h */,
+				9FFB8B2820862A2E0067BCE9 /* curve.h */,
+				9FFB8B2920862A2E0067BCE9 /* session_record.h */,
+				9FFB8B2A20862A2E0067BCE9 /* session_builder.h */,
+				9FFB8B2B20862A2E0067BCE9 /* signal_protocol.h */,
+				9FFB8B2C20862A2E0067BCE9 /* session_cipher.h */,
+				9FFB8B2D20862A2E0067BCE9 /* sender_key_record.h */,
+				9FFB8B2E20862A2E0067BCE9 /* session_pre_key.h */,
+				9FFB8B2F20862A2E0067BCE9 /* signal_protocol_types.h */,
+				9FFB8B3020862A2E0067BCE9 /* sender_key_state.h */,
+				9FFB8B3120862A2E0067BCE9 /* device_consistency.h */,
+				9FFB8B3420862A2E0067BCE9 /* ratchet.h */,
+				9FFB8B3520862A2E0067BCE9 /* fingerprint.h */,
+				9FFB8B3620862A2E0067BCE9 /* group_cipher.h */,
+				9FFB8B3720862A2E0067BCE9 /* key_helper.h */,
+				9FFB8B5020862A640067BCE9 /* SignalProtocolCStructures.h */,
+			);
+			path = SignalProtocolC;
+			sourceTree = "<group>";
+		};
+		9FFD1DD22086304B00FA4626 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				9FFD1DD42086305B00FA4626 /* CommonCrypto.framework */,
+				9FFD1DD62086305B00FA4626 /* Starscream.framework */,
+				9FFD1DD52086305B00FA4626 /* SwiftProtobuf.framework */,
+				9FFD1DD32086305B00FA4626 /* Teapot.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		9FFD1DE1208640F800FA4626 /* Cryptography and Keys */ = {
+			isa = PBXGroup;
+			children = (
+				9FFD1E382087414200FA4626 /* Cryptography.h */,
+				9FFD1E392087414200FA4626 /* Cryptography.m */,
+				9FFD1DFF2086450900FA4626 /* SignalProtocolStore.h */,
+				9FFD1E002086450A00FA4626 /* SignalProtocolStore.m */,
+				9FFD1DE42086411100FA4626 /* SignalContext.h */,
+				9FFD1DE52086411200FA4626 /* SignalContext.m */,
+				9FFD1DFB208644DD00FA4626 /* SignalCommonCryptoProvider.h */,
+				9FFD1DFC208644DD00FA4626 /* SignalCommonCryptoProvider.m */,
+				9FFD1DE22086410100FA4626 /* SignalKeyHelper.swift */,
+				9FFD1E142086488900FA4626 /* Keys */,
+			);
+			path = "Cryptography and Keys";
+			sourceTree = "<group>";
+		};
+		9FFD1DF82086441600FA4626 /* Extensions and Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				9FFD1DF92086441F00FA4626 /* Data+Signal.swift */,
+				9FFD1E3F2087487B00FA4626 /* SignalError.h */,
+				9FFD1E3E2087487B00FA4626 /* SignalError.m */,
+				9FFD1E352087400900FA4626 /* NSData+messagePadding.h */,
+				9FFD1E342087400900FA4626 /* NSData+messagePadding.m */,
+			);
+			path = "Extensions and Helpers";
+			sourceTree = "<group>";
+		};
+		9FFD1E032086459600FA4626 /* SignalStoreProtocols */ = {
+			isa = PBXGroup;
+			children = (
+				9FFD1E042086459600FA4626 /* SignalSenderKeyStoreProtocol.swift */,
+				9FFD1E052086459600FA4626 /* SignalSignedPreKeyStoreProtocol.swift */,
+				9FFD1E062086459600FA4626 /* SignalPreKeyStoreProtocol.swift */,
+				9FFD1E072086459600FA4626 /* SignalSessionStoreProtocol.swift */,
+				9FFD1E082086459600FA4626 /* StorageCFunctions.m */,
+				9FFD1E092086459600FA4626 /* StorageCFunctions.h */,
+				9FFD1E0A2086459600FA4626 /* SignalIdentityKeyStoreProtocol.swift */,
+			);
+			path = SignalStoreProtocols;
+			sourceTree = "<group>";
+		};
+		9FFD1E142086488900FA4626 /* Keys */ = {
+			isa = PBXGroup;
+			children = (
+				9FFD1E172086489500FA4626 /* SignalIdentityKeyPair.swift */,
+				9FFD1E162086489400FA4626 /* SignalKeyPair.swift */,
+				9FFD1E152086489400FA4626 /* SignalPreKey.swift */,
+				9FFD1E182086489500FA4626 /* SignalSignedPreKey.swift */,
+			);
+			path = Keys;
+			sourceTree = "<group>";
+		};
+		9FFD1E2320873D4F00FA4626 /* Protobufs */ = {
+			isa = PBXGroup;
+			children = (
+				9FFD1E2820873D8700FA4626 /* WebSocketResources.proto */,
+				9FFD1E2420873D4F00FA4626 /* SignalService.proto */,
+				9FFD1E2920873D8700FA4626 /* WebSocketResources.pb.swift */,
+				9FFD1E2520873D4F00FA4626 /* SignalService.pb.swift */,
+			);
+			path = Protobufs;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -93,6 +361,35 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9FFB8B4720862A2E0067BCE9 /* signal_protocol_types.h in Headers */,
+				9FFD1DFD208644DE00FA4626 /* SignalCommonCryptoProvider.h in Headers */,
+				9FFB8B3E20862A2E0067BCE9 /* hkdf.h in Headers */,
+				9FFD1E372087400900FA4626 /* NSData+messagePadding.h in Headers */,
+				9FFB8B4F20862A2E0067BCE9 /* key_helper.h in Headers */,
+				9FFB8B3F20862A2E0067BCE9 /* session_state.h in Headers */,
+				9FFB8B4520862A2E0067BCE9 /* sender_key_record.h in Headers */,
+				9FFB8B4620862A2E0067BCE9 /* session_pre_key.h in Headers */,
+				9FFD1DD120862EAA00FA4626 /* SignalProtocolCStructures.h in Headers */,
+				9FFD1E102086459600FA4626 /* StorageCFunctions.h in Headers */,
+				9FFB8B3820862A2E0067BCE9 /* protocol.h in Headers */,
+				9FFB8B4E20862A2E0067BCE9 /* group_cipher.h in Headers */,
+				9FFB8B3920862A2E0067BCE9 /* group_session_builder.h in Headers */,
+				9FFD1E012086450A00FA4626 /* SignalProtocolStore.h in Headers */,
+				9FFB8B4C20862A2E0067BCE9 /* ratchet.h in Headers */,
+				9FFB8B3B20862A2E0067BCE9 /* sender_key.h in Headers */,
+				9FFB8B3C20862A2E0067BCE9 /* signal_protocol_internal.h in Headers */,
+				9FFD1E412087487B00FA4626 /* SignalError.h in Headers */,
+				9FFB8B4320862A2E0067BCE9 /* signal_protocol.h in Headers */,
+				9FFD1E3A2087414200FA4626 /* Cryptography.h in Headers */,
+				9FFB8B4D20862A2E0067BCE9 /* fingerprint.h in Headers */,
+				9FFB8B4420862A2E0067BCE9 /* session_cipher.h in Headers */,
+				9FFD1DE62086411200FA4626 /* SignalContext.h in Headers */,
+				9FFB8B4920862A2E0067BCE9 /* device_consistency.h in Headers */,
+				9FFB8B4820862A2E0067BCE9 /* sender_key_state.h in Headers */,
+				9FFB8B4120862A2E0067BCE9 /* session_record.h in Headers */,
+				9FFB8B4020862A2E0067BCE9 /* curve.h in Headers */,
+				9FFB8B3A20862A2E0067BCE9 /* utarray.h in Headers */,
+				9FFB8B4220862A2E0067BCE9 /* session_builder.h in Headers */,
 				9FFB8B16208629B60067BCE9 /* SignalServiceSwift.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -148,6 +445,7 @@
 				TargetAttributes = {
 					9FFB8B04208629B60067BCE9 = {
 						CreatedOnToolsVersion = 9.3;
+						LastSwiftMigration = 0930;
 					};
 					9FFB8B0D208629B60067BCE9 = {
 						CreatedOnToolsVersion = 9.3;
@@ -177,6 +475,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9FFD1E2A20873D8800FA4626 /* WebSocketResources.proto in Resources */,
+				9FFD1E2620873D4F00FA4626 /* SignalService.proto in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -194,6 +494,39 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9FFD1E2720873D4F00FA4626 /* SignalService.pb.swift in Sources */,
+				9FFD1E2D20873DB400FA4626 /* SignalRecipient.swift in Sources */,
+				9FFD1DDC208630E900FA4626 /* SignalSender.swift in Sources */,
+				9FFD1E112086459600FA4626 /* SignalIdentityKeyStoreProtocol.swift in Sources */,
+				9FFD1E13208645B600FA4626 /* SignalAddress.swift in Sources */,
+				9FFD1E1B2086489500FA4626 /* SignalIdentityKeyPair.swift in Sources */,
+				9FFD1E362087400900FA4626 /* NSData+messagePadding.m in Sources */,
+				9FFD1E2220873D0E00FA4626 /* SignalCipherMessageProtocol.swift in Sources */,
+				9FFD1DFE208644DE00FA4626 /* SignalCommonCryptoProvider.m in Sources */,
+				9FFD1E0C2086459600FA4626 /* SignalSignedPreKeyStoreProtocol.swift in Sources */,
+				9FFD1E1A2086489500FA4626 /* SignalKeyPair.swift in Sources */,
+				9FFD1E2020873C2600FA4626 /* SignalPreKeyBundle.swift in Sources */,
+				9FFD1E3320873FDB00FA4626 /* SignalCiphertext.swift in Sources */,
+				9FFD1E2F20873E6F00FA4626 /* SignalSessionBuilder.swift in Sources */,
+				9FFD1DE72086411200FA4626 /* SignalContext.m in Sources */,
+				9FFD1E3120873EBA00FA4626 /* SignalSessionCipher.swift in Sources */,
+				9FFD1DE32086410100FA4626 /* SignalKeyHelper.swift in Sources */,
+				9FFD1E3D208747EB00FA4626 /* SessionRecord.swift in Sources */,
+				9FFD1DE02086357000FA4626 /* SignalChat.swift in Sources */,
+				9FFD1E0E2086459600FA4626 /* SignalSessionStoreProtocol.swift in Sources */,
+				9FFD1E1E20873A8100FA4626 /* NetworkClient.swift in Sources */,
+				9FFD1E1C2086489500FA4626 /* SignalSignedPreKey.swift in Sources */,
+				9FFD1E192086489500FA4626 /* SignalPreKey.swift in Sources */,
+				9FFD1E0D2086459600FA4626 /* SignalPreKeyStoreProtocol.swift in Sources */,
+				9FFD1E0F2086459600FA4626 /* StorageCFunctions.m in Sources */,
+				9F33523E20862B5500E0F145 /* SignalClient.swift in Sources */,
+				9FFD1E402087487B00FA4626 /* SignalError.m in Sources */,
+				9FFD1DFA2086441F00FA4626 /* Data+Signal.swift in Sources */,
+				9FFD1E2B20873D8800FA4626 /* WebSocketResources.pb.swift in Sources */,
+				9FFD1E0B2086459600FA4626 /* SignalSenderKeyStoreProtocol.swift in Sources */,
+				9FFD1E022086450A00FA4626 /* SignalProtocolStore.m in Sources */,
+				9FFD1E3B2087414200FA4626 /* Cryptography.m in Sources */,
+				9FFD1DDE2086346600FA4626 /* SignalServiceStore.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -339,6 +672,7 @@
 		9FFB8B1A208629B60067BCE9 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
@@ -346,6 +680,10 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = SignalServiceSwift/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -353,9 +691,14 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/SignalServiceSwift/SignalProtocolC",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.bakkenbaeck.SignalServiceSwift;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -364,6 +707,7 @@
 		9FFB8B1B208629B60067BCE9 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
@@ -371,12 +715,20 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = SignalServiceSwift/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/SignalServiceSwift/SignalProtocolC",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.bakkenbaeck.SignalServiceSwift;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
@@ -389,6 +741,7 @@
 		9FFB8B1D208629B60067BCE9 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 29X3GG489T;
 				INFOPLIST_FILE = SignalServiceSwiftTests/Info.plist;
@@ -407,6 +760,7 @@
 		9FFB8B1E208629B60067BCE9 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 29X3GG489T;
 				INFOPLIST_FILE = SignalServiceSwiftTests/Info.plist;
