@@ -8,6 +8,16 @@
 
 /* Begin PBXBuildFile section */
 		9F33523E20862B5500E0F145 /* SignalClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F33523D20862B5500E0F145 /* SignalClient.swift */; };
+		9FA8EEF920878F8A00D0CBB6 /* CommonCrypto.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9FFD1DD42086305B00FA4626 /* CommonCrypto.framework */; };
+		9FA8EEFA20878F8A00D0CBB6 /* SwiftProtobuf.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9FFD1DD52086305B00FA4626 /* SwiftProtobuf.framework */; };
+		9FA8EEFB20878F8A00D0CBB6 /* Teapot.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9FFD1DD32086305B00FA4626 /* Teapot.framework */; };
+		9FA8EF012087900A00D0CBB6 /* CommonCrypto.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 9FFD1DD42086305B00FA4626 /* CommonCrypto.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		9FA8EF022087900A00D0CBB6 /* SwiftProtobuf.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 9FFD1DD52086305B00FA4626 /* SwiftProtobuf.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		9FA8EF032087900A00D0CBB6 /* Teapot.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 9FFD1DD32086305B00FA4626 /* Teapot.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		9FA8EF042087901100D0CBB6 /* SignalServiceSwift.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 9FFB8B05208629B60067BCE9 /* SignalServiceSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		9FA8EF062087963700D0CBB6 /* Starscream.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9FA8EF052087963700D0CBB6 /* Starscream.framework */; };
+		9FA8EF072087963B00D0CBB6 /* Starscream.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 9FA8EF052087963700D0CBB6 /* Starscream.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		9FA8EF082087963D00D0CBB6 /* Starscream.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9FA8EF052087963700D0CBB6 /* Starscream.framework */; };
 		9FD00C7F20875F2300729246 /* SignalInMemoryStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FD00C7E20875F2300729246 /* SignalInMemoryStorage.swift */; };
 		9FD00C812087606A00729246 /* SignalStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FD00C802087606A00729246 /* SignalStore.swift */; };
 		9FFB8B0F208629B60067BCE9 /* SignalServiceSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9FFB8B05208629B60067BCE9 /* SignalServiceSwift.framework */; };
@@ -39,7 +49,6 @@
 		9FFD1DD72086305B00FA4626 /* Teapot.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9FFD1DD32086305B00FA4626 /* Teapot.framework */; };
 		9FFD1DD82086305B00FA4626 /* CommonCrypto.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9FFD1DD42086305B00FA4626 /* CommonCrypto.framework */; };
 		9FFD1DD92086305B00FA4626 /* SwiftProtobuf.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9FFD1DD52086305B00FA4626 /* SwiftProtobuf.framework */; };
-		9FFD1DDA2086305B00FA4626 /* Starscream.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9FFD1DD62086305B00FA4626 /* Starscream.framework */; };
 		9FFD1DDC208630E900FA4626 /* SignalSender.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FFD1DDB208630E900FA4626 /* SignalSender.swift */; };
 		9FFD1DDE2086346600FA4626 /* SignalServiceStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FFD1DDD2086346600FA4626 /* SignalServiceStore.swift */; };
 		9FFD1DE02086357000FA4626 /* SignalChat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FFD1DDF2086357000FA4626 /* SignalChat.swift */; };
@@ -93,8 +102,26 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		9FA8EF002087900400D0CBB6 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				9FA8EF012087900A00D0CBB6 /* CommonCrypto.framework in CopyFiles */,
+				9FA8EF042087901100D0CBB6 /* SignalServiceSwift.framework in CopyFiles */,
+				9FA8EF072087963B00D0CBB6 /* Starscream.framework in CopyFiles */,
+				9FA8EF022087900A00D0CBB6 /* SwiftProtobuf.framework in CopyFiles */,
+				9FA8EF032087900A00D0CBB6 /* Teapot.framework in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		9F33523D20862B5500E0F145 /* SignalClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignalClient.swift; sourceTree = "<group>"; };
+		9FA8EF052087963700D0CBB6 /* Starscream.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Starscream.framework; path = Carthage/Build/iOS/Starscream.framework; sourceTree = SOURCE_ROOT; };
 		9FD00C7E20875F2300729246 /* SignalInMemoryStorage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignalInMemoryStorage.swift; sourceTree = "<group>"; };
 		9FD00C802087606A00729246 /* SignalStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignalStore.swift; sourceTree = "<group>"; };
 		9FFB8B05208629B60067BCE9 /* SignalServiceSwift.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SignalServiceSwift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -129,7 +156,6 @@
 		9FFD1DD32086305B00FA4626 /* Teapot.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Teapot.framework; path = Carthage/Build/iOS/Teapot.framework; sourceTree = SOURCE_ROOT; };
 		9FFD1DD42086305B00FA4626 /* CommonCrypto.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CommonCrypto.framework; path = Carthage/Build/iOS/CommonCrypto.framework; sourceTree = SOURCE_ROOT; };
 		9FFD1DD52086305B00FA4626 /* SwiftProtobuf.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftProtobuf.framework; path = Carthage/Build/iOS/SwiftProtobuf.framework; sourceTree = SOURCE_ROOT; };
-		9FFD1DD62086305B00FA4626 /* Starscream.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Starscream.framework; path = Carthage/Build/iOS/Starscream.framework; sourceTree = SOURCE_ROOT; };
 		9FFD1DDB208630E900FA4626 /* SignalSender.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignalSender.swift; sourceTree = "<group>"; };
 		9FFD1DDD2086346600FA4626 /* SignalServiceStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignalServiceStore.swift; sourceTree = "<group>"; };
 		9FFD1DDF2086357000FA4626 /* SignalChat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignalChat.swift; sourceTree = "<group>"; };
@@ -181,7 +207,7 @@
 				9FFB8B3D20862A2E0067BCE9 /* libsignal-protocol-c.a in Frameworks */,
 				9FFD1DD92086305B00FA4626 /* SwiftProtobuf.framework in Frameworks */,
 				9FFD1DD82086305B00FA4626 /* CommonCrypto.framework in Frameworks */,
-				9FFD1DDA2086305B00FA4626 /* Starscream.framework in Frameworks */,
+				9FA8EF062087963700D0CBB6 /* Starscream.framework in Frameworks */,
 				9FFD1DD72086305B00FA4626 /* Teapot.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -191,18 +217,30 @@
 			buildActionMask = 2147483647;
 			files = (
 				9FFB8B0F208629B60067BCE9 /* SignalServiceSwift.framework in Frameworks */,
+				9FA8EEF920878F8A00D0CBB6 /* CommonCrypto.framework in Frameworks */,
+				9FA8EEFA20878F8A00D0CBB6 /* SwiftProtobuf.framework in Frameworks */,
+				9FA8EF082087963D00D0CBB6 /* Starscream.framework in Frameworks */,
+				9FA8EEFB20878F8A00D0CBB6 /* Teapot.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		9FA8EEF820878F8A00D0CBB6 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		9FFB8AFB208629B60067BCE9 = {
 			isa = PBXGroup;
 			children = (
 				9FFB8B07208629B60067BCE9 /* SignalServiceSwift */,
 				9FFB8B12208629B60067BCE9 /* SignalServiceSwiftTests */,
 				9FFB8B06208629B60067BCE9 /* Products */,
+				9FA8EEF820878F8A00D0CBB6 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -287,8 +325,8 @@
 		9FFD1DD22086304B00FA4626 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				9FA8EF052087963700D0CBB6 /* Starscream.framework */,
 				9FFD1DD42086305B00FA4626 /* CommonCrypto.framework */,
-				9FFD1DD62086305B00FA4626 /* Starscream.framework */,
 				9FFD1DD52086305B00FA4626 /* SwiftProtobuf.framework */,
 				9FFD1DD32086305B00FA4626 /* Teapot.framework */,
 			);
@@ -428,6 +466,7 @@
 				9FFB8B0A208629B60067BCE9 /* Sources */,
 				9FFB8B0B208629B60067BCE9 /* Frameworks */,
 				9FFB8B0C208629B60067BCE9 /* Resources */,
+				9FA8EF002087900400D0CBB6 /* CopyFiles */,
 			);
 			buildRules = (
 			);
@@ -691,6 +730,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/Carthage/Build/iOS/",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
 				INFOPLIST_FILE = SignalServiceSwift/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
@@ -726,6 +766,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/Carthage/Build/iOS/",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
 				INFOPLIST_FILE = SignalServiceSwift/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
@@ -752,6 +793,10 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 29X3GG489T;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = SignalServiceSwiftTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -772,6 +817,10 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 29X3GG489T;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = SignalServiceSwiftTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

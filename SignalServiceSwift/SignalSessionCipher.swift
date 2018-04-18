@@ -68,13 +68,13 @@ import Foundation
         return encrypted
     }
 
-    public func decrypt(cipher: SignalCipherMessageProtocol, ciphertextType: CiphertextType = .unknown) throws -> Data? {
-
+    public func decrypt(cipher: SignalCiphertext, ciphertextType: CiphertextType = .unknown) throws -> Data? {
         var buffer: UnsafeMutablePointer<signal_buffer>? = nil
         var result = SG_ERR_UNKNOWN
-        if let message = cipher as? SignalCipherMessage {
+        
+        if let message = SignalCipherMessage(data: cipher.data, context: self.context) {
             result = session_cipher_decrypt_signal_message(self.cipher, message.signalMessagePointer, nil, &buffer)
-        } else if let preKeyMessage = cipher as? SignalPreKeyMessage {
+        } else if let preKeyMessage = SignalPreKeyMessage(data: cipher.data, context: self.context) {
             result = session_cipher_decrypt_pre_key_signal_message(self.cipher, preKeyMessage.preKeySignalMessagePointer, nil, &buffer)
         }
 

@@ -43,6 +43,7 @@ public class SignalClient {
         self.sender = SignalSender(username: username, password: password, deviceId: deviceId, remoteRegistrationId: registrationId, signalingKey: signalingKey, signalKeyHelper: signalKeyHelper, signalContext: signalContext)
 
         let socketURL = URL(string: "wsss://chat.internal.service.toshi.org/v1/websocket/?login=\(username)&password=\(password)")!
+
         self.socket = WebSocket(url: socketURL)
         self.socket.delegate = self
         self.socket.pongDelegate = self
@@ -126,7 +127,7 @@ public class SignalClient {
 
         let chat = SignalChat.fetchOrCreateChat(with: senderAddress.name, in: self.store)
 
-        guard let _decryptedData = try? sessionCipher.decrypt(cipher: concreteCipherMessage),
+        guard let _decryptedData = try? sessionCipher.decrypt(cipher: concreteCipherMessage as! SignalCiphertext),
             let decryptedData = _decryptedData,
             let incomingMessage = IncomingSignalMessage(from: decryptedData, chatId: chat.uniqueId) else {
                 NSLog("Could not decrypt message! (1)")

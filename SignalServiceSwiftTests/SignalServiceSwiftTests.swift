@@ -42,7 +42,7 @@ class SignalServiceSwiftTests: XCTestCase {
         inMemoryStore.identityKeyPair = identityKeyPair
         inMemoryStore.localRegistrationId = registrationId
 
-        let preKeys = keyHelper.generatePreKeys(withStartingPreKeyId: 0, count: 100)
+        let preKeys = keyHelper.generatePreKeys(withStartingPreKeyId: 1, count: 100)
         XCTAssertEqual(preKeys.count, 100)
 
         let preKey0 = preKeys.first!
@@ -76,7 +76,7 @@ class SignalServiceSwiftTests: XCTestCase {
         bobInMemoryStore.identityKeyPair = bobIdentityKeyPair
         bobInMemoryStore.localRegistrationId = bobLocalRegistrationId
 
-        let bobPreKeys = bobKeyHelper.generatePreKeys(withStartingPreKeyId: 0, count: 100)
+        let bobPreKeys = bobKeyHelper.generatePreKeys(withStartingPreKeyId: 1, count: 100)
         XCTAssertEqual(bobPreKeys.count, 100)
 
         let bobSignedPreKey = bobKeyHelper.generateSignedPreKey(withIdentity: bobIdentityKeyPair, signedPreKeyId: 0)

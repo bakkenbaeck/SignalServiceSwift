@@ -15,7 +15,7 @@ func checkValidity(of bundle: UnsafeMutablePointer<session_pre_key_bundle>) -> B
         let signature = session_pre_key_bundle_get_signed_pre_key_signature(bundle)
         var serialized_signed_pre_key: UnsafeMutablePointer<signal_buffer>?
 
-        guard ec_public_key_serialize(&serialized_signed_pre_key, signed_pre_key) < 0 else {
+        guard ec_public_key_serialize(&serialized_signed_pre_key, signed_pre_key) == 0 else {
             return false
         }
 
