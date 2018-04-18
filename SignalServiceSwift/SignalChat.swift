@@ -9,9 +9,7 @@
 import Foundation
 
 public class SignalChat: Equatable, Codable {
-    var recipientIdentifier: String
-
-//    var store: SignalServiceStore // I don't like this being here.
+    public var recipientIdentifier: String
 
     public lazy var uniqueId: String = {
         return UUID().uuidString
