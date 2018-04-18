@@ -9,17 +9,37 @@
 import Foundation
 
 public class SignalChat: Equatable, Codable {
+    enum CodingKeys: String, CodingKey {
+        case recipientIdentifier,
+        uniqueId,
+        lastArchivalDate,
+        currentDraft,
+        isMuted
+    }
+
     public var recipientIdentifier: String
 
-    public lazy var uniqueId: String = {
-        return UUID().uuidString
-    }()
+    public var uniqueId: String = UUID().uuidString
 
     public var numberOfMessages: Int {
         return self.messages.count
     }
 
-//    public var hasUnreadMessages: Bool = false
+    public var hasUnreadMessages: Bool {
+        guard let incoming = self.messages.filter({ message -> Bool in
+            return message is IncomingSignalMessage
+        }) as? [IncomingSignalMessage] else { return false } // no incoming messages
+
+        for message in incoming {
+            if !message.isRead {
+                return true
+            }
+        }
+
+        return false
+    }
+
+    private var store: SignalServiceStore?
 
     /// Returns the string that will be displayed typically in a conversations view as a preview of the last message.
     public var lastMessageLabel: String {
@@ -38,7 +58,7 @@ public class SignalChat: Equatable, Codable {
     public var isMuted: Bool = false
 
     public var messages: [SignalMessage] {
-        return [] // self.store.messages(in: self)
+        return self.store?.messages(for: self) ?? []
     }
 
     public var isArchived: Bool {
@@ -46,19 +66,19 @@ public class SignalChat: Equatable, Codable {
     }
 
     public class func fetchOrCreateChat(with recipientIdentifier: String, in store: SignalServiceStore) -> SignalChat {
-//        if let chat = store.chat(recipientName: recipientIdentifier) {
-//            return chat
-//        } else  {
-            let chat = SignalChat(recipientIdentifier: recipientIdentifier)
+        if let chat = store.chat(recipientIdentifier: recipientIdentifier) {
+            return chat
+        } else  {
+            let chat = SignalChat(recipientIdentifier: recipientIdentifier, in: store)
             store.save(chat: chat)
 
             return chat
-//        }
+        }
     }
 
-    public init(recipientIdentifier: String) { //, in store: SignalServiceStore) {
+    public init(recipientIdentifier: String, in store: SignalServiceStore) {
         self.recipientIdentifier = recipientIdentifier
-        // self.store = store
+        self.store = store
     }
 
     public static func == (lhs: SignalChat, rhs: SignalChat) -> Bool {

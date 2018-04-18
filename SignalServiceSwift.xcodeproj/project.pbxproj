@@ -20,6 +20,9 @@
 		9FA8EF082087963D00D0CBB6 /* Starscream.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9FA8EF052087963700D0CBB6 /* Starscream.framework */; };
 		9FD00C7F20875F2300729246 /* SignalInMemoryStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FD00C7E20875F2300729246 /* SignalInMemoryStorage.swift */; };
 		9FD00C812087606A00729246 /* SignalStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FD00C802087606A00729246 /* SignalStore.swift */; };
+		9FF4F5C2208798C300EC4D5D /* SignalMessageProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FF4F5C1208798C300EC4D5D /* SignalMessageProtocol.swift */; };
+		9FF4F5C4208798DD00EC4D5D /* IncomingSignalMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FF4F5C3208798DD00EC4D5D /* IncomingSignalMessage.swift */; };
+		9FF4F5C62087990000EC4D5D /* OutgoingSignalMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FF4F5C52087990000EC4D5D /* OutgoingSignalMessage.swift */; };
 		9FFB8B0F208629B60067BCE9 /* SignalServiceSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9FFB8B05208629B60067BCE9 /* SignalServiceSwift.framework */; };
 		9FFB8B14208629B60067BCE9 /* SignalServiceSwiftTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FFB8B13208629B60067BCE9 /* SignalServiceSwiftTests.swift */; };
 		9FFB8B16208629B60067BCE9 /* SignalServiceSwift.h in Headers */ = {isa = PBXBuildFile; fileRef = 9FFB8B08208629B60067BCE9 /* SignalServiceSwift.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -124,6 +127,9 @@
 		9FA8EF052087963700D0CBB6 /* Starscream.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Starscream.framework; path = Carthage/Build/iOS/Starscream.framework; sourceTree = SOURCE_ROOT; };
 		9FD00C7E20875F2300729246 /* SignalInMemoryStorage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignalInMemoryStorage.swift; sourceTree = "<group>"; };
 		9FD00C802087606A00729246 /* SignalStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignalStore.swift; sourceTree = "<group>"; };
+		9FF4F5C1208798C300EC4D5D /* SignalMessageProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignalMessageProtocol.swift; sourceTree = "<group>"; };
+		9FF4F5C3208798DD00EC4D5D /* IncomingSignalMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IncomingSignalMessage.swift; sourceTree = "<group>"; };
+		9FF4F5C52087990000EC4D5D /* OutgoingSignalMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutgoingSignalMessage.swift; sourceTree = "<group>"; };
 		9FFB8B05208629B60067BCE9 /* SignalServiceSwift.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SignalServiceSwift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9FFB8B08208629B60067BCE9 /* SignalServiceSwift.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SignalServiceSwift.h; sourceTree = "<group>"; };
 		9FFB8B09208629B60067BCE9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -234,6 +240,16 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		9FF4F5C0208798B400EC4D5D /* SignalServiceMessages */ = {
+			isa = PBXGroup;
+			children = (
+				9FF4F5C1208798C300EC4D5D /* SignalMessageProtocol.swift */,
+				9FF4F5C3208798DD00EC4D5D /* IncomingSignalMessage.swift */,
+				9FF4F5C52087990000EC4D5D /* OutgoingSignalMessage.swift */,
+			);
+			path = SignalServiceMessages;
+			sourceTree = "<group>";
+		};
 		9FFB8AFB208629B60067BCE9 = {
 			isa = PBXGroup;
 			children = (
@@ -262,6 +278,7 @@
 				9FFD1DD22086304B00FA4626 /* Frameworks */,
 				9FFB8B1F20862A2E0067BCE9 /* SignalProtocolC */,
 				9FFD1E2320873D4F00FA4626 /* Protobufs */,
+				9FF4F5C0208798B400EC4D5D /* SignalServiceMessages */,
 				9FFD1DDB208630E900FA4626 /* SignalSender.swift */,
 				9FFD1E2C20873DB300FA4626 /* SignalRecipient.swift */,
 				9FFD1E12208645B500FA4626 /* SignalAddress.swift */,
@@ -543,7 +560,9 @@
 				9FFD1E2D20873DB400FA4626 /* SignalRecipient.swift in Sources */,
 				9FFD1DDC208630E900FA4626 /* SignalSender.swift in Sources */,
 				9FFD1E112086459600FA4626 /* SignalIdentityKeyStoreProtocol.swift in Sources */,
+				9FF4F5C4208798DD00EC4D5D /* IncomingSignalMessage.swift in Sources */,
 				9FFD1E13208645B600FA4626 /* SignalAddress.swift in Sources */,
+				9FF4F5C2208798C300EC4D5D /* SignalMessageProtocol.swift in Sources */,
 				9FFD1E1B2086489500FA4626 /* SignalIdentityKeyPair.swift in Sources */,
 				9FFD1E362087400900FA4626 /* NSData+messagePadding.m in Sources */,
 				9FFD1E2220873D0E00FA4626 /* SignalCipherMessageProtocol.swift in Sources */,
@@ -562,6 +581,7 @@
 				9FFD1E1E20873A8100FA4626 /* NetworkClient.swift in Sources */,
 				9FFD1E1C2086489500FA4626 /* SignalSignedPreKey.swift in Sources */,
 				9FFD1E192086489500FA4626 /* SignalPreKey.swift in Sources */,
+				9FF4F5C62087990000EC4D5D /* OutgoingSignalMessage.swift in Sources */,
 				9FFD1E0D2086459600FA4626 /* SignalPreKeyStoreProtocol.swift in Sources */,
 				9FFD1E0F2086459600FA4626 /* StorageCFunctions.m in Sources */,
 				9F33523E20862B5500E0F145 /* SignalClient.swift in Sources */,
