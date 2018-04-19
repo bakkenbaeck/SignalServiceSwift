@@ -58,7 +58,7 @@ public class SignalChat: Equatable, Codable {
     public var isMuted: Bool = false
 
     public var messages: [SignalMessage] {
-        return self.store?.messages(for: self) ?? []
+        return self.store!.messages(for: self)
     }
 
     public var isArchived: Bool {
