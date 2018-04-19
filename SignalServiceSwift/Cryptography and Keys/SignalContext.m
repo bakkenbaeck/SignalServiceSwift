@@ -34,7 +34,7 @@ static SignalContext *_shared = nil;
     }
 }
 
-- (instancetype)initWithStore:(SignalProtocolStore *)store {
+- (instancetype)initWithStore:(SignalLibraryStoreBridge *)store {
     NSParameterAssert(store);
 
     if (self = [super init]) {

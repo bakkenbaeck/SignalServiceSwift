@@ -25,12 +25,12 @@ public enum CiphertextType: Int32 {
     }
 }
 
-public protocol SignalCipherMessageProtocol {
+public protocol SignalLibraryMessage {
     var data: Data { get set }
     var ciphertextType: CiphertextType { get set }
 }
 
-public class SignalCipherMessage: NSObject, SignalCipherMessageProtocol {
+public class SignalLibraryCiphertextMessage: NSObject, SignalLibraryMessage {
     public var data: Data
 
     public var ciphertextType: CiphertextType
@@ -51,7 +51,7 @@ public class SignalCipherMessage: NSObject, SignalCipherMessageProtocol {
     }
 }
 
-public class SignalPreKeyMessage: NSObject, SignalCipherMessageProtocol {
+public class SignalLibraryPreKeyMessage: NSObject, SignalLibraryMessage {
     public var data: Data
 
     public var ciphertextType: CiphertextType

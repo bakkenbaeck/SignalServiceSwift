@@ -10,7 +10,7 @@ import Foundation
 
 let CurrentVersion: Int32 = 3
 
-public class SignalCiphertext: NSObject, SignalCipherMessageProtocol {
+public class SignalCiphertext: NSObject, SignalLibraryMessage {
     public var data: Data
 
     public var ciphertextType: CiphertextType

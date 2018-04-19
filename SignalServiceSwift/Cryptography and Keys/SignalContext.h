@@ -8,7 +8,7 @@
 
 @import Foundation;
 #import "SignalCommonCryptoProvider.h"
-#import "SignalProtocolStore.h"
+#import "SignalLibraryStoreBridge.h"
 
 NS_ASSUME_NONNULL_BEGIN
 @interface SignalContext : NSObject
@@ -19,9 +19,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, readonly) signal_context *context;
 @property (nonatomic, strong, readonly) NSRecursiveLock *lock;
 
-@property (nonatomic, strong, readonly) SignalProtocolStore *store;
+@property (nonatomic, strong, readonly) SignalLibraryStoreBridge *store;
 
-- (instancetype)initWithStore:(SignalProtocolStore *)store;
+- (instancetype)initWithStore:(SignalLibraryStoreBridge *)store;
 
 @end
 NS_ASSUME_NONNULL_END

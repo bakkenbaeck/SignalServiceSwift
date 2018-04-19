@@ -1,15 +1,14 @@
 //
-//  SignalInMemoryStorage.swift
-//  SignalWrapperTests
+//  SignalLibraryStore.swift
+//  SignalServiceSwift
 //
-//  Created by Igor Ranieri on 22.03.18.
+//  Created by Igor Ranieri on 19.04.18.
 //  Copyright © 2018 Bakken&Bæck. All rights reserved.
 //
 
 import Foundation
-import SignalServiceSwift
 
-@objc public class SignalStoreInMemoryStorage: NSObject, SignalLibraryStoreProtocol {
+@objc public class SignalLibraryStore: NSObject, SignalLibraryStoreProtocol {
     @objc public var identityKeyPair: SignalIdentityKeyPair!
     @objc public var localRegistrationId: UInt32 = 0
 
@@ -244,4 +243,5 @@ import SignalServiceSwift
     @objc public func allDeviceIds(for addressName: String) -> [NSNumber] {
         return self.deviceSessionRecords(forAddressName: addressName)?.allKeys as? [NSNumber] ?? []
     }
+
 }

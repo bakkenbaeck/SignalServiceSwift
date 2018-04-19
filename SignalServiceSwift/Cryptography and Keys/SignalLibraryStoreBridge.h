@@ -43,13 +43,13 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol SignalIdentityKeyStoreProtocol;
 @protocol SignalSenderKeyStoreProtocol;
 
-@protocol SignalStoreProtocol <SignalSessionStoreProtocol, SignalPreKeyStoreProtocol, SignalSignedPreKeyStoreProtocol, SignalIdentityKeyStoreProtocol, SignalSenderKeyStoreProtocol>
+@protocol SignalLibraryStoreProtocol <SignalSessionStoreProtocol, SignalPreKeyStoreProtocol, SignalSignedPreKeyStoreProtocol, SignalIdentityKeyStoreProtocol, SignalSenderKeyStoreProtocol>
 
 -  (NSMutableDictionary * _Nullable) deviceSessionRecordsForAddressName:(NSString *)addressName;
 
 @end
 
-@interface SignalProtocolStore : NSObject
+@interface SignalLibraryStoreBridge : NSObject
 
 @property (nonatomic, strong, readonly) id<SignalSessionStoreProtocol> sessionStore;
 @property (nonatomic, strong, readonly) id<SignalPreKeyStoreProtocol> preKeyStore;
@@ -59,7 +59,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, readonly) signal_protocol_store_context *storeContextPointer;
 
 
-- (instancetype) initWithSignalStore:(id<SignalStoreProtocol>)signalStore;
+- (instancetype) initWithSignalStore:(id<SignalLibraryStoreProtocol>)signalStore;
 
 - (instancetype) initWithSessionStore:(id<SignalSessionStoreProtocol>)sessionStore
                           preKeyStore:(id<SignalPreKeyStoreProtocol>)preKeyStore

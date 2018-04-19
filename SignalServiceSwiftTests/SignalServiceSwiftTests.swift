@@ -25,7 +25,7 @@ class SignalServiceSwiftTests: XCTestCase {
         // Create Alice
         let aliceAddress =  SignalAddress(name: "alice", deviceId: 1)
         let inMemoryStore = SignalStoreInMemoryStorage()
-        let concreteStore = SignalProtocolStore(signalStore: inMemoryStore)
+        let concreteStore = SignalLibraryStoreBridge(signalStore: inMemoryStore)
         let signalContext = SignalContext(store: concreteStore)
         let keyHelper = SignalKeyHelper(context: signalContext)
 
@@ -59,7 +59,7 @@ class SignalServiceSwiftTests: XCTestCase {
 
         // Create Bob
         let bobInMemoryStore = SignalStoreInMemoryStorage()
-        let bobConcreteStore = SignalProtocolStore(signalStore: bobInMemoryStore)
+        let bobConcreteStore = SignalLibraryStoreBridge(signalStore: bobInMemoryStore)
         let bobSignalContext = SignalContext(store: bobConcreteStore)
 
         bobConcreteStore.setup(with: bobSignalContext.context)
@@ -126,27 +126,27 @@ class SignalServiceSwiftTests: XCTestCase {
 
     func testWebSocketStuff() {
         let inMemoryStore = SignalStoreInMemoryStorage()
-        let concreteStore = SignalProtocolStore(signalStore: inMemoryStore)
+        let concreteStore = SignalLibraryStoreBridge(signalStore: inMemoryStore)
         let signalContext = SignalContext(store: concreteStore)
         let signalKeyHelper = SignalKeyHelper(context: signalContext)
-        
+
         let store = SignalStore()
-        
+
         concreteStore.setup(with: signalContext.context)
-        
+
         let username = "0x4a78c0c1c744152cdc03352fced626818c10e2a3"
         let pwd =  "9B72DEAA-E951-481C-AB8F-4224F10E5708"
         let signalingKey = "n4y2CeegP0QkftaOtdUla6xnvdT4mGtrlNrZyMdsZAdKLtphdMzhbzENoDjSvtx17TYEqQ=="
         let url = URL(string: "https://chat.internal.service.toshi.org")!
-        
+
         let client = SignalClient(baseURL: url, signalingKey: signalingKey, username: username, password: pwd, deviceId: 1, registrationId: 1, signalKeyHelper: signalKeyHelper, signalContext: signalContext, store: store)
-        
+
         let expectation = XCTestExpectation(description: "123")
         wait(for: [expectation], timeout: 1000)
-        
+
         DispatchQueue.main.asyncAfter(deadline: .now() + 100) {
             print(client)
-            
+
             expectation.fulfill()
         }
     }

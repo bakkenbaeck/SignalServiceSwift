@@ -84,24 +84,24 @@ public class SignalClient {
         }
     }
 
-    func cipherMessage(from data: Data, ciphertextType: CiphertextType = .unknown) throws -> SignalCipherMessageProtocol?  {
-        var message: SignalCipherMessage? = nil
-        var preKeyMessage: SignalPreKeyMessage? = nil
+    func cipherMessage(from data: Data, ciphertextType: CiphertextType = .unknown) throws -> SignalLibraryMessage?  {
+        var message: SignalLibraryCiphertextMessage? = nil
+        var preKeyMessage: SignalLibraryPreKeyMessage? = nil
 
         if ciphertextType == .preKeyMessage {
-            preKeyMessage = SignalPreKeyMessage(data: data, context: self.sender.signalContext)
+            preKeyMessage = SignalLibraryPreKeyMessage(data: data, context: self.sender.signalContext)
             if preKeyMessage == nil {
                 return nil
             }
         } else if ciphertextType == .message {
-            message = SignalCipherMessage(data: data, context: self.sender.signalContext)
+            message = SignalLibraryCiphertextMessage(data: data, context: self.sender.signalContext)
             if message == nil {
                 return nil
             }
         } else {
             // Fall back to brute force type detection...
-            preKeyMessage = SignalPreKeyMessage(data: data, context: self.sender.signalContext)
-            message = SignalCipherMessage(data: data, context: self.sender.signalContext)
+            preKeyMessage = SignalLibraryPreKeyMessage(data: data, context: self.sender.signalContext)
+            message = SignalLibraryCiphertextMessage(data: data, context: self.sender.signalContext)
             if preKeyMessage == nil && message == nil {
                 throw ErrorFromSignalError(.invalidArgument)
             }
@@ -121,7 +121,7 @@ public class SignalClient {
                 return
         }
 
-        if cipherMessage is SignalPreKeyMessage {
+        if cipherMessage is SignalLibraryPreKeyMessage {
             self.networkClient.checkPreKeys(for: self.sender)
         }
 

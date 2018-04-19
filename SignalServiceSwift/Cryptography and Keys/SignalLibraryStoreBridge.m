@@ -6,7 +6,7 @@
 //  Copyright © 2018 Bakken&Bæck. All rights reserved.
 //
 
-#import "SignalProtocolStore.h"
+#import "SignalLibraryStoreBridge.h"
 #import <SignalServiceSwift/SignalServiceSwift-Swift.h>
 
 static int load_session_func(signal_buffer **record, signal_buffer **user_record, const signal_protocol_address *address, void *user_data) {
@@ -276,7 +276,7 @@ static int swift_load_sender_key(signal_buffer **record, signal_buffer **user_re
     }
 }
 
-@implementation SignalProtocolStore
+@implementation SignalLibraryStoreBridge
 
 - (void) dealloc {
     if (_storeContextPointer) {
@@ -286,7 +286,7 @@ static int swift_load_sender_key(signal_buffer **record, signal_buffer **user_re
     //_storeContext = NULL;
 }
 
-- (instancetype) initWithSignalStore:(id<SignalStoreProtocol>)signalStore {
+- (instancetype) initWithSignalStore:(id<SignalLibraryStoreProtocol>)signalStore {
     if (self = [self initWithSessionStore:signalStore preKeyStore:signalStore signedPreKeyStore:signalStore identityKeyStore:signalStore senderKeyStore:signalStore]){
     }
     return self;

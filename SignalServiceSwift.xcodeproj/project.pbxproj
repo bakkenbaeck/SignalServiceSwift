@@ -18,6 +18,7 @@
 		9FA8EF062087963700D0CBB6 /* Starscream.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9FA8EF052087963700D0CBB6 /* Starscream.framework */; };
 		9FA8EF072087963B00D0CBB6 /* Starscream.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 9FA8EF052087963700D0CBB6 /* Starscream.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		9FA8EF082087963D00D0CBB6 /* Starscream.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9FA8EF052087963700D0CBB6 /* Starscream.framework */; };
+		9FCCD5BF2088D6A200F2D9F3 /* SignalLibraryStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FCCD5BE2088D6A200F2D9F3 /* SignalLibraryStore.swift */; };
 		9FD00C7F20875F2300729246 /* SignalInMemoryStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FD00C7E20875F2300729246 /* SignalInMemoryStorage.swift */; };
 		9FD00C812087606A00729246 /* SignalStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FD00C802087606A00729246 /* SignalStore.swift */; };
 		9FF4F5C2208798C300EC4D5D /* SignalMessageProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FF4F5C1208798C300EC4D5D /* SignalMessageProtocol.swift */; };
@@ -61,8 +62,8 @@
 		9FFD1DFA2086441F00FA4626 /* Data+Signal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FFD1DF92086441F00FA4626 /* Data+Signal.swift */; };
 		9FFD1DFD208644DE00FA4626 /* SignalCommonCryptoProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = 9FFD1DFB208644DD00FA4626 /* SignalCommonCryptoProvider.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9FFD1DFE208644DE00FA4626 /* SignalCommonCryptoProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 9FFD1DFC208644DD00FA4626 /* SignalCommonCryptoProvider.m */; };
-		9FFD1E012086450A00FA4626 /* SignalProtocolStore.h in Headers */ = {isa = PBXBuildFile; fileRef = 9FFD1DFF2086450900FA4626 /* SignalProtocolStore.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		9FFD1E022086450A00FA4626 /* SignalProtocolStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 9FFD1E002086450A00FA4626 /* SignalProtocolStore.m */; };
+		9FFD1E012086450A00FA4626 /* SignalLibraryStoreBridge.h in Headers */ = {isa = PBXBuildFile; fileRef = 9FFD1DFF2086450900FA4626 /* SignalLibraryStoreBridge.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		9FFD1E022086450A00FA4626 /* SignalLibraryStoreBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 9FFD1E002086450A00FA4626 /* SignalLibraryStoreBridge.m */; };
 		9FFD1E0B2086459600FA4626 /* SignalSenderKeyStoreProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FFD1E042086459600FA4626 /* SignalSenderKeyStoreProtocol.swift */; };
 		9FFD1E0C2086459600FA4626 /* SignalSignedPreKeyStoreProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FFD1E052086459600FA4626 /* SignalSignedPreKeyStoreProtocol.swift */; };
 		9FFD1E0D2086459600FA4626 /* SignalPreKeyStoreProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FFD1E062086459600FA4626 /* SignalPreKeyStoreProtocol.swift */; };
@@ -77,7 +78,7 @@
 		9FFD1E1C2086489500FA4626 /* SignalSignedPreKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FFD1E182086489500FA4626 /* SignalSignedPreKey.swift */; };
 		9FFD1E1E20873A8100FA4626 /* NetworkClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FFD1E1D20873A7F00FA4626 /* NetworkClient.swift */; };
 		9FFD1E2020873C2600FA4626 /* SignalPreKeyBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FFD1E1F20873C2500FA4626 /* SignalPreKeyBundle.swift */; };
-		9FFD1E2220873D0E00FA4626 /* SignalCipherMessageProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FFD1E2120873D0D00FA4626 /* SignalCipherMessageProtocol.swift */; };
+		9FFD1E2220873D0E00FA4626 /* SignalLibraryMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FFD1E2120873D0D00FA4626 /* SignalLibraryMessage.swift */; };
 		9FFD1E2620873D4F00FA4626 /* SignalService.proto in Resources */ = {isa = PBXBuildFile; fileRef = 9FFD1E2420873D4F00FA4626 /* SignalService.proto */; };
 		9FFD1E2720873D4F00FA4626 /* SignalService.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FFD1E2520873D4F00FA4626 /* SignalService.pb.swift */; };
 		9FFD1E2A20873D8800FA4626 /* WebSocketResources.proto in Resources */ = {isa = PBXBuildFile; fileRef = 9FFD1E2820873D8700FA4626 /* WebSocketResources.proto */; };
@@ -125,6 +126,7 @@
 /* Begin PBXFileReference section */
 		9F33523D20862B5500E0F145 /* SignalClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignalClient.swift; sourceTree = "<group>"; };
 		9FA8EF052087963700D0CBB6 /* Starscream.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Starscream.framework; path = Carthage/Build/iOS/Starscream.framework; sourceTree = SOURCE_ROOT; };
+		9FCCD5BE2088D6A200F2D9F3 /* SignalLibraryStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignalLibraryStore.swift; sourceTree = "<group>"; };
 		9FD00C7E20875F2300729246 /* SignalInMemoryStorage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignalInMemoryStorage.swift; sourceTree = "<group>"; };
 		9FD00C802087606A00729246 /* SignalStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignalStore.swift; sourceTree = "<group>"; };
 		9FF4F5C1208798C300EC4D5D /* SignalMessageProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignalMessageProtocol.swift; sourceTree = "<group>"; };
@@ -171,8 +173,8 @@
 		9FFD1DF92086441F00FA4626 /* Data+Signal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Data+Signal.swift"; sourceTree = "<group>"; };
 		9FFD1DFB208644DD00FA4626 /* SignalCommonCryptoProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SignalCommonCryptoProvider.h; sourceTree = "<group>"; };
 		9FFD1DFC208644DD00FA4626 /* SignalCommonCryptoProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SignalCommonCryptoProvider.m; sourceTree = "<group>"; };
-		9FFD1DFF2086450900FA4626 /* SignalProtocolStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SignalProtocolStore.h; sourceTree = "<group>"; };
-		9FFD1E002086450A00FA4626 /* SignalProtocolStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SignalProtocolStore.m; sourceTree = "<group>"; };
+		9FFD1DFF2086450900FA4626 /* SignalLibraryStoreBridge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SignalLibraryStoreBridge.h; sourceTree = "<group>"; };
+		9FFD1E002086450A00FA4626 /* SignalLibraryStoreBridge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SignalLibraryStoreBridge.m; sourceTree = "<group>"; };
 		9FFD1E042086459600FA4626 /* SignalSenderKeyStoreProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignalSenderKeyStoreProtocol.swift; sourceTree = "<group>"; };
 		9FFD1E052086459600FA4626 /* SignalSignedPreKeyStoreProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignalSignedPreKeyStoreProtocol.swift; sourceTree = "<group>"; };
 		9FFD1E062086459600FA4626 /* SignalPreKeyStoreProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignalPreKeyStoreProtocol.swift; sourceTree = "<group>"; };
@@ -187,7 +189,7 @@
 		9FFD1E182086489500FA4626 /* SignalSignedPreKey.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignalSignedPreKey.swift; sourceTree = "<group>"; };
 		9FFD1E1D20873A7F00FA4626 /* NetworkClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkClient.swift; sourceTree = "<group>"; };
 		9FFD1E1F20873C2500FA4626 /* SignalPreKeyBundle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignalPreKeyBundle.swift; sourceTree = "<group>"; };
-		9FFD1E2120873D0D00FA4626 /* SignalCipherMessageProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignalCipherMessageProtocol.swift; sourceTree = "<group>"; };
+		9FFD1E2120873D0D00FA4626 /* SignalLibraryMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignalLibraryMessage.swift; sourceTree = "<group>"; };
 		9FFD1E2420873D4F00FA4626 /* SignalService.proto */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = SignalService.proto; sourceTree = "<group>"; };
 		9FFD1E2520873D4F00FA4626 /* SignalService.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignalService.pb.swift; sourceTree = "<group>"; };
 		9FFD1E2820873D8700FA4626 /* WebSocketResources.proto */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = WebSocketResources.proto; sourceTree = "<group>"; };
@@ -284,14 +286,15 @@
 				9FFD1E12208645B500FA4626 /* SignalAddress.swift */,
 				9FFD1E2E20873E6F00FA4626 /* SignalSessionBuilder.swift */,
 				9FFD1E3020873EBA00FA4626 /* SignalSessionCipher.swift */,
-				9FFD1DDD2086346600FA4626 /* SignalServiceStore.swift */,
 				9FFD1DDF2086357000FA4626 /* SignalChat.swift */,
 				9FFB8B08208629B60067BCE9 /* SignalServiceSwift.h */,
 				9FFD1E1D20873A7F00FA4626 /* NetworkClient.swift */,
 				9FFD1E1F20873C2500FA4626 /* SignalPreKeyBundle.swift */,
 				9FFD1E3C208747EB00FA4626 /* SessionRecord.swift */,
 				9FFD1E3220873FDB00FA4626 /* SignalCiphertext.swift */,
-				9FFD1E2120873D0D00FA4626 /* SignalCipherMessageProtocol.swift */,
+				9FFD1E2120873D0D00FA4626 /* SignalLibraryMessage.swift */,
+				9FFD1DDD2086346600FA4626 /* SignalServiceStore.swift */,
+				9FCCD5BE2088D6A200F2D9F3 /* SignalLibraryStore.swift */,
 				9F33523D20862B5500E0F145 /* SignalClient.swift */,
 				9FFB8B09208629B60067BCE9 /* Info.plist */,
 			);
@@ -355,8 +358,8 @@
 			children = (
 				9FFD1E382087414200FA4626 /* Cryptography.h */,
 				9FFD1E392087414200FA4626 /* Cryptography.m */,
-				9FFD1DFF2086450900FA4626 /* SignalProtocolStore.h */,
-				9FFD1E002086450A00FA4626 /* SignalProtocolStore.m */,
+				9FFD1DFF2086450900FA4626 /* SignalLibraryStoreBridge.h */,
+				9FFD1E002086450A00FA4626 /* SignalLibraryStoreBridge.m */,
 				9FFD1DE42086411100FA4626 /* SignalContext.h */,
 				9FFD1DE52086411200FA4626 /* SignalContext.m */,
 				9FFD1DFB208644DD00FA4626 /* SignalCommonCryptoProvider.h */,
@@ -435,7 +438,7 @@
 				9FFB8B3820862A2E0067BCE9 /* protocol.h in Headers */,
 				9FFB8B4E20862A2E0067BCE9 /* group_cipher.h in Headers */,
 				9FFB8B3920862A2E0067BCE9 /* group_session_builder.h in Headers */,
-				9FFD1E012086450A00FA4626 /* SignalProtocolStore.h in Headers */,
+				9FFD1E012086450A00FA4626 /* SignalLibraryStoreBridge.h in Headers */,
 				9FFB8B4C20862A2E0067BCE9 /* ratchet.h in Headers */,
 				9FFB8B3B20862A2E0067BCE9 /* sender_key.h in Headers */,
 				9FFB8B3C20862A2E0067BCE9 /* signal_protocol_internal.h in Headers */,
@@ -565,7 +568,7 @@
 				9FF4F5C2208798C300EC4D5D /* SignalMessageProtocol.swift in Sources */,
 				9FFD1E1B2086489500FA4626 /* SignalIdentityKeyPair.swift in Sources */,
 				9FFD1E362087400900FA4626 /* NSData+messagePadding.m in Sources */,
-				9FFD1E2220873D0E00FA4626 /* SignalCipherMessageProtocol.swift in Sources */,
+				9FFD1E2220873D0E00FA4626 /* SignalLibraryMessage.swift in Sources */,
 				9FFD1DFE208644DE00FA4626 /* SignalCommonCryptoProvider.m in Sources */,
 				9FFD1E0C2086459600FA4626 /* SignalSignedPreKeyStoreProtocol.swift in Sources */,
 				9FFD1E1A2086489500FA4626 /* SignalKeyPair.swift in Sources */,
@@ -589,8 +592,9 @@
 				9FFD1DFA2086441F00FA4626 /* Data+Signal.swift in Sources */,
 				9FFD1E2B20873D8800FA4626 /* WebSocketResources.pb.swift in Sources */,
 				9FFD1E0B2086459600FA4626 /* SignalSenderKeyStoreProtocol.swift in Sources */,
-				9FFD1E022086450A00FA4626 /* SignalProtocolStore.m in Sources */,
+				9FFD1E022086450A00FA4626 /* SignalLibraryStoreBridge.m in Sources */,
 				9FFD1E3B2087414200FA4626 /* Cryptography.m in Sources */,
+				9FCCD5BF2088D6A200F2D9F3 /* SignalLibraryStore.swift in Sources */,
 				9FFD1DDE2086346600FA4626 /* SignalServiceStore.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
