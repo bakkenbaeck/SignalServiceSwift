@@ -12,17 +12,41 @@ import Foundation
     @objc public var identityKeyPair: SignalIdentityKeyPair!
     @objc public var localRegistrationId: UInt32 = 0
 
-    private(set) var sessionStore = NSMutableDictionary()
-    private(set) var preKeyStore = NSMutableDictionary()
-    private(set) var signedPreKeyStore = NSMutableDictionary()
-    private(set) var identityKeyStore = NSMutableDictionary()
-    private(set) var senderKeyStore = NSMutableDictionary()
+    private(set) var sessionStore = [String: Any]() {
+        willSet {
+            NSLog("%@", newValue)
+        }
+    }
 
-    private let currentlySignedPreKeyStoreKey = "CurrentlySignedPreKey"
+    private(set) var preKeyStore = [UInt32: Any]() {
+        willSet {
+            NSLog("%@", newValue)
+        }
+    }
+
+    private(set) var signedPreKeyStore = [UInt32: Any]() {
+        willSet {
+            NSLog("%@", newValue)
+        }
+    }
+
+    private(set) var identityKeyStore = [String: Any]() {
+        willSet {
+            NSLog("%@", newValue)
+        }
+    }
+
+    private(set) var senderKeyStore = [String: Any]() {
+        willSet {
+            NSLog("%@", newValue)
+        }
+    }
+
+    private let currentlySignedPreKeyStoreKey = UInt32.max
 
     // MARK: SignalSessionStore
     @objc public func deviceSessionRecords(forAddressName addressName: String) -> NSMutableDictionary? {
-        guard let copy = (self.sessionStore.value(forKey: addressName) as? NSDictionary) else {
+        guard let copy = (self.sessionStore[addressName] as? NSDictionary) else {
             return nil
         }
 
@@ -91,7 +115,7 @@ import Foundation
      * return nil if not found
      */
     @objc public func loadPreKey(with id: UInt32) -> Data? {
-        return self.preKeyStore.object(forKey: id) as? Data
+        return self.preKeyStore[id] as? Data
     }
 
     /**
@@ -117,15 +141,15 @@ import Foundation
      */
     @discardableResult
     @objc public func deletePreKey(with id: UInt32) -> Bool {
-        self.preKeyStore.removeObject(forKey: id)
+        self.preKeyStore.removeValue(forKey: id)
 
         return self.preKeyStore[id] == nil
     }
 
     public func nextPreKeyId() -> UInt32 {
-        let allKeys = (self.preKeyStore.allKeys as! [UInt32]).sorted()
+        guard let lastKey = self.preKeyStore.keys.sorted().last else { return 1 }
 
-        return allKeys.last! + 1
+        return lastKey + 1
     }
 
 
@@ -160,7 +184,7 @@ import Foundation
      */
     @discardableResult
     @objc public func removeSignedPreKey(withId signedPreKeyId: UInt32) -> Bool {
-        self.signedPreKeyStore.removeObject(forKey: signedPreKeyId)
+        self.signedPreKeyStore.removeValue(forKey: signedPreKeyId)
 
         return true
     }
