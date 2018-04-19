@@ -10,11 +10,11 @@ import Foundation
 
 public class SignalChat: Equatable, Codable {
     enum CodingKeys: String, CodingKey {
-        case recipientIdentifier,
-        uniqueId,
-        lastArchivalDate,
-        currentDraft,
-        isMuted
+        case recipientIdentifier
+        case uniqueId
+        case lastArchivalDate
+        case currentDraft
+        case isMuted
     }
 
     public var recipientIdentifier: String
@@ -39,7 +39,7 @@ public class SignalChat: Equatable, Codable {
         return false
     }
 
-    private var store: SignalServiceStore?
+    var store: SignalServiceStore?
 
     /// Returns the string that will be displayed typically in a conversations view as a preview of the last message.
     public var lastMessageLabel: String {
@@ -58,7 +58,7 @@ public class SignalChat: Equatable, Codable {
     public var isMuted: Bool = false
 
     public var messages: [SignalMessage] {
-        return self.store!.messages(for: self)
+        return self.store?.messages(for: self) ?? []
     }
 
     public var isArchived: Bool {
