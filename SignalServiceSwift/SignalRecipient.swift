@@ -8,8 +8,12 @@
 
 import Foundation
 
-public struct SignalRecipient: Codable {
+public struct SignalRecipient: Codable, Equatable {
     var name: String
     var deviceId: Int32
     var remoteRegistrationId: UInt32
+
+    public static func == (lhs: SignalRecipient, rhs: SignalRecipient) -> Bool {
+        return lhs.name == rhs.name && lhs.remoteRegistrationId == rhs.remoteRegistrationId && lhs.deviceId == rhs.deviceId
+    }
 }

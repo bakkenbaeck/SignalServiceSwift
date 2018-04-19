@@ -65,17 +65,6 @@ public class SignalChat: Equatable, Codable {
         return (self.lastArchivalDate?.timeIntervalSinceNow ?? 0) > 0
     }
 
-    public class func fetchOrCreateChat(with recipientIdentifier: String, in store: SignalServiceStore) -> SignalChat {
-        if let chat = store.chat(recipientIdentifier: recipientIdentifier) {
-            return chat
-        } else  {
-            let chat = SignalChat(recipientIdentifier: recipientIdentifier, in: store)
-            store.save(chat: chat)
-
-            return chat
-        }
-    }
-
     public init(recipientIdentifier: String, in store: SignalServiceStore) {
         self.recipientIdentifier = recipientIdentifier
         self.store = store

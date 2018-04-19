@@ -15,28 +15,29 @@ public protocol PersistenceStore {
     func store(_ data: Data, type: SignalServiceStore.PersistedType)
 }
 
-public enum SignalServiceStoreChangeType {
-    case insert
-    case update
-    case delete
-}
-
 public protocol SignalServiceStoreChatDelegate {
     func signalServiceStoreWillChangeChats()
-    func signalServiceStoreDidChangeChat(_ chat: SignalChat, at indexPath: IndexPath, for changeType: SignalServiceStoreChangeType)
+    func signalServiceStoreDidChangeChat(_ chat: SignalChat, at indexPath: IndexPath, for changeType: SignalServiceStore.ChangeType)
     func signalServiceStoreDidChangeChats()
 }
 
 public protocol SignalServiceStoreMessageDelegate {
     func signalServiceStoreWillChangeMessages()
-    func signalServiceStoreDidChangeMessage(_ message: SignalMessage, at indexPath: IndexPath, for changeType: SignalServiceStoreChangeType)
+    func signalServiceStoreDidChangeMessage(_ message: SignalMessage, at indexPath: IndexPath, for changeType: SignalServiceStore.ChangeType)
     func signalServiceStoreDidChangeMessages()
 }
 
 public class SignalServiceStore {
+    public enum ChangeType {
+        case insert
+        case update
+        case delete
+    }
+
     public enum PersistedType: Int {
         case chat
         case message
+        case recipient
     }
 
     public var numberOfChats: Int {
@@ -48,6 +49,7 @@ public class SignalServiceStore {
 
     private var chats: [SignalChat] = []
     private var messages: [SignalMessage] = []
+    private var recipients: [SignalRecipient] = []
 
     private var persistenceStore: PersistenceStore
 
@@ -74,6 +76,33 @@ public class SignalServiceStore {
         return self.chats[index]
     }
 
+    func fetchOrCreateRecipient(name: String, deviceId: Int32, remoteRegistrationId: UInt32) -> SignalRecipient {
+        let recipient: SignalRecipient
+
+        if let existingRecipient = self.recipients.first(where: { recipient -> Bool in
+            return recipient.name == name && recipient.deviceId == deviceId && recipient.remoteRegistrationId == remoteRegistrationId
+        }) {
+            recipient = existingRecipient
+        } else {
+            recipient = SignalRecipient(name: name, deviceId: deviceId, remoteRegistrationId: remoteRegistrationId)
+
+            self.save(recipient)
+        }
+
+        return recipient
+    }
+
+    func fetchOrCreateChat(with recipientIdentifier: String, in store: SignalServiceStore) -> SignalChat {
+        if let chat = self.chat(recipientIdentifier: recipientIdentifier) {
+            return chat
+        } else  {
+            let chat = SignalChat(recipientIdentifier: recipientIdentifier, in: store)
+            self.save(chat)
+
+            return chat
+        }
+    }
+
     func chat(recipientIdentifier: String) -> SignalChat? {
         return self.chats.first(where: { chat -> Bool in
             chat.recipientIdentifier == recipientIdentifier
@@ -96,7 +125,12 @@ public class SignalServiceStore {
         return messages
     }
 
-    func save(message: SignalMessage) {
+    func save(_ recipient: SignalRecipient) {
+        let data = try! JSONEncoder().encode(recipient)
+        self.persistenceStore.store(data, type: .recipient)
+    }
+
+    func save(_ message: SignalMessage) {
         self.messageDelegate?.signalServiceStoreWillChangeMessages()
 
         let data = try! JSONEncoder().encode(message)
@@ -109,7 +143,7 @@ public class SignalServiceStore {
         self.messageDelegate?.signalServiceStoreDidChangeMessages()
     }
 
-    func save(chat: SignalChat) {
+    func save(_ chat: SignalChat) {
         self.chatDelegate?.signalServiceStoreWillChangeChats()
 
         let data = try! JSONEncoder().encode(chat)

@@ -69,15 +69,16 @@ public class SignalClient {
 
             let ciphertext = try! sessionCipher.encrypt(message: body)!
 
-            let recipient = SignalRecipient(name: to.name, deviceId: to.deviceId, remoteRegistrationId: preKeyBundle.registrationId)
-            let chat = SignalChat.fetchOrCreateChat(with: to.name, in: self.store)
+
+            let recipient = self.store.fetchOrCreateRecipient(name: to.name, deviceId: to.deviceId, remoteRegistrationId: preKeyBundle.registrationId)
+            let chat = self.store.fetchOrCreateChat(with: recipient.name, in: self.store)
 
             let outgoingMessage = OutgoingSignalMessage(recipientId: recipient.name, chatId: chat.uniqueId, body: body, ciphertext: ciphertext)
 
             NSLog("Sending…")
             self.networkClient.sendMessage(outgoingMessage, from: self.sender, to: recipient, in: chat) { success in
                 if success {
-                    self.store.save(message: outgoingMessage)
+                    self.store.save(outgoingMessage)
                 }
             }
         }
@@ -124,7 +125,7 @@ public class SignalClient {
             self.networkClient.checkPreKeys(for: self.sender)
         }
 
-        let chat = SignalChat.fetchOrCreateChat(with: senderAddress.name, in: self.store)
+        let chat = self.store.fetchOrCreateChat(with: senderAddress.name, in: self.store)
 
         guard let _decryptedData = try? sessionCipher.decrypt(cipher: concreteCipherMessage),
             let decryptedData = _decryptedData,
@@ -133,7 +134,7 @@ public class SignalClient {
                 return
         }
 
-        self.store.save(message: incomingMessage)
+        self.store.save(incomingMessage)
     }
 
     func processSocketMessage(_ message: Signalservice_WebSocketMessage) {
