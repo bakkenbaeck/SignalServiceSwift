@@ -19,12 +19,11 @@ class SignalServiceSwiftTests: XCTestCase {
         super.tearDown()
     }
 
-    func testExample() {
-
-        let aliceAddress =  SignalAddress(name: "alice", deviceId: 1)
+    func testEncodingDecoding() {
         let bobAddress = SignalAddress(name: "bob", deviceId: 1)
 
         // Create Alice
+        let aliceAddress =  SignalAddress(name: "alice", deviceId: 1)
         let inMemoryStore = SignalStoreInMemoryStorage()
         let concreteStore = SignalProtocolStore(signalStore: inMemoryStore)
         let signalContext = SignalContext(store: concreteStore)
@@ -105,8 +104,6 @@ class SignalServiceSwiftTests: XCTestCase {
         let bobSessionCipher = SignalSessionCipher(address: aliceAddress, context: bobSignalContext)
         let bobMessage = "Hey, it's a me, tha bob!"
 
-
-
         guard let bobCiphertext = try! bobSessionCipher.encrypt(message: bobMessage) else {
             XCTFail()
             return
@@ -118,35 +115,39 @@ class SignalServiceSwiftTests: XCTestCase {
             return
         }
 
-        let decryptedBobString = IncomingSignalMessage(from: decryptedBobMessageData, chatId: "1")!
+        let incoming = IncomingSignalMessage(signalContentData: decryptedBobMessageData, chatId: "1")!
 
-        XCTAssertEqual(bobMessage, decryptedBobString.body)
+        XCTAssertEqual(bobMessage, incoming.body)
+
+        let outgoing = OutgoingSignalMessage(recipientId: "1", chatId: "1", body: "", ciphertext: SignalCiphertext(message: "", bobCiphertext.ciphertextPointer))
+
+        XCTAssertNotEqual(incoming, outgoing)
     }
 
-//    func testWebSocketStuff() {
-//        let inMemoryStore = SignalStoreInMemoryStorage()
-//        let concreteStore = SignalProtocolStore(signalStore: inMemoryStore)
-//        let signalContext = SignalContext(store: concreteStore)
-//        let signalKeyHelper = SignalKeyHelper(context: signalContext)
-//
-//        let store = SignalStore()
-//
-//        concreteStore.setup(with: signalContext.context)
-//
-//        let username = "0x4a78c0c1c744152cdc03352fced626818c10e2a3"
-//        let pwd =  "9B72DEAA-E951-481C-AB8F-4224F10E5708"
-//        let signalingKey = "n4y2CeegP0QkftaOtdUla6xnvdT4mGtrlNrZyMdsZAdKLtphdMzhbzENoDjSvtx17TYEqQ=="
-//        let url = URL(string: "https://chat.internal.service.toshi.org")!
-//
-//        let client = SignalClient(baseURL: url, signalingKey: signalingKey, username: username, password: pwd, deviceId: 1, registrationId: 1, signalKeyHelper: signalKeyHelper, signalContext: signalContext, store: store)
-//
-//        let expectation = XCTestExpectation(description: "123")
-//        wait(for: [expectation], timeout: 1000)
-//
-//        DispatchQueue.main.asyncAfter(deadline: .now() + 100) {
-//            print(client)
-//
-//            expectation.fulfill()
-//        }
-//    }
+    func testWebSocketStuff() {
+        let inMemoryStore = SignalStoreInMemoryStorage()
+        let concreteStore = SignalProtocolStore(signalStore: inMemoryStore)
+        let signalContext = SignalContext(store: concreteStore)
+        let signalKeyHelper = SignalKeyHelper(context: signalContext)
+        
+        let store = SignalStore()
+        
+        concreteStore.setup(with: signalContext.context)
+        
+        let username = "0x4a78c0c1c744152cdc03352fced626818c10e2a3"
+        let pwd =  "9B72DEAA-E951-481C-AB8F-4224F10E5708"
+        let signalingKey = "n4y2CeegP0QkftaOtdUla6xnvdT4mGtrlNrZyMdsZAdKLtphdMzhbzENoDjSvtx17TYEqQ=="
+        let url = URL(string: "https://chat.internal.service.toshi.org")!
+        
+        let client = SignalClient(baseURL: url, signalingKey: signalingKey, username: username, password: pwd, deviceId: 1, registrationId: 1, signalKeyHelper: signalKeyHelper, signalContext: signalContext, store: store)
+        
+        let expectation = XCTestExpectation(description: "123")
+        wait(for: [expectation], timeout: 1000)
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 100) {
+            print(client)
+            
+            expectation.fulfill()
+        }
+    }
 }

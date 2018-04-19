@@ -50,8 +50,6 @@ class NetworkClient {
     func fetchPreKeyBundle(for recipientName: String, with sender: SignalSender, completion: @escaping((SignalPreKeyBundle) -> Void)) {
         self.fetchTimestamp({ timestamp in
             // GET/v2/keys/{eth_address}/{device_id}, always use * wildcard for device_id.
-            NSLog("Prepare to fetch prekey bundle")
-
             let path = "/v2/keys/\(recipientName)/*"
             let fields = self.teapot.basicAuthenticationHeader(username: sender.username, password: sender.password)
 
@@ -74,11 +72,13 @@ class NetworkClient {
         // TODO: group chat
         self.fetchTimestamp({ timestamp in
             let timestamp = UInt64(timestamp * 1000)
+            let type = (message.ciphertext?.ciphertextType ?? .unknown).rawValue
 
             let payload: [String: Any] = [
                 "timestamp": timestamp,
                 "messages": [
                     [
+                        "type": type,
                         "destination": recipient.name,
                         "destinationDeviceId": recipient.deviceId,
                         "destinationRegistrationId": recipient.remoteRegistrationId,

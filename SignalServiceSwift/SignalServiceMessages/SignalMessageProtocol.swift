@@ -8,7 +8,7 @@
 
 import Foundation
 
-public class SignalMessage: Codable {
+public class SignalMessage: Codable, Equatable {
     public var body: String
     public var chatId: String
     
@@ -18,5 +18,11 @@ public class SignalMessage: Codable {
     public init(body: String, chatId: String) {
         self.body = body
         self.chatId = chatId
+    }
+
+    public static func ==(lhs: SignalMessage, rhs: SignalMessage) -> Bool {
+        guard type(of: lhs) == type(of: rhs) else { return false }
+
+        return lhs.uniqueId == rhs.uniqueId && lhs.timestamp == rhs.timestamp
     }
 }

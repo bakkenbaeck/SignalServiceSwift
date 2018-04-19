@@ -50,8 +50,6 @@ public class SignalClient {
 
         self.socket.connect()
 
-        NSLog("TEST")
-
         RunLoop.main.add(self.keepAliveTimer, forMode: .defaultRunLoopMode)
     }
 
@@ -73,6 +71,7 @@ public class SignalClient {
 
             let recipient = SignalRecipient(name: to.name, deviceId: to.deviceId, remoteRegistrationId: preKeyBundle.registrationId)
             let chat = SignalChat.fetchOrCreateChat(with: to.name, in: self.store)
+
             let outgoingMessage = OutgoingSignalMessage(recipientId: recipient.name, chatId: chat.uniqueId, body: body, ciphertext: ciphertext)
 
             NSLog("Sending…")
@@ -129,7 +128,7 @@ public class SignalClient {
 
         guard let _decryptedData = try? sessionCipher.decrypt(cipher: concreteCipherMessage as! SignalCiphertext),
             let decryptedData = _decryptedData,
-            let incomingMessage = IncomingSignalMessage(from: decryptedData, chatId: chat.uniqueId) else {
+            let incomingMessage = IncomingSignalMessage(signalContentData: decryptedData, chatId: chat.uniqueId) else {
                 NSLog("Could not decrypt message! (1)")
                 return
         }

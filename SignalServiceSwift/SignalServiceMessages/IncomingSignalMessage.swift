@@ -14,8 +14,8 @@ public class IncomingSignalMessage: SignalMessage {
     enum CodingKeys: String, CodingKey {
         case isRead
     }
-
-    public init?(from data: Data, chatId: String) {
+    
+    public init?(signalContentData data: Data, chatId: String) {
         guard let content = try? Signalservice_Content(serializedData: data) else {
             return nil
         }

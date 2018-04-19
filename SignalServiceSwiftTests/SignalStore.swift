@@ -10,25 +10,21 @@ import Foundation
 import SignalServiceSwift
 
 class SignalStore: SignalServiceStore {
-
     var numberOfChats: Int {
-        return self.chats.count
+        return self._chats.count
     }
 
     var chatDelegate: SignalServiceStoreChatDelegate?
     var messageDelegate: SignalServiceStoreMessageDelegate?
 
-    private var chats: [Data] = []
-    private var messages: [Data] = []
+    private var _chats: [SignalChat] = []
+    private var messages: [SignalMessage] = []
 
     public func chat(at index: Int) -> SignalChat? {
-        let chatData = self.chats[index]
-        let chat = try? JSONDecoder().decode(SignalChat.self, from: chatData)
-
-        return chat
+        return self._chats[index]
     }
 
-    func chat(recipientName: String) -> SignalChat? {
+    func chat(recipientIdentifier: String) -> SignalChat? {
         //        for chat in self.chats where chat["recipient"] as? String == recipientName {
         //            return SignalChat(with: chat)
         //        }
@@ -44,7 +40,7 @@ class SignalStore: SignalServiceStore {
         return nil
     }
 
-    func messages(in chat: SignalChat) -> [SignalMessage] {
+    func messages(for chat: SignalChat) -> [SignalMessage] {
         //        let messages = self.messages.compactMap({ message -> [String: Any]? in
         //            return (message["chatId"] as? String ?? "" == chat.uniqueId) ? message : nil
         //        }).sorted(by: { (a, b) -> Bool in
@@ -67,17 +63,8 @@ class SignalStore: SignalServiceStore {
     func save(message: SignalMessage) {
         self.messageDelegate?.signalServiceStoreWillChangeMessages()
 
-        let data: Data
-        if let message = message as? OutgoingSignalMessage {
-            data = try! JSONEncoder().encode(message)
-        } else if let message = message as? IncomingSignalMessage {
-            data = try! JSONEncoder().encode(message)
-        } else {
-            fatalError("Add more cases as we add more message types…")
-        }
-
-        self.messages.append(data)
-        let indexPath = IndexPath(item: self.messages.index(of: data)!, section: 0)
+        self.messages.append(message)
+        let indexPath = IndexPath(item: self.messages.index(of: message)!, section: 0)
         self.messageDelegate?.signalServiceStoreDidChangeMessage(message, at: indexPath, for: .insert)
 
         self.messageDelegate?.signalServiceStoreDidChangeMessages()
@@ -86,17 +73,19 @@ class SignalStore: SignalServiceStore {
     func save(chat: SignalChat) {
         self.chatDelegate?.signalServiceStoreWillChangeChats()
 
-        let data = try! JSONEncoder().encode(chat)
-        self.chats.append(data)
-
-        let indexPath = IndexPath(item: self.chats.index(of: data)!, section: 0)
+        self._chats.append(chat)
+        let indexPath = IndexPath(item: self._chats.index(of: chat)!, section: 0)
         self.chatDelegate?.signalServiceStoreDidChangeChat(chat, at: indexPath, for: .insert)
 
         self.chatDelegate?.signalServiceStoreDidChangeChats()
     }
 
     func deleteAllChatsAndMessages() {
-        self.chats = []
+        self._chats = []
         self.messages = []
+    }
+
+    func chats() -> [SignalChat] {
+        return self._chats
     }
 }
