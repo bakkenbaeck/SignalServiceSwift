@@ -126,7 +126,7 @@ public class SignalClient {
 
         let chat = SignalChat.fetchOrCreateChat(with: senderAddress.name, in: self.store)
 
-        guard let _decryptedData = try? sessionCipher.decrypt(cipher: concreteCipherMessage as! SignalCiphertext),
+        guard let _decryptedData = try? sessionCipher.decrypt(cipher: concreteCipherMessage),
             let decryptedData = _decryptedData,
             let incomingMessage = IncomingSignalMessage(signalContentData: decryptedData, chatId: chat.uniqueId) else {
                 NSLog("Could not decrypt message! (1)")

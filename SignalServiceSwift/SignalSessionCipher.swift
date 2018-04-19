@@ -68,7 +68,7 @@ import Foundation
         return encrypted
     }
 
-    public func decrypt(cipher: SignalCiphertext, ciphertextType: CiphertextType = .unknown) throws -> Data? {
+    public func decrypt(cipher: SignalCipherMessageProtocol, ciphertextType: CiphertextType = .unknown) throws -> Data? {
         var buffer: UnsafeMutablePointer<signal_buffer>? = nil
         var result = SG_ERR_UNKNOWN
         
