@@ -51,13 +51,13 @@ public class SignalServiceStore {
     private var messages: [SignalMessage] = []
     private var recipients: [SignalRecipient] = []
 
-    private var persistenceStore: PersistenceStore
+    private var persistenceStore: PersistenceStore?
 
-    public init(persistenceStore: PersistenceStore) {
+    public init(persistenceStore: PersistenceStore? = nil) {
         self.persistenceStore = persistenceStore
 
-        let chatsData = self.persistenceStore.loadChats()
-        let messagesData = self.persistenceStore.loadMessages()
+        let chatsData = self.persistenceStore?.loadChats() ?? []
+        let messagesData = self.persistenceStore?.loadMessages() ?? []
 
         for data in chatsData {
             let chat = try! JSONDecoder().decode(SignalChat.self, from: data)
@@ -127,14 +127,14 @@ public class SignalServiceStore {
 
     func save(_ recipient: SignalRecipient) {
         let data = try! JSONEncoder().encode(recipient)
-        self.persistenceStore.store(data, type: .recipient)
+        self.persistenceStore?.store(data, type: .recipient)
     }
 
     func save(_ message: SignalMessage) {
         self.messageDelegate?.signalServiceStoreWillChangeMessages()
 
         let data = try! JSONEncoder().encode(message)
-        self.persistenceStore.store(data, type: .message)
+        self.persistenceStore?.store(data, type: .message)
 
         self.messages.append(message)
         let indexPath = IndexPath(item: self.messages.index(of: message)!, section: 0)
@@ -147,7 +147,7 @@ public class SignalServiceStore {
         self.chatDelegate?.signalServiceStoreWillChangeChats()
 
         let data = try! JSONEncoder().encode(chat)
-        self.persistenceStore.store(data, type: .chat)
+        self.persistenceStore?.store(data, type: .chat)
 
         self.chats.append(chat)
         let indexPath = IndexPath(item: self.chats.index(of: chat)!, section: 0)

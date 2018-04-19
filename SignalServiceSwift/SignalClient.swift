@@ -13,6 +13,11 @@ public class SignalClient {
     var socket: WebSocket
     let sender: SignalSender
 
+    var libraryStore: SignalLibraryStoreProtocol
+    var libraryStoreBridge: SignalLibraryStoreBridge
+    public var signalContext: SignalContext
+    public var signalKeyHelper: SignalKeyHelper
+
     public var store: SignalServiceStore
 
     public var shouldKeepSocketAlive: Bool
@@ -33,14 +38,21 @@ public class SignalClient {
         return self.networkClient.baseURL
     }
 
-    public init(baseURL: URL, signalingKey: String, username: String, password: String, deviceId: Int32, registrationId: UInt32, signalKeyHelper: SignalKeyHelper, signalContext: SignalContext, store: SignalServiceStore) {
+    public init(baseURL: URL, signalingKey: String, username: String, password: String, deviceId: Int32, registrationId: UInt32, persistenceStore: PersistenceStore) {
 
-        self.store = store
+        self.libraryStore = SignalLibraryStore()
+        self.libraryStoreBridge = SignalLibraryStoreBridge(signalStore: self.libraryStore)
+        self.signalContext = SignalContext(store: self.libraryStoreBridge)
+        self.signalKeyHelper = SignalKeyHelper(context: self.signalContext)
+
+        self.libraryStoreBridge.setup(with: self.signalContext.context)
+
+        self.store = SignalServiceStore(persistenceStore: persistenceStore)
 
         self.shouldKeepSocketAlive = false
         self.networkClient = NetworkClient(baseURL: baseURL)
 
-        self.sender = SignalSender(username: username, password: password, deviceId: deviceId, remoteRegistrationId: registrationId, signalingKey: signalingKey, signalKeyHelper: signalKeyHelper, signalContext: signalContext)
+        self.sender = SignalSender(username: username, password: password, deviceId: deviceId, remoteRegistrationId: registrationId, signalingKey: signalingKey, signalKeyHelper: self.signalKeyHelper, signalContext: signalContext)
 
         let socketURL = URL(string: "wsss://chat.internal.service.toshi.org/v1/websocket/?login=\(username)&password=\(password)")!
 

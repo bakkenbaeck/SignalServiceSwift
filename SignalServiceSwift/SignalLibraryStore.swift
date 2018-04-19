@@ -243,5 +243,4 @@ import Foundation
     @objc public func allDeviceIds(for addressName: String) -> [NSNumber] {
         return self.deviceSessionRecords(forAddressName: addressName)?.allKeys as? [NSNumber] ?? []
     }
-
 }

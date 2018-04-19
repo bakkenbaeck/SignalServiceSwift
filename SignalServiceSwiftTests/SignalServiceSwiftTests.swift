@@ -9,6 +9,20 @@
 import XCTest
 @testable import SignalServiceSwift
 
+class TestsPersistenceStore: PersistenceStore {
+    func loadChats() -> [Data] {
+        return []
+    }
+
+    func loadMessages() -> [Data] {
+        return []
+    }
+
+    func store(_ data: Data, type: SignalServiceStore.PersistedType) {
+
+    }
+}
+
 class SignalServiceSwiftTests: XCTestCase {
     override func setUp() {
         super.setUp()
@@ -24,8 +38,8 @@ class SignalServiceSwiftTests: XCTestCase {
 
         // Create Alice
         let aliceAddress =  SignalAddress(name: "alice", deviceId: 1)
-        let inMemoryStore = SignalStoreInMemoryStorage()
-        let concreteStore = SignalLibraryStoreBridge(signalStore: inMemoryStore)
+        let inMemoryLibraryStore = SignalLibraryStore()
+        let concreteStore = SignalLibraryStoreBridge(signalStore: inMemoryLibraryStore)
         let signalContext = SignalContext(store: concreteStore)
         let keyHelper = SignalKeyHelper(context: signalContext)
 
@@ -38,8 +52,8 @@ class SignalServiceSwiftTests: XCTestCase {
             return
         }
 
-        inMemoryStore.identityKeyPair = identityKeyPair
-        inMemoryStore.localRegistrationId = registrationId
+        inMemoryLibraryStore.identityKeyPair = identityKeyPair
+        inMemoryLibraryStore.localRegistrationId = registrationId
 
         let preKeys = keyHelper.generatePreKeys(withStartingPreKeyId: 1, count: 100)
         XCTAssertEqual(preKeys.count, 100)
@@ -48,8 +62,8 @@ class SignalServiceSwiftTests: XCTestCase {
 
         let signedPreKey = keyHelper.generateSignedPreKey(withIdentity: identityKeyPair, signedPreKeyId: 0)
 
-        XCTAssertTrue(inMemoryStore.storePreKey(data: preKey0.serializedData, id: preKey0.preKeyId))
-        XCTAssertTrue(inMemoryStore.storeSignedPreKey(signedPreKey.serializedData, signedPreKeyId: signedPreKey.preKeyId))
+        XCTAssertTrue(inMemoryLibraryStore.storePreKey(data: preKey0.serializedData, id: preKey0.preKeyId))
+        XCTAssertTrue(inMemoryLibraryStore.storeSignedPreKey(signedPreKey.serializedData, signedPreKeyId: signedPreKey.preKeyId))
 
         guard let alicePreKeyBundle = SignalPreKeyBundle(registrationId: registrationId, deviceId: aliceAddress.deviceId, preKeyId: preKey0.preKeyId, preKeyPublic: preKey0.keyPair.publicKey, signedPreKeyId: signedPreKey.preKeyId, signedPreKeyPublic: signedPreKey.keyPair.publicKey, signature: signedPreKey.signature as NSData, identityKey: identityKeyPair.publicKey) else {
 
@@ -58,7 +72,7 @@ class SignalServiceSwiftTests: XCTestCase {
         }
 
         // Create Bob
-        let bobInMemoryStore = SignalStoreInMemoryStorage()
+        let bobInMemoryStore = SignalLibraryStore()
         let bobConcreteStore = SignalLibraryStoreBridge(signalStore: bobInMemoryStore)
         let bobSignalContext = SignalContext(store: bobConcreteStore)
 
@@ -125,29 +139,21 @@ class SignalServiceSwiftTests: XCTestCase {
     }
 
     func testWebSocketStuff() {
-        let inMemoryStore = SignalStoreInMemoryStorage()
-        let concreteStore = SignalLibraryStoreBridge(signalStore: inMemoryStore)
-        let signalContext = SignalContext(store: concreteStore)
-        let signalKeyHelper = SignalKeyHelper(context: signalContext)
-
-        let store = SignalStore()
-
-        concreteStore.setup(with: signalContext.context)
-
         let username = "0x4a78c0c1c744152cdc03352fced626818c10e2a3"
         let pwd =  "9B72DEAA-E951-481C-AB8F-4224F10E5708"
         let signalingKey = "n4y2CeegP0QkftaOtdUla6xnvdT4mGtrlNrZyMdsZAdKLtphdMzhbzENoDjSvtx17TYEqQ=="
         let url = URL(string: "https://chat.internal.service.toshi.org")!
 
-        let client = SignalClient(baseURL: url, signalingKey: signalingKey, username: username, password: pwd, deviceId: 1, registrationId: 1, signalKeyHelper: signalKeyHelper, signalContext: signalContext, store: store)
+        let client = SignalClient(baseURL: url, signalingKey: signalingKey, username: username, password: pwd, deviceId: 1, registrationId: 1, persistenceStore: TestsPersistenceStore())
 
         let expectation = XCTestExpectation(description: "123")
-        wait(for: [expectation], timeout: 1000)
 
-        DispatchQueue.main.asyncAfter(deadline: .now() + 100) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
             print(client)
 
             expectation.fulfill()
         }
+
+        wait(for: [expectation], timeout: 8)
     }
 }
