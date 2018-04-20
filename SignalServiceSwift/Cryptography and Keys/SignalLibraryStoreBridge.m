@@ -21,6 +21,7 @@ static int load_session_func(signal_buffer **record, signal_buffer **user_record
     if (!data) {
         return 0;
     }
+
     signal_buffer *buffer = signal_buffer_create(data.bytes, data.length);
     *record = buffer;
 

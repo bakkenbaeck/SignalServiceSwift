@@ -36,6 +36,8 @@ class NetworkClient {
         return self.teapot.baseURL
     }
 
+    let baseAuthHeaderFields: [String: String]
+
     private var preKeyQueue = DispatchQueue.init(label: "com.bakkenbaeck.PreKeysQueue", qos: .background)
 
     enum RefreshPreKeysMode {
@@ -43,17 +45,22 @@ class NetworkClient {
         case signedOnly
     }
 
-    init(baseURL: URL) {
+    init(baseURL: URL, username: String?, password: String?) {
         self.teapot = Teapot(baseURL: baseURL)
+
+        if let username = username, let password = password {
+            self.baseAuthHeaderFields = self.teapot.basicAuthenticationHeader(username: username, password: password)
+        } else {
+            self.baseAuthHeaderFields = [:]
+        }
     }
 
-    func fetchPreKeyBundle(for recipientName: String, with sender: SignalSender, completion: @escaping((SignalPreKeyBundle) -> Void)) {
+    func fetchPreKeyBundle(for recipientName: String, completion: @escaping((SignalPreKeyBundle) -> Void)) {
         self.fetchTimestamp({ timestamp in
             // GET/v2/keys/{eth_address}/{device_id}, always use * wildcard for device_id.
             let path = "/v2/keys/\(recipientName)/*"
-            let fields = self.teapot.basicAuthenticationHeader(username: sender.username, password: sender.password)
 
-            self.teapot.get(path, headerFields: fields) { result in
+            self.teapot.get(path, headerFields: self.baseAuthHeaderFields) { result in
                 switch result {
                 case .failure(_, _, _):
                     NSLog("failed to retrieve pre key bundle for user: \(recipientName)")
@@ -72,6 +79,7 @@ class NetworkClient {
         // TODO: group chat
         self.fetchTimestamp({ timestamp in
             let timestamp = UInt64(timestamp * 1000)
+
             let type = (message.ciphertext?.ciphertextType ?? .unknown).rawValue
 
             let payload: [String: Any] = [
@@ -91,14 +99,11 @@ class NetworkClient {
             let path = "/v1/messages/\(recipient.name)"
 
             let requestParameters = RequestParameter(payload)
-            let fields = self.teapot.basicAuthenticationHeader(username: sender.username, password: sender.password)
 
-            self.teapot.put(path, parameters: requestParameters, headerFields: fields) { result in
+            self.teapot.put(path, parameters: requestParameters, headerFields: self.baseAuthHeaderFields) { result in
                 switch result {
                 case let .success(params, response):
                     completion(true)
-                    print(params)
-                    NSLog("%@", response)
 // Send a sync receipt if it's an outgoing message
 //                    if let message = message as? OutgoingMessage {
 //                        let outgoingMessage = OutgoingSentMessageTranscript(message: message)
@@ -114,11 +119,10 @@ class NetworkClient {
         })
     }
 
-    func checkPreKeys(for sender: SignalSender) {
+    func checkPreKeys(in context: SignalContext, signalKeyHelper: SignalKeyHelper, sender: SignalSender) {
         let path = "/v2/keys"
 
-        let fields = self.teapot.basicAuthenticationHeader(username: sender.username, password: sender.password)
-        self.teapot.get(path, headerFields: fields) { result in
+        self.teapot.get(path, headerFields: self.baseAuthHeaderFields) { result in
             switch result {
             case let .success(params, _):
                 guard let dict = params?.dictionary, let count = dict["count"] as? Int else {
@@ -128,11 +132,11 @@ class NetworkClient {
 
                 let shouldUpdateOneTimePreKeys = count < PreKeysMininumCount
                 if shouldUpdateOneTimePreKeys  {
-                    self.updateOneTimePreKeys(sender: sender, mode: .signedAndOneTime)
+                    self.updateOneTimePreKeys(context: context, signalKeyHelper: signalKeyHelper, mode: .signedAndOneTime)
                 } else {
                     var shouldUpdateSignedPrekey = false
 
-                    if let currentSignedPreKeyId = sender.currentlySignedPreKeyId, let currentSignedPreKeyData = sender.signalContext.store.signedPreKeyStore.loadSignedPreKey(withId: currentSignedPreKeyId), let signedPreKey = SignalSignedPreKey(serializedData: currentSignedPreKeyData) {
+                    if let currentSignedPreKeyId = context.currentlySignedPreKeyId, let currentSignedPreKeyData = context.store.signedPreKeyStore.loadSignedPreKey(withId: currentSignedPreKeyId), let signedPreKey = SignalSignedPreKey(serializedData: currentSignedPreKeyData) {
 
                         shouldUpdateSignedPrekey = signedPreKey.timestamp.timeIntervalSinceNow >= 2.days
                     } else {
@@ -140,17 +144,17 @@ class NetworkClient {
                     }
 
                     if shouldUpdateSignedPrekey {
-                        self.updateOneTimePreKeys(sender: sender, mode: .signedOnly)
+                        self.updateOneTimePreKeys(context: context, signalKeyHelper: signalKeyHelper, mode: .signedOnly)
                     }
 
                     if !shouldUpdateSignedPrekey && !shouldUpdateOneTimePreKeys {
                         // If we didn't update the prekeys, our local "current signed key" state should
                         // agree with the service's "current signed key" state.  Let's verify that.
                         let path = "/v2/keys/signed"
-                        self.teapot.get(path, headerFields: fields) { signedKeyResult in
+                        self.teapot.get(path, headerFields: self.baseAuthHeaderFields) { signedKeyResult in
                             switch signedKeyResult {
                             case let .success(param, response):
-                                let currentSignedPreKeyId = sender.signalContext.store.signedPreKeyStore.fetchCurrentSignedPreKeyId()
+                                let currentSignedPreKeyId = context.store.signedPreKeyStore.fetchCurrentSignedPreKeyId()
 
                                 guard let responseDictionary = param?.dictionary,
                                 let serverSignedPreKeyId = responseDictionary["keyId"] as? UInt32,
@@ -178,34 +182,32 @@ class NetworkClient {
                 guard let json = json?.dictionary else { fatalError("JSON dictionary not found in payload") }
                 guard let timestamp = json["timestamp"] as? Int else { fatalError("Timestamp not found in json payload or not an integer.") }
 
-                DispatchQueue.main.async {
                     completion(timestamp)
-                }
             case .failure(_, _, _): //(let json, let response, let error):
-                NSLog("Could not fetch timestamp. Wat.")
+                NSLog("Could not fetch timestamp.")
                 break
             }
         }
     }
 
-    func updateOneTimePreKeys(sender: SignalSender, mode: RefreshPreKeysMode) {
+    func updateOneTimePreKeys(context: SignalContext, signalKeyHelper: SignalKeyHelper, mode: RefreshPreKeysMode) {
         self.preKeyQueue.async {
             // generate a new signed pre key
-            let signedPreKey = SignalSignedPreKey(withIdentityKeyPair: sender.identityKeyPair, signalContext: sender.signalContext)
+            let signedPreKey = SignalSignedPreKey(withIdentityKeyPair: context.identityKeyPair, signalContext: context)
             // Store the new signed key immediately, before it is sent to the
             // service to prevent race conditions and other edge cases.
-            sender.signalContext.store.signedPreKeyStore.storeSignedPreKey(signedPreKey.serializedData, signedPreKeyId: signedPreKey.preKeyId)
+            context.store.signedPreKeyStore.storeSignedPreKey(signedPreKey.serializedData, signedPreKeyId: signedPreKey.preKeyId)
 
             switch mode {
             case .signedAndOneTime:
-                let nextPreKeyId = sender.nextPreKeyId()!
-                let preKeys = sender.signalKeyHelper.generatePreKeys(withStartingPreKeyId: nextPreKeyId, count: 100)
+                let nextPreKeyId = context.nextPreKeyId()
+                let preKeys = signalKeyHelper.generatePreKeys(withStartingPreKeyId: nextPreKeyId, count: 100)
 
                 var serializedPrekeyList = [[String: Any]]()
                 preKeys.forEach { key in
                     // Store the new one-time keys immediately, before they are sent to the
                     // service to prevent race conditions and other edge cases.
-                    guard sender.signalContext.store.preKeyStore.storePreKey(data: key.serializedData, id: key.preKeyId) else { fatalError() }
+                    guard context.store.preKeyStore.storePreKey(data: key.serializedData, id: key.preKeyId) else { fatalError() }
 
                     serializedPrekeyList.append([
                         "keyId": key.preKeyId,
@@ -213,7 +215,7 @@ class NetworkClient {
                         ])
                 }
 
-                let publicIdentityKeyString = sender.identityKeyPair.publicKey.base64EncodedString()
+                let publicIdentityKeyString = context.identityKeyPair.publicKey.base64EncodedString()
 
                 let signedPreKeyDict: [String : Any] = [
                     "keyId": signedPreKey.preKeyId,
@@ -228,13 +230,13 @@ class NetworkClient {
                 ]
 
                 let path = "/v2/keys"
-                let fields = self.teapot.basicAuthenticationHeader(username: sender.username, password: sender.password)
                 let parameters = RequestParameter(registrationParameters)
 
-                self.teapot.put(path, parameters: parameters, headerFields: fields) { result in
+                self.teapot.put(path, parameters: parameters, headerFields: self.baseAuthHeaderFields) { result in
                     switch result {
                     case let .success(params, response):
-                        NSLog("%@", response)
+//                        NSLog("%@", response)
+                        break
                     case let .failure(_, _, error):
                         NSLog(error.localizedDescription)
                     }
@@ -248,18 +250,14 @@ class NetworkClient {
                 let parameters = RequestParameter(signedPreKeyDict)
 
                 let path = "/v2/keys/signed"
-                let fields = self.teapot.basicAuthenticationHeader(username: sender.username, password: sender.password)
 
-                self.teapot.put(path, parameters: parameters, headerFields: fields) { result in
+                self.teapot.put(path, parameters: parameters, headerFields: self.baseAuthHeaderFields) { result in
                     switch result {
                     case let .success(params, response):
-                        sender.signalContext.store.signedPreKeyStore.storeCurrentSignedPreKeyId(signedPreKey.preKeyId)
+                        context.store.signedPreKeyStore.storeCurrentSignedPreKeyId(signedPreKey.preKeyId)
 
-                        NSLog("%@", response)
-//                        NSLog(params)
+//                        NSLog("%@", response)
                     case let .failure(params, response, error):
-//                        print(response)
-//                        print(params)
                         NSLog(error.localizedDescription)
                     }
                 }

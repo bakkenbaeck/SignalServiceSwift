@@ -8,6 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		9F33523E20862B5500E0F145 /* SignalClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F33523D20862B5500E0F145 /* SignalClient.swift */; };
+		9F3F15F32089F10900023FCE /* Starscream.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 9FA8EF052087963700D0CBB6 /* Starscream.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		9F3F15F42089F10900023FCE /* CommonCrypto.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 9FFD1DD42086305B00FA4626 /* CommonCrypto.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		9F3F15F52089F10900023FCE /* SwiftProtobuf.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 9FFD1DD52086305B00FA4626 /* SwiftProtobuf.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		9F3F15F62089F10900023FCE /* Teapot.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 9FFD1DD32086305B00FA4626 /* Teapot.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		9FA8EEF920878F8A00D0CBB6 /* CommonCrypto.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9FFD1DD42086305B00FA4626 /* CommonCrypto.framework */; };
 		9FA8EEFA20878F8A00D0CBB6 /* SwiftProtobuf.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9FFD1DD52086305B00FA4626 /* SwiftProtobuf.framework */; };
 		9FA8EEFB20878F8A00D0CBB6 /* Teapot.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9FFD1DD32086305B00FA4626 /* Teapot.framework */; };
@@ -19,6 +23,7 @@
 		9FA8EF072087963B00D0CBB6 /* Starscream.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 9FA8EF052087963700D0CBB6 /* Starscream.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		9FA8EF082087963D00D0CBB6 /* Starscream.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9FA8EF052087963700D0CBB6 /* Starscream.framework */; };
 		9FCCD5BF2088D6A200F2D9F3 /* SignalLibraryStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FCCD5BE2088D6A200F2D9F3 /* SignalLibraryStore.swift */; };
+		9FCCD5D32089E0AC00F2D9F3 /* SignalContext+Optionals.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FCCD5D22089E0AC00F2D9F3 /* SignalContext+Optionals.swift */; };
 		9FF4F5C2208798C300EC4D5D /* SignalMessageProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FF4F5C1208798C300EC4D5D /* SignalMessageProtocol.swift */; };
 		9FF4F5C4208798DD00EC4D5D /* IncomingSignalMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FF4F5C3208798DD00EC4D5D /* IncomingSignalMessage.swift */; };
 		9FF4F5C62087990000EC4D5D /* OutgoingSignalMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FF4F5C52087990000EC4D5D /* OutgoingSignalMessage.swift */; };
@@ -105,6 +110,19 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		9F3F15F22089F0FE00023FCE /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				9F3F15F32089F10900023FCE /* Starscream.framework in CopyFiles */,
+				9F3F15F42089F10900023FCE /* CommonCrypto.framework in CopyFiles */,
+				9F3F15F52089F10900023FCE /* SwiftProtobuf.framework in CopyFiles */,
+				9F3F15F62089F10900023FCE /* Teapot.framework in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		9FA8EF002087900400D0CBB6 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -125,6 +143,7 @@
 		9F33523D20862B5500E0F145 /* SignalClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignalClient.swift; sourceTree = "<group>"; };
 		9FA8EF052087963700D0CBB6 /* Starscream.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Starscream.framework; path = Carthage/Build/iOS/Starscream.framework; sourceTree = SOURCE_ROOT; };
 		9FCCD5BE2088D6A200F2D9F3 /* SignalLibraryStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignalLibraryStore.swift; sourceTree = "<group>"; };
+		9FCCD5D22089E0AC00F2D9F3 /* SignalContext+Optionals.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SignalContext+Optionals.swift"; sourceTree = "<group>"; };
 		9FF4F5C1208798C300EC4D5D /* SignalMessageProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignalMessageProtocol.swift; sourceTree = "<group>"; };
 		9FF4F5C3208798DD00EC4D5D /* IncomingSignalMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IncomingSignalMessage.swift; sourceTree = "<group>"; };
 		9FF4F5C52087990000EC4D5D /* OutgoingSignalMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutgoingSignalMessage.swift; sourceTree = "<group>"; };
@@ -372,6 +391,7 @@
 				9FFD1E3E2087487B00FA4626 /* SignalError.m */,
 				9FFD1E352087400900FA4626 /* NSData+messagePadding.h */,
 				9FFD1E342087400900FA4626 /* NSData+messagePadding.m */,
+				9FCCD5D22089E0AC00F2D9F3 /* SignalContext+Optionals.swift */,
 			);
 			path = "Extensions and Helpers";
 			sourceTree = "<group>";
@@ -463,6 +483,7 @@
 				9FFB8B01208629B60067BCE9 /* Frameworks */,
 				9FFB8B02208629B60067BCE9 /* Headers */,
 				9FFB8B03208629B60067BCE9 /* Resources */,
+				9F3F15F22089F0FE00023FCE /* CopyFiles */,
 			);
 			buildRules = (
 			);
@@ -585,6 +606,7 @@
 				9FFD1E402087487B00FA4626 /* SignalError.m in Sources */,
 				9FFD1DFA2086441F00FA4626 /* Data+Signal.swift in Sources */,
 				9FFD1E2B20873D8800FA4626 /* WebSocketResources.pb.swift in Sources */,
+				9FCCD5D32089E0AC00F2D9F3 /* SignalContext+Optionals.swift in Sources */,
 				9FFD1E0B2086459600FA4626 /* SignalSenderKeyStoreProtocol.swift in Sources */,
 				9FFD1E022086450A00FA4626 /* SignalLibraryStoreBridge.m in Sources */,
 				9FFD1E3B2087414200FA4626 /* Cryptography.m in Sources */,

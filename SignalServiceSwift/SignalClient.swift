@@ -10,35 +10,34 @@ import Foundation
 import Starscream
 
 public class SignalClient {
-    var socket: WebSocket
-    let sender: SignalSender
+    var socket: WebSocket?
+    var sender: SignalSender?
 
-    var libraryStore: SignalLibraryStoreProtocol
-    var libraryStoreBridge: SignalLibraryStoreBridge
+    public var libraryStore: SignalLibraryStoreProtocol
+    public var libraryStoreBridge: SignalLibraryStoreBridge
     public var signalContext: SignalContext
     public var signalKeyHelper: SignalKeyHelper
 
     public var store: SignalServiceStore
 
-    public var shouldKeepSocketAlive: Bool
+    public var shouldKeepSocketAlive: Bool = false
 
     lazy var keepAliveTimer: Timer = {
         Timer(fire: Date(), interval: 30.0, repeats: true, block: { t in
-            if self.shouldKeepSocketAlive && !self.socket.isConnected {
-                self.socket.connect()
+            if self.shouldKeepSocketAlive && self.socket?.isConnected != true {
+                self.socket?.connect()
             } else {
-                self.socket.write(ping: Data())
+                self.socket?.write(ping: Data())
             }
         })
     }()
 
-    let networkClient: NetworkClient
+    var networkClient: NetworkClient?
 
-    public var baseURL: URL {
-        return self.networkClient.baseURL
-    }
+    public var baseURL: URL
 
-    public init(baseURL: URL, signalingKey: String, username: String, password: String, deviceId: Int32, registrationId: UInt32, persistenceStore: PersistenceStore) {
+    public init(baseURL: URL, persistenceStore: PersistenceStore) {
+        self.baseURL = baseURL
 
         self.libraryStore = SignalLibraryStore()
         self.libraryStoreBridge = SignalLibraryStoreBridge(signalStore: self.libraryStore)
@@ -49,27 +48,33 @@ public class SignalClient {
 
         self.store = SignalServiceStore(persistenceStore: persistenceStore)
 
-        self.shouldKeepSocketAlive = false
-        self.networkClient = NetworkClient(baseURL: baseURL)
+    }
 
-        self.sender = SignalSender(username: username, password: password, deviceId: deviceId, remoteRegistrationId: registrationId, signalingKey: signalingKey, signalKeyHelper: self.signalKeyHelper, signalContext: signalContext)
+    public func setupSender(username: String, password: String, deviceId: Int32, registrationId: UInt32, signalingKey: String) {
+        let sender = SignalSender(username: username, password: password, deviceId: deviceId, remoteRegistrationId: registrationId, signalingKey: signalingKey)
 
-        let socketURL = URL(string: "wsss://chat.internal.service.toshi.org/v1/websocket/?login=\(username)&password=\(password)")!
+        self.sender = sender
+
+        let socketURL = URL(string: "wsss://\(self.baseURL.host!)/v1/websocket/?login=\(username)&password=\(password)")!
 
         self.socket = WebSocket(url: socketURL)
-        self.socket.delegate = self
-        self.socket.pongDelegate = self
+        self.socket?.delegate = self
+        self.socket?.pongDelegate = self
 
-        self.socket.connect()
+        self.socket?.connect()
 
         RunLoop.main.add(self.keepAliveTimer, forMode: .defaultRunLoopMode)
+
+        self.networkClient = NetworkClient(baseURL: self.baseURL, username: sender.username, password: sender.password)
     }
 
     public func sendMessage(_ body: String, to: SignalAddress) {
-        self.networkClient.fetchPreKeyBundle(for: to.name, with: self.sender) { preKeyBundle in
+         guard let sender = self.sender else { return }
+
+        self.networkClient?.fetchPreKeyBundle(for: to.name) { preKeyBundle in
             NSLog("Fetched pre key bundle")
 
-            let sessionBuilder = SignalSessionBuilder(address: to, context: self.sender.signalContext)!
+            let sessionBuilder = SignalSessionBuilder(address: to, context: self.signalContext)!
             guard sessionBuilder.processPreKeyBundle(preKeyBundle) else {
                 NSLog("Could not process prekey bundle!")
                 fatalError()
@@ -77,10 +82,9 @@ public class SignalClient {
 
             NSLog("Processed pre key bundle")
 
-            let sessionCipher = SignalSessionCipher(address: to, context: self.sender.signalContext)
+            let sessionCipher = SignalSessionCipher(address: to, context: self.signalContext)
 
             let ciphertext = try! sessionCipher.encrypt(message: body)!
-
 
             let recipient = self.store.fetchOrCreateRecipient(name: to.name, deviceId: to.deviceId, remoteRegistrationId: preKeyBundle.registrationId)
             let chat = self.store.fetchOrCreateChat(with: recipient.name, in: self.store)
@@ -88,7 +92,7 @@ public class SignalClient {
             let outgoingMessage = OutgoingSignalMessage(recipientId: recipient.name, chatId: chat.uniqueId, body: body, ciphertext: ciphertext)
 
             NSLog("Sending…")
-            self.networkClient.sendMessage(outgoingMessage, from: self.sender, to: recipient, in: chat) { success in
+            self.networkClient?.sendMessage(outgoingMessage, from: sender, to: recipient, in: chat) { success in
                 if success {
                     self.store.save(outgoingMessage)
                 }
@@ -101,19 +105,19 @@ public class SignalClient {
         var preKeyMessage: SignalLibraryPreKeyMessage? = nil
 
         if ciphertextType == .preKeyMessage {
-            preKeyMessage = SignalLibraryPreKeyMessage(data: data, context: self.sender.signalContext)
+            preKeyMessage = SignalLibraryPreKeyMessage(data: data, context: self.signalContext)
             if preKeyMessage == nil {
                 return nil
             }
         } else if ciphertextType == .message {
-            message = SignalLibraryCiphertextMessage(data: data, context: self.sender.signalContext)
+            message = SignalLibraryCiphertextMessage(data: data, context: self.signalContext)
             if message == nil {
                 return nil
             }
         } else {
             // Fall back to brute force type detection...
-            preKeyMessage = SignalLibraryPreKeyMessage(data: data, context: self.sender.signalContext)
-            message = SignalLibraryCiphertextMessage(data: data, context: self.sender.signalContext)
+            preKeyMessage = SignalLibraryPreKeyMessage(data: data, context: self.signalContext)
+            message = SignalLibraryCiphertextMessage(data: data, context: self.signalContext)
             if preKeyMessage == nil && message == nil {
                 throw ErrorFromSignalError(.invalidArgument)
             }
@@ -123,9 +127,11 @@ public class SignalClient {
     }
 
     func decryptCiphertextEnvelope(_ envelope: Signalservice_Envelope) {
+        guard let sender = self.sender else { return }
+
         let content = envelope.hasContent ? envelope.content : envelope.legacyMessage
         let senderAddress = SignalAddress(name: envelope.source, deviceId: Int32(envelope.sourceDevice))
-        let sessionCipher = SignalSessionCipher(address: senderAddress, context: self.sender.signalContext)
+        let sessionCipher = SignalSessionCipher(address: senderAddress, context: self.signalContext)
 
         guard let cipherMessage = try? self.cipherMessage(from: content),
             let concreteCipherMessage = cipherMessage else {
@@ -134,7 +140,7 @@ public class SignalClient {
         }
 
         if cipherMessage is SignalLibraryPreKeyMessage {
-            self.networkClient.checkPreKeys(for: self.sender)
+            self.networkClient?.checkPreKeys(in: self.signalContext, signalKeyHelper: self.signalKeyHelper, sender: sender)
         }
 
         let chat = self.store.fetchOrCreateChat(with: senderAddress.name, in: self.store)
@@ -150,8 +156,10 @@ public class SignalClient {
     }
 
     func processSocketMessage(_ message: Signalservice_WebSocketMessage) {
+        guard let sender = self.sender else { return }
+
         if message.request.path == "/api/v1/message", message.request.verb == "PUT" {
-            let payload = Cryptography.decryptAppleMessagePayload(message.request.body, withSignalingKey: self.sender.signalingKey)
+            let payload = Cryptography.decryptAppleMessagePayload(message.request.body, withSignalingKey: sender.signalingKey)
             guard let envelope = try? Signalservice_Envelope(serializedData: payload) else {
                 NSLog("No envelope!")
                 return
@@ -178,11 +186,11 @@ extension SignalClient: WebSocketDelegate {
     }
 
     public func websocketDidDisconnect(socket: WebSocketClient, error: Error?) {
-        NSLog("did disconnect: \(error?.localizedDescription ?? "No error")")
+        NSLog("did disconnect: \((error as? WSError)?.message ?? "No error")")
 
         if self.shouldKeepSocketAlive {
             NSLog("reconnecting…")
-            self.socket.connect()
+            self.socket?.connect()
         }
     }
 

@@ -14,31 +14,31 @@ import Foundation
 
     private(set) var sessionStore = [String: Any]() {
         willSet {
-            NSLog("%@", newValue)
+//            NSLog("%@", newValue)
         }
     }
 
     private(set) var preKeyStore = [UInt32: Any]() {
         willSet {
-            NSLog("%@", newValue)
+//            NSLog("%@", newValue)
         }
     }
 
     private(set) var signedPreKeyStore = [UInt32: Any]() {
         willSet {
-            NSLog("%@", newValue)
+//            NSLog("%@", newValue)
         }
     }
 
     private(set) var identityKeyStore = [String: Any]() {
         willSet {
-            NSLog("%@", newValue)
+//            NSLog("%@", newValue)
         }
     }
 
     private(set) var senderKeyStore = [String: Any]() {
         willSet {
-            NSLog("%@", newValue)
+//            NSLog("%@", newValue)
         }
     }
 

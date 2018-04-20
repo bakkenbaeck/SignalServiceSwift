@@ -144,12 +144,13 @@ class SignalServiceSwiftTests: XCTestCase {
         let signalingKey = "n4y2CeegP0QkftaOtdUla6xnvdT4mGtrlNrZyMdsZAdKLtphdMzhbzENoDjSvtx17TYEqQ=="
         let url = URL(string: "https://chat.internal.service.toshi.org")!
 
-        let client = SignalClient(baseURL: url, signalingKey: signalingKey, username: username, password: pwd, deviceId: 1, registrationId: 1, persistenceStore: TestsPersistenceStore())
+        let client = SignalClient(baseURL: url, persistenceStore: TestsPersistenceStore())
+        client.setupSender(username: username, password: pwd, deviceId: 1, registrationId: 1, signalingKey: signalingKey)
 
         let expectation = XCTestExpectation(description: "123")
 
         DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
-            print(client)
+            XCTAssertTrue(client.socket?.isConnected ?? false)
 
             expectation.fulfill()
         }

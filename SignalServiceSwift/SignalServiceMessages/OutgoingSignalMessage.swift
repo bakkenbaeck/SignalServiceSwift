@@ -24,9 +24,7 @@ public class OutgoingSignalMessage: SignalMessage {
     public var messageState: MessageState = .none
     public var recipientId: String
 
-    // optional with nil value, otherwise it won't let me conform to Codable 👀
-    // in practice, we should assume it is not optional.
-    public var ciphertext: SignalCiphertext? = nil
+    public var ciphertext: SignalCiphertext?
 
     public func encryptedBodybase64Encoded() -> String {
         return self.ciphertext!.data.base64EncodedString()
@@ -34,10 +32,10 @@ public class OutgoingSignalMessage: SignalMessage {
 
     init(recipientId: String, chatId: String, body: String, ciphertext: SignalCiphertext) {
         self.recipientId = recipientId
-        self.ciphertext = ciphertext
 
         super.init(body: body, chatId: chatId)
 
+        self.ciphertext = ciphertext
     }
 
     required public init(from decoder: Decoder) throws {
