@@ -1,0 +1,4 @@
+github "apple/swift-protobuf" "1.0.3"
+github "bakkenbaeck/teapot" "1.4.0"
+github "daltoniam/Starscream" "3.0.5"
+github "soffes/CommonCrypto" "v1.1.0"
