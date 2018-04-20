@@ -16,4 +16,8 @@ FOUNDATION_EXPORT const unsigned char SignalServiceSwiftVersionString[];
 
 // In this header, you should import all the public headers of your framework using statements like #import <SignalServiceSwift/PublicHeader.h>
 
-
+#import "SignalProtocolCStructures.h"
+#import "SignalContext.h"
+#import "NSData+messagePadding.h"
+#import "Cryptography.h"
+#import "SignalError.h"
