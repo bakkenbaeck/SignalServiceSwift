@@ -173,7 +173,7 @@ static int encrypt_func(signal_buffer **output, int cipher, const uint8_t *key, 
                      kCCOptionPKCS7Padding, // options
                      key, // key
                      key_len, // keylength
-                     iv,// iv
+                     iv,// Initialisation vector https://en.wikipedia.org/wiki/Initialisation_vector
                      plaintext, // dataIn
                      plaintext_len, // dataInLength,
                      cipherData.mutableBytes, // dataOut
@@ -230,7 +230,7 @@ static int decrypt_func(signal_buffer **output, int cipher, const uint8_t *key, 
                      kCCOptionPKCS7Padding, // options
                      key, // key
                      key_len, // keylength
-                     iv,// iv
+                     iv,// Initialisation vector https://en.wikipedia.org/wiki/Initialisation_vector
                      ciphertext, // dataIn
                      ciphertext_len, // dataInLength,
                      outData.mutableBytes, // dataOut
