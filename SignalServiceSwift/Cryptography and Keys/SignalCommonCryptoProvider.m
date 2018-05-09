@@ -133,9 +133,8 @@ static int sha512_digest_final_func(void *digest_context, signal_buffer **output
 }
 
 static void sha512_digest_cleanup_func(void *digest_context, void *user_data) {
-    if (digest_context != nil) {
-        NSLog(@"%p", &digest_context);
-        free(&digest_context);
+    if (digest_context) {
+        free(digest_context);
     }
 }
 

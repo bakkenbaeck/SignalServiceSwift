@@ -23,29 +23,6 @@ class SignalMessageManager {
         self.signalContext = signalContext
         self.store = store
         self.delegate = delegate
-
-//        _ = NotificationCenter.default.addObserver(forName: .SignalMessageStateDidChange, object: nil, queue: nil) { (notification) in
-//            guard let userInfo = notification.userInfo
-//                else { return }
-//            guard let oldMessage = userInfo["old"] as? SignalMessage,
-//                let newMessage = userInfo["new"] as? SignalMessage,
-//                let chat = self.store.chat(chatId: newMessage.chatId)
-//                else { return }
-        //
-        //
-//            if let oldMessage = oldMessage as? IncomingSignalMessage, let newMessage = newMessage as? IncomingSignalMessage,
-//                oldMessage.isRead != newMessage.isRead {
-        //
-//                let readReceiptMessage = ReadReceiptSignalMessage(message: newMessage, store: self.store)
-//                for address in chat.recipients ?? [] {
-//                    self.sendMessage(readReceiptMessage, to: address, in: chat, completion: { success in
-//                        if DebugLevel.current == .verbose {
-//                            NSLog("Sent receipt to %@ in %@.", address.name, chat.name)
-//                        }
-//                    })
-//                }
-//            }
-//        }
     }
 
     func uploadAttachment(_ attachment: Data, in message: OutgoingSignalMessage, completion: @escaping (_ success: Bool) -> Void) {
@@ -228,8 +205,6 @@ class SignalMessageManager {
             NSLog("Should add device: %d to recipient: %@", device, recipientAddress)
         }
 
-        // save recipient
-
         completion()
     }
 
@@ -325,6 +300,7 @@ class SignalMessageManager {
         }
     }
 
+    ///TODO: Fix group info requests. Should tell others about a group.
     private func handleGroupInfoRequest(envelope: Signalservice_Envelope, dataMessage: Signalservice_DataMessage, groupChat: SignalChat?) {
         guard let groupChat = groupChat else { return }
         /// Important: don't give info about a group if they don't belong to it.
@@ -337,7 +313,6 @@ class SignalMessageManager {
 
         // create info message informing of update
         let infoMessage = OutgoingSignalMessage(recipientId: envelope.source, chatId: groupChat.uniqueId, body: updateInfo.customMessage, groupMessageType: .update, store: self.store)
-        // InfoSignalMessage(senderId: envelope.source, chatId: groupChat.uniqueId, messageType: .groupUpdate, customMessage: updateInfo.customMessage, additionalInfo: updateInfo.additionalInfo)
 
         // Only send it to the requesting party.
         let recipient = SignalAddress(name: envelope.source, deviceId: Int32(envelope.sourceDevice))
@@ -381,6 +356,7 @@ class SignalMessageManager {
         self.receivedTextMessage(envelope, dataMessage: dataMessage)
         let isGroupAvatarUpdate = dataMessage.hasGroup && dataMessage.group.type == .update && dataMessage.group.hasAvatar
         if isGroupAvatarUpdate {
+            ///TODO: group avatar update
             //                DebugLevel.current == .verbose {
             //                    NSLog("Data message has group avatar attachment.")
             //                }
@@ -408,23 +384,21 @@ class SignalMessageManager {
 
         let sessionCipher = SignalSessionCipher(address: senderAddress, context: self.signalContext)
 
-        var concreteCipherMessage: SignalLibraryMessage
+        var cipherMessage: SignalLibraryMessage
         do {
-            guard let cipherMessage = try self.cipherMessage(from: content) else { return false }
-
-            concreteCipherMessage = cipherMessage
+            cipherMessage = try self.cipherMessage(from: content)
         } catch (let error) {
             NSLog("Could not decrypt message: %@", error.localizedDescription)
 
             return false
         }
 
-        if concreteCipherMessage is SignalLibraryPreKeyMessage {
+        if cipherMessage is SignalLibraryPreKeyMessage {
             self.networkClient.checkPreKeys(in: self.signalContext, sender: self.sender)
         }
 
         do {
-            guard let decryptedData = try sessionCipher.decrypt(cipher: concreteCipherMessage),
+            guard let decryptedData = try sessionCipher.decrypt(cipher: cipherMessage),
                 let content = try? Signalservice_Content(serializedData: decryptedData) else {
                 NSLog("Could not decrypt message! (1)")
                 return false
@@ -495,19 +469,19 @@ class SignalMessageManager {
         ]]
     }
 
-    private func cipherMessage(from data: Data, ciphertextType: CiphertextType = .unknown) throws -> SignalLibraryMessage? {
+    private func cipherMessage(from data: Data, ciphertextType: CiphertextType = .unknown) throws -> SignalLibraryMessage {
         var message: SignalLibraryCiphertextMessage?
         var preKeyMessage: SignalLibraryPreKeyMessage?
 
         if ciphertextType == .preKeyMessage {
             preKeyMessage = SignalLibraryPreKeyMessage(data: data, context: self.signalContext)
             if preKeyMessage == nil {
-                return nil
+                throw ErrorFromSignalError(.invalidArgument)
             }
         } else if ciphertextType == .message {
             message = SignalLibraryCiphertextMessage(data: data, context: self.signalContext)
             if message == nil {
-                return nil
+                throw ErrorFromSignalError(.invalidArgument)
             }
         } else {
             // Fall back to brute force type detection...
@@ -518,7 +492,10 @@ class SignalMessageManager {
             }
         }
 
-        return preKeyMessage ?? message
+        guard let cipherMessage: SignalLibraryMessage = (preKeyMessage ?? message)
+            else { throw ErrorFromSignalError(.invalidArgument) }
+
+        return cipherMessage
     }
 
     private func updateInfo(groupChat: SignalChat, dataMessage: Signalservice_DataMessage) -> (customMessage: String, additionalInfo: String) {
@@ -532,7 +509,7 @@ class SignalMessageManager {
             return ("GROUP_TITLE_CHANGED", dataMessage.group.name)
         }
 
-        // group image changed?
+        ///TODO:  group image changed
         //        if dataMessage.group.avatar.id != newGroup.avatarId {
         //            return (NSLocalizedString("GROUP_AVATAR_CHANGED", comment: "Displays a message indicating the group has a new image"),
         //            dataMessage.group.avatar.id.description)

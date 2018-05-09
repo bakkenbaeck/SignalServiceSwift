@@ -73,7 +73,7 @@ class ChatsViewController: UIViewController {
 
             super.init(coder: aDecoder)
 
-            self.signalClient.setupSender(username: self.user.toshiAddress, password: self.user.password, deviceId: self.user.address.deviceId, registrationId: self.signalClient.libraryStore.localRegistrationId, signalingKey: self.user.signalingKey!)
+            self.signalClient.setupSender(username: self.user.toshiAddress, password: self.user.password, deviceId: self.user.address.deviceId, signalingKey: self.user.signalingKey!)
 
             self.signalClient.shouldKeepSocketAlive = true
         } else {

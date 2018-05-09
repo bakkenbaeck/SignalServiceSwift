@@ -75,7 +75,7 @@ class SignalSessionCipher: NSObject {
             throw ErrorFromSignalError(SignalErrorFromCode(result))
         }
 
-        let outData = (Data(bytes: signal_buffer_data(buffer)!, count: signal_buffer_len(buffer)) as NSData).removePadding()
+        let outData = (Data(bytes: signal_buffer_data(buffer), count: signal_buffer_len(buffer)) as NSData).removePadding()
 
         signal_buffer_free(buffer)
 

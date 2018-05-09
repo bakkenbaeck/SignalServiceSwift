@@ -36,8 +36,9 @@ public class SignalClient {
 
     var messageSender: SignalMessageManager?
 
+    ///TODO: make this internal, move user bootstrapping data generation to client.
     public var libraryStore: SignalLibraryStoreProtocol
-    public var libraryStoreBridge: SignalLibraryStoreBridge
+    var libraryStoreBridge: SignalLibraryStoreBridge
     public var signalContext: SignalContext
 
     public var store: SignalServiceStore
@@ -69,7 +70,7 @@ public class SignalClient {
         self.store = SignalServiceStore(persistenceStore: persistenceStore, contactsDelegate: contactsDelegate)
     }
 
-    public func setupSender(username: String, password: String, deviceId: Int32, registrationId: UInt32, signalingKey: String) {
+    public func setupSender(username: String, password: String, deviceId: Int32, registrationId: UInt32? = nil, signalingKey: String) {
         // setup socket
         let socketURL = URL(string: "wsss://\(self.baseURL.host!)/v1/websocket/?login=\(username)&password=\(password)")!
 
@@ -81,8 +82,10 @@ public class SignalClient {
 
         RunLoop.main.add(self.keepAliveTimer, forMode: .defaultRunLoopMode)
 
+        let unwrappedRegistrationId = registrationId ?? self.libraryStore.localRegistrationId
+
         // setup message sender and network client
-        let sender = SignalSender(username: username, password: password, deviceId: deviceId, remoteRegistrationId: registrationId, signalingKey: signalingKey)
+        let sender = SignalSender(username: username, password: password, deviceId: deviceId, remoteRegistrationId: unwrappedRegistrationId, signalingKey: signalingKey)
         let networkClient = NetworkClient(baseURL: self.baseURL, username: sender.username, password: sender.password)
 
         self.messageSender = SignalMessageManager(sender: sender, networkClient: networkClient, signalContext: self.signalContext, store: self.store, delegate: self)
