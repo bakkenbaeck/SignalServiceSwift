@@ -167,24 +167,9 @@ class ChatsViewController: UIViewController {
     @IBAction func didTapCreateChatButton(_ sender: Any) {
         // Group message test
         self.signalClient.sendGroupMessage("", type: .new, to: [self.testContact, self.otherContact, self.ellenContact, self.user.address])
-//        // Now send a test message!
+//        // 1:1 chat test.
 //        let chat = self.signalClient.store.fetchOrCreateChat(with: self.ellenContact.name)
 //        self.didRequestSendRandomMessage(in: chat)
-    }
-}
-
-extension ChatsViewController: SignalServiceStoreMessageDelegate {
-    func signalServiceStoreWillChangeMessages() {
-    }
-
-    func signalServiceStoreDidChangeMessage(_ message: SignalMessage, at indexPath: IndexPath, for changeType: SignalServiceStore.ChangeType) {
-
-        let sofaMessage = SofaMessage(content: message.body)
-        print("Received: \"\(sofaMessage.body)\"")
-    }
-
-    func signalServiceStoreDidChangeMessages() {
-        self.tableView.reloadData()
     }
 }
 

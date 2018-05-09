@@ -10,8 +10,6 @@
 
 @implementation NSData (messagePadding)
 
-//
-
 - (BOOL)ows_constantTimeIsEqualToData:(NSData *)other
 {
     BOOL isEqual = YES;
@@ -31,8 +29,6 @@
     return isEqual;
 }
 
-//
-
 - (NSData *)removePadding {
     unsigned long paddingStart = self.length;
 
@@ -50,7 +46,6 @@
 
     return [self subdataWithRange:NSMakeRange(0, paddingStart)];
 }
-
 
 - (NSData *)paddedMessageBody {
     // From

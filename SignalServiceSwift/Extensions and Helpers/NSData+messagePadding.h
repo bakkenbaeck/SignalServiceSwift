@@ -10,7 +10,6 @@
 
 - (NSData *)paddedMessageBody;
 
-//
 - (BOOL)ows_constantTimeIsEqualToData:(NSData *)other;
 
 @end
