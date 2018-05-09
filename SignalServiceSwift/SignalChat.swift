@@ -14,15 +14,26 @@ public class SignalChat: Equatable, Codable {
         case name
         case lastArchivalDate
         case currentDraft
+        case groupChatImageData
         case isMuted
     }
 
     var store: SignalServiceStore?
     var contactsDelegate: SignalRecipientsDelegate?
 
-    public var groupImage: UIImage? {
-        return self.contactsDelegate?.image(for: self.uniqueId)
+    public var image: UIImage? {
+        return self.isGroupChat ? self.groupChatImage : self.contactsDelegate?.image(for: self.uniqueId)
     }
+
+    var groupChatImage: UIImage? {
+        if let data = self.groupChatImageData {
+            return UIImage(data: data)
+        }
+
+        return nil
+    }
+
+    var groupChatImageData: Data?
 
     public var displayName: String {
         if self.isGroupChat {

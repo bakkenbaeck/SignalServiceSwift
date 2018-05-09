@@ -24,24 +24,9 @@ class ChatCell: UITableViewCell {
         }
     }
 
-    var attachmentImage: UIImage? {
-        set {
-            self.attachmentImageView.image = newValue
-
-            guard let image = newValue else {
-                self.attachmentImageViewHeightConstraint.constant = 0
-
-                return
-            }
-
-            let aspectRatio: CGFloat = image.size.height / image.size.width
-
-            self.attachmentImageViewHeightConstraint = self.attachmentImageView.heightAnchor.constraint(equalTo: self.attachmentImageView.widthAnchor, multiplier: aspectRatio)
-            self.attachmentImageViewHeightConstraint.priority = UILayoutPriority(rawValue: 999)
-            self.attachmentImageViewHeightConstraint.isActive = true
-        }
-        get {
-            return self.attachmentImageView.image
+    var avatarImage: UIImage? {
+        didSet {
+            self.avatarImageView.image = self.avatarImage
         }
     }
 
@@ -74,7 +59,6 @@ class ChatCell: UITableViewCell {
     private lazy var containerView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-//        view.clipsToBounds = true
 
         return view
     }()
@@ -86,18 +70,10 @@ class ChatCell: UITableViewCell {
         return view
     }()
 
-    private lazy var attachmentImageViewHeightConstraint: NSLayoutConstraint = {
-        let heightConstraint = self.attachmentImageView.heightAnchor.constraint(lessThanOrEqualToConstant: 0)
-        heightConstraint.priority = UILayoutPriority(rawValue: 999)
-        heightConstraint.isActive = true
 
-        return heightConstraint
-    }()
-
-    private lazy var attachmentImageView: UIImageView = {
+    private lazy var avatarImageView: UIImageView = {
         let view = UIImageView(image: nil)
         view.translatesAutoresizingMaskIntoConstraints = false
-
         view.contentMode = .scaleAspectFit
 
         return view
@@ -136,7 +112,7 @@ class ChatCell: UITableViewCell {
     func setup() {
         self.contentView.addSubview(self.containerView)
 
-        self.containerView.addSubview(self.attachmentImageView)
+        self.containerView.addSubview(self.avatarImageView)
 
         self.containerView.addSubview(self.titleLabel)
         self.containerView.addSubview(self.dateLabel)
@@ -145,18 +121,22 @@ class ChatCell: UITableViewCell {
         self.containerView.layer.masksToBounds = true
         self.containerView.layer.cornerRadius = 16
 
+        self.avatarImageView.layer.cornerRadius = 22
+
         NSLayoutConstraint.activate([
             self.containerView.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 8),
             self.containerView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -8),
             self.containerView.leftAnchor.constraint(equalTo: self.contentView.leftAnchor, constant: 8),
             self.containerView.rightAnchor.constraint(equalTo: self.contentView.rightAnchor, constant: -8),
 
-            self.attachmentImageViewHeightConstraint,
-            self.attachmentImageView.topAnchor.constraint(equalTo: self.containerView.topAnchor),
-            self.attachmentImageView.leftAnchor.constraint(equalTo: self.containerView.leftAnchor),
-            self.attachmentImageView.rightAnchor.constraint(equalTo: self.containerView.rightAnchor),
+            self.avatarImageView.topAnchor.constraint(equalTo: self.containerView.topAnchor),
+            self.avatarImageView.leftAnchor.constraint(equalTo: self.containerView.leftAnchor),
+            self.avatarImageView.rightAnchor.constraint(equalTo: self.containerView.rightAnchor),
 
-            self.titleLabel.topAnchor.constraint(equalTo: self.attachmentImageView.bottomAnchor, constant: 8),
+            self.avatarImageView.heightAnchor.constraint(equalToConstant: 44),
+            self.avatarImageView.widthAnchor.constraint(equalToConstant: 44),
+
+            self.titleLabel.topAnchor.constraint(equalTo: self.avatarImageView.bottomAnchor, constant: 8),
             self.titleLabel.leftAnchor.constraint(equalTo: self.containerView.leftAnchor, constant: 8),
             self.titleLabel.rightAnchor.constraint(equalTo: self.containerView.rightAnchor, constant: -8),
             self.titleLabel.bottomAnchor.constraint(equalTo: self.dateLabel.topAnchor, constant: -8),
@@ -202,7 +182,7 @@ class ChatCell: UITableViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
 
-        self.attachmentImage = nil
+        self.avatarImage = nil
         self.title = nil
         self.date = ""
         self.state = .clear
