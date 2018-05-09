@@ -7,3 +7,4 @@
 */
 
 "GROUP_TITLE_CHANGED" = "%@ renamed group to %@.";
+"GROUP_AVATAR_CHANGED" = "%@ changed the group cover photo.";

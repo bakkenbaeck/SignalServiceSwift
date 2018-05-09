@@ -520,11 +520,10 @@ class SignalMessageManager {
             return ("GROUP_TITLE_CHANGED", dataMessage.group.name)
         }
 
-        ///TODO:  group image changed
-        //        if dataMessage.group.avatar.id != newGroup.avatarId {
-        //            return (NSLocalizedString("GROUP_AVATAR_CHANGED", comment: "Displays a message indicating the group has a new image"),
-        //            dataMessage.group.avatar.id.description)
-        //        }
+        // group image changed
+        if dataMessage.group.avatar.id != groupChat.avatarServerId {
+            return ("GROUP_AVATAR_CHANGED", "")
+        }
 
         // Changed members
         var customMessage = "GROUP_UPDATED"

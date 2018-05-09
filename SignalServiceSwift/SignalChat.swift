@@ -23,6 +23,14 @@ public class SignalChat: Equatable, Codable {
 
     var avatarId: String?
 
+    var avatarServerId: UInt64 {
+        if let avatarId = avatarId {
+            return self.store?.attachment(with: avatarId)?.serverId ?? 0
+        }
+
+        return 0
+    }
+
     public var image: UIImage? {
         // 1:1 chat
         if let recipientIdentifier = self.recipientIdentifier {
