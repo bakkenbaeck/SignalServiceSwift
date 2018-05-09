@@ -1,0 +1,5 @@
+github "bakkenbaeck/teapot" ~> 1.3
+github "bakkenbaeck/EtherealCereal" ~> 0.3.0
+github "stephencelis/SQLite.swift"
+github "roberthein/TinyConstraints" 
+github "UseSweet/SweetUIKit"
