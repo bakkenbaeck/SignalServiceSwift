@@ -24,6 +24,12 @@ public class SignalChat: Equatable, Codable {
     var avatarId: String?
 
     public var image: UIImage? {
+        // 1:1 chat
+        if let recipientIdentifier = self.recipientIdentifier {
+            return self.contactsDelegate?.image(for: recipientIdentifier)
+        }
+
+        // group chat
         guard let id = self.avatarId,
             let avatarPointer = self.store?.attachment(with: id),
             let data = avatarPointer.attachmentData,
