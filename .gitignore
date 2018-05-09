@@ -35,6 +35,7 @@ DerivedData
 Carthage/Build/watchOS
 Carthage/Build/tvOS
 contents.xcworkspacedata
+*/Carthage/Build/.*.version
 Carthage/Build/.*.version
 
 # Credential
