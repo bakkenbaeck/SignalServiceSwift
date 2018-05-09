@@ -202,6 +202,7 @@ extension ChatsViewController: UITableViewDataSource {
     private func configureCell(_ cell: ChatCell, at indexPath: IndexPath) {
         let chat = self.signalClient.store.chat(at: indexPath.row)!
         cell.title = chat.displayName
+        cell.avatarImage = chat.image
 
         if let message = chat.visibleMessages.last {
             cell.date = self.dateFormatter.string(from: Date(milisecondTimeIntervalSinceEpoch: message.timestamp))

@@ -70,11 +70,14 @@ class ChatCell: UITableViewCell {
         return view
     }()
 
-
     private lazy var avatarImageView: UIImageView = {
         let view = UIImageView(image: nil)
         view.translatesAutoresizingMaskIntoConstraints = false
         view.contentMode = .scaleAspectFit
+
+        view.layer.masksToBounds = true
+        view.layer.borderColor = UIColor.gray.cgColor
+        view.layer.borderWidth = .lineHeight
 
         return view
     }()
@@ -84,6 +87,7 @@ class ChatCell: UITableViewCell {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = .systemFont(ofSize: 12)
         label.textAlignment = .right
+        label.setContentHuggingPriority(.required, for: .vertical)
 
         return label
     }()
@@ -123,37 +127,22 @@ class ChatCell: UITableViewCell {
 
         self.avatarImageView.layer.cornerRadius = 22
 
+        var constraints = NSLayoutConstraint.constraints(withVisualFormat: "|-[avatar]-[title]-|", options: [], metrics: [:], views: ["avatar" : self.avatarImageView, "title": self.titleLabel])
+        constraints.append(contentsOf: NSLayoutConstraint.constraints(withVisualFormat: "|-[avatar]-[date]-|", options: [], metrics: [:], views: ["avatar" : self.avatarImageView, "date": self.dateLabel]))
+        constraints.append(contentsOf: NSLayoutConstraint.constraints(withVisualFormat: "V:|-[avatar]-|", options: [], metrics: [:], views: ["avatar" : self.avatarImageView]))
+        constraints.append(contentsOf: NSLayoutConstraint.constraints(withVisualFormat: "V:|-[title]-[date]-|", options: [], metrics: [:], views: ["date": self.dateLabel, "title": self.titleLabel]))
+
+        NSLayoutConstraint.activate(constraints)
+
         NSLayoutConstraint.activate([
             self.containerView.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 8),
             self.containerView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -8),
             self.containerView.leftAnchor.constraint(equalTo: self.contentView.leftAnchor, constant: 8),
             self.containerView.rightAnchor.constraint(equalTo: self.contentView.rightAnchor, constant: -8),
 
-            self.avatarImageView.topAnchor.constraint(equalTo: self.containerView.topAnchor),
-            self.avatarImageView.leftAnchor.constraint(equalTo: self.containerView.leftAnchor),
-            self.avatarImageView.rightAnchor.constraint(equalTo: self.containerView.rightAnchor),
-
             self.avatarImageView.heightAnchor.constraint(equalToConstant: 44),
-            self.avatarImageView.widthAnchor.constraint(equalToConstant: 44),
-
-            self.titleLabel.topAnchor.constraint(equalTo: self.avatarImageView.bottomAnchor, constant: 8),
-            self.titleLabel.leftAnchor.constraint(equalTo: self.containerView.leftAnchor, constant: 8),
-            self.titleLabel.rightAnchor.constraint(equalTo: self.containerView.rightAnchor, constant: -8),
-            self.titleLabel.bottomAnchor.constraint(equalTo: self.dateLabel.topAnchor, constant: -8),
-
-            self.stateView.topAnchor.constraint(equalTo: self.dateLabel.topAnchor),
-            self.stateView.rightAnchor.constraint(equalTo: self.containerView.rightAnchor),
-            self.stateView.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor),
-
-            self.dateLabel.leftAnchor.constraint(equalTo: self.containerView.leftAnchor, constant: 8),
-            self.dateLabel.rightAnchor.constraint(equalTo: self.stateView.leftAnchor, constant: -8),
-            self.dateLabel.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor, constant: -8)
+            self.avatarImageView.widthAnchor.constraint(equalToConstant: 44)
         ])
-
-//        constraints.forEach { constraint in
-//            constraint.priority = UILayoutPriority.init(rawValue: 999.0)
-//            constraint.isActive = true
-//        }
     }
 
     init() {

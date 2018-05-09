@@ -326,7 +326,27 @@ class SignalMessageManager {
 
             let chat = self.store.groupChat(groupId: groupId)
 
-            if chat == nil {
+            if let chat = chat {
+                let isGroupAvatarUpdate = dataMessage.hasGroup && dataMessage.group.type == .update && dataMessage.group.hasAvatar
+                if isGroupAvatarUpdate {
+                    //            DebugLevel.current == .verbose {
+                    //                NSLog("Data message has group avatar attachment.")
+                    //            }
+
+                    var pointer = SignalServiceAttachmentPointer(serverId: dataMessage.group.avatar.id, key: dataMessage.group.avatar.key, digest: dataMessage.group.avatar.digest, size: dataMessage.group.avatar.size, contentType: dataMessage.group.avatar.contentType)
+                    pointer.state = .downloading
+                    try? self.store.save(attachmentPointer: pointer)
+
+                    self.networkClient.retrieve(pointer) { data in
+                        pointer.attachmentData = data
+
+                        chat.avatarId = pointer.uniqueId
+
+                        try? self.store.save(attachmentPointer: pointer)
+                        try? self.store.save(chat)
+                    }
+                }
+            } else {
                 // Unknown group.
                 switch groupContext.type {
                 case .update:
@@ -354,15 +374,6 @@ class SignalMessageManager {
         }
 
         self.receivedTextMessage(envelope, dataMessage: dataMessage)
-        let isGroupAvatarUpdate = dataMessage.hasGroup && dataMessage.group.type == .update && dataMessage.group.hasAvatar
-        if isGroupAvatarUpdate {
-            ///TODO: group avatar update
-            //                DebugLevel.current == .verbose {
-            //                    NSLog("Data message has group avatar attachment.")
-            //                }
-
-            // handleReceivedGroupAvatarUpdateWithEnvelope
-        }
     }
 
     private func sendGroupInfoRequest(groupId: String, envelope: Signalservice_Envelope) {
@@ -400,8 +411,8 @@ class SignalMessageManager {
         do {
             guard let decryptedData = try sessionCipher.decrypt(cipher: cipherMessage),
                 let content = try? Signalservice_Content(serializedData: decryptedData) else {
-                NSLog("Could not decrypt message! (1)")
-                return false
+                    NSLog("Could not decrypt message! (1)")
+                    return false
             }
 
             if content.hasSyncMessage {
@@ -466,7 +477,7 @@ class SignalMessageManager {
             "destinationRegistrationId": remoteRegistrationId,
             "content": ciphertext.base64Encoded(),
             "isSilent": false
-        ]]
+            ]]
     }
 
     private func cipherMessage(from data: Data, ciphertextType: CiphertextType = .unknown) throws -> SignalLibraryMessage {

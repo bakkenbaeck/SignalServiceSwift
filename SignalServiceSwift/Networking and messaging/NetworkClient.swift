@@ -313,4 +313,49 @@ class NetworkClient {
             }
         }
     }
+
+    func retrieve(_ pointer: SignalServiceAttachmentPointer, completion: @escaping (_ data: Data?) -> Void) {
+        if pointer.serverId < 100 {
+            NSLog("Suspicious attachment id %llu.", pointer.serverId)
+        }
+
+        self.getAttachmentLocation(attachmentId: pointer.serverId) { location in
+            guard let location = location else { fatalError("could not retrieve location") }
+
+            self.download(from: location, pointer: pointer, completion: completion)
+        }
+    }
+
+    private func download(from location: String, pointer: SignalServiceAttachmentPointer, completion: @escaping (_ data: Data?) -> Void) {
+        guard let url = URL(string: location) else { return }
+
+        let configuration = URLSessionConfiguration.default
+        configuration.httpAdditionalHeaders = ["Content-Type": "application/octet-stream"]
+        let session = URLSession(configuration: configuration)
+
+        let task = session.dataTask(with: url) { data, response, error in
+            var decryptedData: Data? = nil
+            defer {
+                completion(decryptedData)
+            }
+            
+            if let response = response as? HTTPURLResponse, response.statusCode != 200 {
+                NSLog("Could not download attachment. \(response)")
+                return
+            }
+            if let error = error {
+                NSLog("Error \(error.localizedDescription)")
+                return
+            }
+
+            guard let data = data else {
+                NSLog("Error, no data to decrypt for attachment.")
+                return
+            }
+
+            decryptedData = Cryptography.decryptAttachment(data, withKey: pointer.key, digest: pointer.digest, unpaddedSize: pointer.size)
+        }
+
+        task.resume()
+    }
 }
