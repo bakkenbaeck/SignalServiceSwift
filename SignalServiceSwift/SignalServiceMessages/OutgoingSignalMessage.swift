@@ -124,7 +124,6 @@ public class OutgoingSignalMessage: SignalMessage {
         return super.attachment
     }
 
-
     var store: SignalServiceStore?
 
     public enum GroupMetaMessageType: Int, Codable {

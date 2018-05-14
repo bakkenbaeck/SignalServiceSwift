@@ -36,7 +36,7 @@ public class SignalClient {
 
     var messageSender: SignalMessageManager?
 
-    ///TODO: make this internal, move user bootstrapping data generation to client.
+    /// TODO: make this internal, move user bootstrapping data generation to client.
     public var libraryStore: SignalLibraryStoreProtocol
     var libraryStoreBridge: SignalLibraryStoreBridge
     public var signalContext: SignalContext

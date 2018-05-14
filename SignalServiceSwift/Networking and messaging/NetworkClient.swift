@@ -334,11 +334,11 @@ class NetworkClient {
         let session = URLSession(configuration: configuration)
 
         let task = session.dataTask(with: url) { data, response, error in
-            var decryptedData: Data? = nil
+            var decryptedData: Data?
             defer {
                 completion(decryptedData)
             }
-            
+
             if let response = response as? HTTPURLResponse, response.statusCode != 200 {
                 NSLog("Could not download attachment. \(response)")
                 return

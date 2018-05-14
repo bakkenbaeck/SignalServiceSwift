@@ -35,7 +35,7 @@
     }
 
     deinit {
-        ratchet_identity_key_pair_destroy(UnsafeMutableRawPointer(identityKeyPairPointer).assumingMemoryBound(to: signal_type_base.self))
+        ratchet_identity_key_pair_destroy(UnsafeMutableRawPointer(self.identityKeyPairPointer).assumingMemoryBound(to: signal_type_base.self))
     }
 
     public required init?(coder aDecoder: NSCoder) {

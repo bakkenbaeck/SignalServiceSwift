@@ -41,7 +41,7 @@ public class SignalChat: Equatable, Codable {
         guard let id = self.avatarId,
             let avatarPointer = self.store?.attachment(with: id),
             let data = avatarPointer.attachmentData,
-            let image  = UIImage(data: data)
+            let image = UIImage(data: data)
         else {
             return nil
         }
@@ -111,9 +111,9 @@ public class SignalChat: Equatable, Codable {
     public var isMuted: Bool = false
 
     public var visibleMessages: [SignalMessage] {
-        return self.messages.filter({ message -> Bool in
-            return !message.body.isEmpty || message is InfoSignalMessage
-        })
+        return self.messages.filter { message -> Bool in
+            !message.body.isEmpty || message is InfoSignalMessage
+        }
     }
 
     public var messages: [SignalMessage] {

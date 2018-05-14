@@ -52,7 +52,7 @@ class SignalMessageManager {
 
             message.messageState = .unsent
 
-            if (shouldPersistMessage) {
+            if shouldPersistMessage {
                 try? self.store.save(message)
             }
 
@@ -67,7 +67,7 @@ class SignalMessageManager {
 //                    let selfRecipient = SignalAddress(name: self.sender.username, deviceId: 1)
 
 //                    self.sendMessage(transcriptMessage, to: selfRecipient, in: chat, attachments: []) { success in
-                    if (shouldPersistMessage) {
+                    if shouldPersistMessage {
                         try? self.store.save(message)
                     }
 //                    }
@@ -75,7 +75,7 @@ class SignalMessageManager {
             } else {
                 defer {
                     message.messageState = .unsent
-                    if (shouldPersistMessage) {
+                    if shouldPersistMessage {
                         try? self.store.save(message)
                     }
                 }
@@ -300,7 +300,7 @@ class SignalMessageManager {
         }
     }
 
-    ///TODO: Fix group info requests. Should tell others about a group.
+    /// TODO: Fix group info requests. Should tell others about a group.
     private func handleGroupInfoRequest(envelope: Signalservice_Envelope, dataMessage: Signalservice_DataMessage, groupChat: SignalChat?) {
         guard let groupChat = groupChat else { return }
         /// Important: don't give info about a group if they don't belong to it.
@@ -411,8 +411,8 @@ class SignalMessageManager {
         do {
             guard let decryptedData = try sessionCipher.decrypt(cipher: cipherMessage),
                 let content = try? Signalservice_Content(serializedData: decryptedData) else {
-                    NSLog("Could not decrypt message! (1)")
-                    return false
+                NSLog("Could not decrypt message! (1)")
+                return false
             }
 
             if content.hasSyncMessage {
@@ -477,7 +477,7 @@ class SignalMessageManager {
             "destinationRegistrationId": remoteRegistrationId,
             "content": ciphertext.base64Encoded(),
             "isSilent": false
-            ]]
+        ]]
     }
 
     private func cipherMessage(from data: Data, ciphertextType: CiphertextType = .unknown) throws -> SignalLibraryMessage {
@@ -504,7 +504,7 @@ class SignalMessageManager {
         }
 
         guard let cipherMessage: SignalLibraryMessage = (preKeyMessage ?? message)
-            else { throw ErrorFromSignalError(.invalidArgument) }
+        else { throw ErrorFromSignalError(.invalidArgument) }
 
         return cipherMessage
     }
