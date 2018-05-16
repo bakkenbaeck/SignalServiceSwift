@@ -57,7 +57,7 @@ public class SignalClient {
 
     public var baseURL: URL
 
-    public init(baseURL: URL, contactsDelegate: SignalRecipientsDelegate, persistenceStore: PersistenceStore) {
+    public init(baseURL: URL, recipientsDelegate: SignalRecipientsDisplayDelegate, persistenceStore: PersistenceStore) {
         self.baseURL = baseURL
 
         self.libraryStore = SignalLibraryStore(delegate: persistenceStore)
@@ -67,12 +67,65 @@ public class SignalClient {
         self.libraryStore.context = self.signalContext
         self.libraryStoreBridge.setup(with: self.signalContext.context)
 
-        self.store = SignalServiceStore(persistenceStore: persistenceStore, contactsDelegate: contactsDelegate)
+        self.store = SignalServiceStore(persistenceStore: persistenceStore, contactsDelegate: recipientsDelegate)
     }
 
-    public func setupSender(username: String, password: String, deviceId: Int32, registrationId: UInt32? = nil, signalingKey: String) {
-        // setup socket
-        let socketURL = URL(string: "wsss://\(self.baseURL.host!)/v1/websocket/?login=\(username)&password=\(password)")!
+    public func generateUserBootstrap(username: String, password: String) -> [String: Any] {
+        let identityKeyPair = self.signalContext.signalKeyHelper.generateAndStoreIdentityKeyPair()!
+        let signalingKey = Data.generateSecureRandomData(count: 52).base64EncodedString()
+        let registrationId = signalContext.signalKeyHelper.generateRegistrationId()
+
+        let identityPublicKey = identityKeyPair.publicKey.base64EncodedString()
+
+        let signedPreKey = self.signalContext.signalKeyHelper.generateSignedPreKey(withIdentity: identityKeyPair, signedPreKeyId: 0)
+        let preKeys = self.signalContext.signalKeyHelper.generatePreKeys(withStartingPreKeyId: 1, count: 100)
+
+        for prekey in preKeys {
+            _ = self.libraryStore.storePreKey(data: prekey.serializedData, id: prekey.preKeyId)
+        }
+
+        self.libraryStore.storeSignedPreKey(signedPreKey.serializedData, signedPreKeyId: signedPreKey.preKeyId)
+        self.libraryStore.storeCurrentSignedPreKeyId(signedPreKey.preKeyId)
+        self.libraryStore.localRegistrationId = registrationId
+
+        let sender = SignalSender(username: username, password: password, deviceId: 1, remoteRegistrationId: registrationId, signalingKey: signalingKey)
+        self.store.storeSender(sender)
+        
+        let networkClient = NetworkClient(baseURL: self.baseURL, username: sender.username, password: sender.password)
+        self.messageSender = SignalMessageManager(sender: sender, networkClient: networkClient, signalContext: self.signalContext, store: self.store, delegate: self)
+
+        var prekeysDict = [[String: Any]]()
+
+        for prekey in preKeys {
+            let prekeyParam: [String: Any] = [
+                "keyId": prekey.preKeyId,
+                "publicKey": prekey.keyPair.publicKey.base64EncodedString()
+            ]
+            prekeysDict.append(prekeyParam)
+        }
+
+        let signedPreKeyDict: [String: Any] = [
+            "keyId": Int(signedPreKey.preKeyId),
+            "publicKey": signedPreKey.keyPair.publicKey.base64EncodedString(),
+            "signature": signedPreKey.signature.base64EncodedString()
+        ]
+
+        let payload: [String: Any] = [
+            "identityKey": identityPublicKey,
+            "password": password,
+            "preKeys": prekeysDict,
+            "registrationId": Int(registrationId),
+            "signalingKey": signalingKey,
+            "signedPreKey": signedPreKeyDict
+        ]
+
+        return payload
+    }
+
+    public func startSocket() {
+        guard let sender = self.store.fetchSender() else { return }
+
+        let socketURL = URL(string: "wsss://\(self.baseURL.host!)/v1/websocket/?login=\(sender.username)&password=\(sender.password)")!
 
         self.socket = WebSocket(url: socketURL)
         self.socket?.delegate = self
@@ -80,15 +133,10 @@ public class SignalClient {
 
         self.socket?.connect()
 
-        RunLoop.main.add(self.keepAliveTimer, forMode: .defaultRunLoopMode)
-
-        let unwrappedRegistrationId = registrationId ?? self.libraryStore.localRegistrationId
-
-        // setup message sender and network client
-        let sender = SignalSender(username: username, password: password, deviceId: deviceId, remoteRegistrationId: unwrappedRegistrationId, signalingKey: signalingKey)
         let networkClient = NetworkClient(baseURL: self.baseURL, username: sender.username, password: sender.password)
-
         self.messageSender = SignalMessageManager(sender: sender, networkClient: networkClient, signalContext: self.signalContext, store: self.store, delegate: self)
+
+        RunLoop.main.add(self.keepAliveTimer, forMode: .defaultRunLoopMode)
     }
 
     public func sendGroupMessage(_ body: String, type: OutgoingSignalMessage.GroupMetaMessageType, to recipientAddresses: [SignalAddress], attachments: [Data] = []) {

@@ -46,15 +46,14 @@ class MessagesBasicCell: UITableViewCell {
         return view
     }()
 
-    private(set) lazy var errorView: MessagesErrorView = {
+    private lazy var errorView: MessagesErrorView = {
         let view = MessagesErrorView()
         view.alpha = 0
 
         return view
     }()
 
-    private(set) lazy var errorlabel: UILabel = {
-
+    private lazy var errorlabel: UILabel = {
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.alignment = .right
 

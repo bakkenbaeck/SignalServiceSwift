@@ -21,7 +21,7 @@
     /// - Important: As a side-effect, it will automatically replaced our stored identity key. Use with care.
     ///
     /// - Returns: Our new signal identity key pair.
-    public func generateIdentityKeyPair() -> SignalIdentityKeyPair? {
+    public func generateAndStoreIdentityKeyPair() -> SignalIdentityKeyPair? {
         var keyPairPointer: UnsafeMutablePointer<ratchet_identity_key_pair>?
         let result = signal_protocol_key_helper_generate_identity_key_pair(&keyPairPointer, self.context.context)
 

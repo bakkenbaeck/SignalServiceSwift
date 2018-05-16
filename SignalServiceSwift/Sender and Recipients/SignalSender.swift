@@ -6,7 +6,7 @@
 //  Copyright © 2018 Bakken&Bæck. All rights reserved.
 //
 
-struct SignalSender {
+struct SignalSender: Codable {
     /// Works as a base-auth username, as well as an identifier.
     var username: String
 

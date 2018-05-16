@@ -25,9 +25,11 @@ class MessagesTextCell: MessagesBasicCell {
             self.messageImageView.image = messageImage
 
             let aspectRatio: CGFloat = messageImage.size.height / messageImage.size.width
+            let widthAnchor = messageImage.size.width > self.bubbleView.frame.width ? self.bubbleView.widthAnchor : self.messageImageView.widthAnchor
 
             self.imageHeightConstraint?.isActive = false
-            self.imageHeightConstraint = self.messageImageView.height(to: self.messageImageView, self.messageImageView.widthAnchor, multiplier: aspectRatio, priority: .defaultHigh)
+            self.imageHeightConstraint = self.messageImageView.heightAnchor.constraint(equalTo: widthAnchor, multiplier: aspectRatio)
+            self.imageHeightConstraint?.isActive = true
         }
     }
 

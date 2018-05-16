@@ -113,12 +113,6 @@ extension MessagesViewController: UITableViewDataSource {
         return UITableViewAutomaticDimension
     }
 
-//    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-//        let cell = self.configuredCell(for: indexPath, dequeue: false)
-//
-//        return cell.systemLayoutSizeFitting(CGSize(width: self.tableView.bounds.width, height: .greatestFiniteMagnitude), withHorizontalFittingPriority: .required, verticalFittingPriority: .fittingSizeLevel).height
-//    }
-
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = self.configuredCell(for: indexPath)
 
@@ -127,12 +121,11 @@ extension MessagesViewController: UITableViewDataSource {
         return cell
     }
 
-    private func configuredCell(for indexPath: IndexPath, dequeue: Bool = false) -> UITableViewCell {
+    private func configuredCell(for indexPath: IndexPath) -> UITableViewCell {
         let message = self.message(at: indexPath)
 
         if let message = message as? InfoSignalMessage {
-            let cell = dequeue ? self.tableView.dequeue(StatusCell.self, for: indexPath) : StatusCell()
-
+            let cell = self.tableView.dequeue(StatusCell.self, for: indexPath)
             let localizedFormat = NSLocalizedString(message.customMessage, comment: "")
             let contact = ContactManager.displayName(for: message.senderId)
             let string = String(format: localizedFormat, contact, message.additionalInfo)
@@ -145,7 +138,7 @@ extension MessagesViewController: UITableViewDataSource {
 
             return cell
         } else {
-            let cell = dequeue ? self.tableView.dequeue(MessagesTextCell.self, for: indexPath) : MessagesTextCell()
+            let cell = self.tableView.dequeue(MessagesTextCell.self, for: indexPath)
             cell.isOutGoing = message is OutgoingSignalMessage
             cell.messageText = SofaMessage(content: message.body).body
 

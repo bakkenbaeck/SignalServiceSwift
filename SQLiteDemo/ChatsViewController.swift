@@ -53,7 +53,7 @@ class ChatsViewController: UIViewController {
     let teapot = Teapot(baseURL: URL(string: "https://chat.internal.service.toshi.org")!)
 
     lazy var signalClient: SignalClient = {
-        let client = SignalClient(baseURL: URL(string: "https://chat.internal.service.toshi.org")!, contactsDelegate: self, persistenceStore: self.persistenceStore)
+        let client = SignalClient(baseURL: URL(string: "https://chat.internal.service.toshi.org")!, recipientsDelegate: self, persistenceStore: self.persistenceStore)
         client.store.chatDelegate = self
 
         return client
@@ -73,8 +73,7 @@ class ChatsViewController: UIViewController {
 
             super.init(coder: aDecoder)
 
-            self.signalClient.setupSender(username: self.user.toshiAddress, password: self.user.password, deviceId: self.user.address.deviceId, signalingKey: self.user.signalingKey!)
-
+            self.signalClient.startSocket()
             self.signalClient.shouldKeepSocketAlive = true
         } else {
             self.user = User(privateKey: "0989d7b7ccfe3baf39ed441d001df834173e0729916210d14f60068d1d22c595")
@@ -99,9 +98,8 @@ class ChatsViewController: UIViewController {
 
     func register(user: User) {
         self.fetchTimestamp { timestamp in
-            let parameters = UserBootstrapParameter(user: user, signalClient: self.signalClient)
+            let payload = self.signalClient.generateUserBootstrap(username: user.toshiAddress, password: user.password)
             let path = "/v1/accounts/bootstrap"
-            let payload = parameters.payload
 
             guard let data = try? JSONSerialization.data(withJSONObject: payload, options: []) else {
                 NSLog("Invalid JSON payload!")
@@ -124,19 +122,8 @@ class ChatsViewController: UIViewController {
                         fatalError()
                     }
 
-                    let preKey = parameters.prekeys.first!
-                    let signedPreKey = parameters.signedPrekey
-
-                    user.password = parameters.password
-                    user.signalingKey = parameters.signalingKey
-                    user.preKeyBundle = SignalPreKeyBundle(registrationId: parameters.registrationId, deviceId: user.address.deviceId, preKeyId: preKey.preKeyId, preKeyPublic: preKey.keyPair.publicKey, signedPreKeyId: signedPreKey.preKeyId, signedPreKeyPublic: signedPreKey.keyPair.publicKey, signature: signedPreKey.signature as NSData, identityKey: parameters.identityKeyPair.publicKey)
-
-                    self.signalClient.libraryStore.localRegistrationId = parameters.registrationId
-
-                    self.signalClient.setupSender(username: user.toshiAddress, password: parameters.password, deviceId: user.address.deviceId, registrationId: parameters.registrationId, signalingKey: parameters.signalingKey)
-
+                    self.signalClient.startSocket()
                     self.signalClient.shouldKeepSocketAlive = true
-
                     self.persistenceStore.storeUser(user)
 
                 case .failure(_, _, let error):
@@ -190,14 +177,14 @@ extension ChatsViewController: UITableViewDataSource {
         return UITableViewAutomaticDimension
     }
 
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        let cell = ChatCell()
-        self.configureCell(cell, at: indexPath)
-
-        cell.layoutIfNeeded()
-
-        return cell.systemLayoutSizeFitting(CGSize(width: self.tableView.bounds.width, height: .greatestFiniteMagnitude), withHorizontalFittingPriority: .required, verticalFittingPriority: .fittingSizeLevel).height
-    }
+//    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+//        let cell = ChatCell()
+//        self.configureCell(cell, at: indexPath)
+//
+//        cell.layoutIfNeeded()
+//
+//        return cell.systemLayoutSizeFitting(CGSize(width: self.tableView.bounds.width, height: .greatestFiniteMagnitude), withHorizontalFittingPriority: .required, verticalFittingPriority: .fittingSizeLevel).height
+//    }
 
     private func configureCell(_ cell: ChatCell, at indexPath: IndexPath) {
         let chat = self.signalClient.store.chat(at: indexPath.row)!
@@ -257,7 +244,7 @@ extension ChatsViewController: MessagesViewControllerDelegate {
     }
 }
 
-extension ChatsViewController: SignalRecipientsDelegate {
+extension ChatsViewController: SignalRecipientsDisplayDelegate {
     func displayName(for address: String) -> String {
        return ContactManager.displayName(for: address)
     }

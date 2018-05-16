@@ -3,7 +3,6 @@ import TinyConstraints
 import UIKit
 
 final class MessagesErrorView: UIView {
-
     private lazy var imageView: UIImageView = {
         let view = UIImageView()
         view.image = #imageLiteral(resourceName: "error")

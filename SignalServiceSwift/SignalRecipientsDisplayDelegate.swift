@@ -6,7 +6,7 @@
 //  Copyright © 2018 Bakken&Bæck. All rights reserved.
 //
 
-public protocol SignalRecipientsDelegate {
+public protocol SignalRecipientsDisplayDelegate {
     func image(for address: String) -> UIImage?
     func displayName(for address: String) -> String
 }

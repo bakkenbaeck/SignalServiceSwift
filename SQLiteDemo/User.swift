@@ -13,15 +13,11 @@ import SignalServiceSwift
 class User: Codable {
     enum CodingKeys: String, CodingKey {
         case password
-        case signalingKey
         case privateKey
     }
 
     var privateKey: String
     var password: String
-    var signalingKey: String? = nil
-
-    var preKeyBundle: SignalPreKeyBundle? = nil
 
     lazy var cereal: EtherealCereal = {
         EtherealCereal(privateKey: self.privateKey)

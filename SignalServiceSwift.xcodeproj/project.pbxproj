@@ -36,7 +36,7 @@
 		9F723093208F2FD500F568F7 /* Date+milisecondTimestamp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F723092208F2FD500F568F7 /* Date+milisecondTimestamp.swift */; };
 		9F723096208F303200F568F7 /* NSDate+Chrono.h in Headers */ = {isa = PBXBuildFile; fileRef = 9F723094208F303200F568F7 /* NSDate+Chrono.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9F723097208F303200F568F7 /* NSDate+Chrono.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9F723095208F303200F568F7 /* NSDate+Chrono.mm */; };
-		9F8F25192091D3A10020FF00 /* SignalRecipientsDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F8F25182091D3A10020FF00 /* SignalRecipientsDelegate.swift */; };
+		9F8F25192091D3A10020FF00 /* SignalRecipientsDisplayDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F8F25182091D3A10020FF00 /* SignalRecipientsDisplayDelegate.swift */; };
 		9F8F251B209219680020FF00 /* SignalServiceAttachmentsProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F8F251A209219680020FF00 /* SignalServiceAttachmentsProcessor.swift */; };
 		9F8F251D209348260020FF00 /* SignalServiceAttachmentPointer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F8F251C209348260020FF00 /* SignalServiceAttachmentPointer.swift */; };
 		9FA8EEF920878F8A00D0CBB6 /* CommonCrypto.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9FFD1DD42086305B00FA4626 /* CommonCrypto.framework */; };
@@ -219,7 +219,7 @@
 		9F723092208F2FD500F568F7 /* Date+milisecondTimestamp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+milisecondTimestamp.swift"; sourceTree = "<group>"; };
 		9F723094208F303200F568F7 /* NSDate+Chrono.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate+Chrono.h"; sourceTree = "<group>"; };
 		9F723095208F303200F568F7 /* NSDate+Chrono.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "NSDate+Chrono.mm"; sourceTree = "<group>"; };
-		9F8F25182091D3A10020FF00 /* SignalRecipientsDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignalRecipientsDelegate.swift; sourceTree = "<group>"; };
+		9F8F25182091D3A10020FF00 /* SignalRecipientsDisplayDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignalRecipientsDisplayDelegate.swift; sourceTree = "<group>"; };
 		9F8F251A209219680020FF00 /* SignalServiceAttachmentsProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignalServiceAttachmentsProcessor.swift; sourceTree = "<group>"; };
 		9F8F251C209348260020FF00 /* SignalServiceAttachmentPointer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignalServiceAttachmentPointer.swift; sourceTree = "<group>"; };
 		9FA8EF052087963700D0CBB6 /* Starscream.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Starscream.framework; path = Carthage/Build/iOS/Starscream.framework; sourceTree = SOURCE_ROOT; };
@@ -506,7 +506,7 @@
 				9F0A199C20A070320051B268 /* Networking and messaging */,
 				9FFD1DDF2086357000FA4626 /* SignalChat.swift */,
 				9F33523D20862B5500E0F145 /* SignalClient.swift */,
-				9F8F25182091D3A10020FF00 /* SignalRecipientsDelegate.swift */,
+				9F8F25182091D3A10020FF00 /* SignalRecipientsDisplayDelegate.swift */,
 				9FFB8B08208629B60067BCE9 /* SignalServiceSwift.h */,
 				9FFB8B09208629B60067BCE9 /* Info.plist */,
 			);
@@ -848,7 +848,7 @@
 			files = (
 				9FFD1E2720873D4F00FA4626 /* SignalService.pb.swift in Sources */,
 				9F27B9F12090C61F0032C7DD /* InfoSignalMessage.swift in Sources */,
-				9F8F25192091D3A10020FF00 /* SignalRecipientsDelegate.swift in Sources */,
+				9F8F25192091D3A10020FF00 /* SignalRecipientsDisplayDelegate.swift in Sources */,
 				9FFD1DDC208630E900FA4626 /* SignalSender.swift in Sources */,
 				9FFD1E112086459600FA4626 /* SignalIdentityKeyStoreProtocol.swift in Sources */,
 				9F8F251B209219680020FF00 /* SignalServiceAttachmentsProcessor.swift in Sources */,

@@ -9,6 +9,8 @@
 public protocol PersistenceStore: SignalLibraryStoreDelegate {
     func retrieveAllObjects(ofType type: SignalServiceStore.PersistedType) -> [Data]
 
+    func retrieveObject(ofType type: SignalServiceStore.PersistedType, key: String) -> Data?
+
     func update(_ data: Data, key: String, type: SignalServiceStore.PersistedType)
     func store(_ data: Data, key: String, type: SignalServiceStore.PersistedType)
 }
@@ -39,6 +41,7 @@ public class SignalServiceStore {
         case recipient
         case infoMessage
         case attachmentPointer
+        case sender
     }
 
     public var numberOfChats: Int {
@@ -47,7 +50,7 @@ public class SignalServiceStore {
 
     public var chatDelegate: SignalServiceStoreChatDelegate?
     public var messageDelegate: SignalServiceStoreMessageDelegate?
-    public var contactsDelegate: SignalRecipientsDelegate
+    public var contactsDelegate: SignalRecipientsDisplayDelegate
 
     private let decoder = JSONDecoder()
     private let encoder = JSONEncoder()
@@ -62,7 +65,7 @@ public class SignalServiceStore {
 
     private var persistenceStore: PersistenceStore?
 
-    public init(persistenceStore: PersistenceStore? = nil, contactsDelegate: SignalRecipientsDelegate) {
+    public init(persistenceStore: PersistenceStore? = nil, contactsDelegate: SignalRecipientsDisplayDelegate) {
         self.contactsDelegate = contactsDelegate
         self.persistenceStore = persistenceStore
 
@@ -129,6 +132,18 @@ public class SignalServiceStore {
         } catch (let error) {
             NSLog("Could not decode chat or message: %@", error.localizedDescription)
         }
+    }
+
+    func fetchSender() -> SignalSender? {
+        guard let data = self.persistenceStore?.retrieveObject(ofType: .sender, key: "sender") else { return nil }
+        let sender = try? self.decoder.decode(SignalSender.self, from: data)
+
+        return sender
+    }
+
+    func storeSender(_ sender: SignalSender) {
+        guard let data = try? self.encoder.encode(sender) else { return }
+        self.persistenceStore?.store(data, key: "sender", type: .sender)
     }
 
     public func chat(at index: Int) -> SignalChat? {
@@ -304,7 +319,12 @@ public class SignalServiceStore {
         // update?
         if self.messages.contains(message) {
             if let chat = self.chat(chatId: message.chatId) {
-                let indexPath = IndexPath(item: chat.visibleMessages.index(of: message)!, section: 0)
+                guard let index = chat.visibleMessages.index(of: message) else {
+                    NSLog("Message type visible in chat.")
+                    return
+                }
+
+                let indexPath = IndexPath(item: index, section: 0)
                 DispatchQueue.main.async {
                     self.messageDelegate?.signalServiceStoreDidChangeMessage(message, at: indexPath, for: .update)
                     self.messageDelegate?.signalServiceStoreDidChangeMessages()
@@ -314,7 +334,12 @@ public class SignalServiceStore {
             }
         } else {
             self.messages.append(message)
-            if let chat = self.chat(chatId: message.chatId), let index = chat.visibleMessages.index(of: message) {
+            if let chat = self.chat(chatId: message.chatId) {
+                guard let index = chat.visibleMessages.index(of: message) else {
+                    NSLog("Message type visible in chat.")
+                    return
+                }
+                
                 let indexPath = IndexPath(item: index, section: 0)
                 DispatchQueue.main.async {
                     self.messageDelegate?.signalServiceStoreDidChangeMessage(message, at: indexPath, for: .insert)

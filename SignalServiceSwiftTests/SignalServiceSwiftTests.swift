@@ -93,7 +93,7 @@ class SignalServiceSwiftTests: XCTestCase {
         concreteStore.setup(with: signalContext.context)
 
         let registrationId = keyHelper.generateRegistrationId()
-        guard let identityKeyPair = keyHelper.generateIdentityKeyPair() else {
+        guard let identityKeyPair = keyHelper.generateAndStoreIdentityKeyPair() else {
             XCTFail()
 
             return
@@ -129,7 +129,7 @@ class SignalServiceSwiftTests: XCTestCase {
 
         let bobKeyHelper = SignalKeyHelper(context: bobSignalContext)
 
-        guard let bobIdentityKeyPair = bobKeyHelper.generateIdentityKeyPair() else {
+        guard let bobIdentityKeyPair = bobKeyHelper.generateAndStoreIdentityKeyPair() else {
             XCTFail()
             return
         }

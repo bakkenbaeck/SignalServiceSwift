@@ -11,6 +11,7 @@ import SignalServiceSwift
 import SQLite
 
 class FilePersistenceStore: PersistenceStore {
+
     let dbConnection: Connection
 
     let table: Table
@@ -72,7 +73,7 @@ class FilePersistenceStore: PersistenceStore {
     }
 
     func retrieveAllObjects(ofType type: SignalServiceStore.PersistedType) -> [Data] {
-        let result = self.table.filter(self.typeField == type.rawValue.description)
+        let result = self.table.filter(self.typeField == type.rawValue)
         var objects = [Data]()
 
         do {
@@ -86,8 +87,24 @@ class FilePersistenceStore: PersistenceStore {
         return objects
     }
 
+    func retrieveObject(ofType type: SignalServiceStore.PersistedType, key: String) -> Data? {
+        let result = self.table.filter(self.typeField == type.rawValue && self.identifierField == key)
+        var object: Data?
+
+        do {
+            for data in try self.dbConnection.prepare(result) {
+                object = data[self.dataField]
+                break
+            }
+        } catch (let error) {
+            NSLog("Could not retrieve data from db: %@", error.localizedDescription)
+        }
+
+        return object
+    }
+
     func update(_ data: Data, key: String, type: SignalServiceStore.PersistedType) {
-        let object = self.table.filter(self.identifierField == key && self.typeField == type.rawValue.description)
+        let object = self.table.filter(self.identifierField == key && self.typeField == type.rawValue)
 
         do {
             try self.dbConnection.run(object.update(self.dataField <- data))
@@ -97,7 +114,7 @@ class FilePersistenceStore: PersistenceStore {
     }
 
     func store(_ data: Data, key: String, type: SignalServiceStore.PersistedType) {
-        let insert = self.table.insert(self.identifierField <- key, self.dataField <- data, self.typeField <- type.rawValue.description)
+        let insert = self.table.insert(self.identifierField <- key, self.dataField <- data, self.typeField <- type.rawValue)
 
         do {
             try self.dbConnection.run(insert)

@@ -19,7 +19,7 @@ public class SignalChat: Equatable, Codable {
     }
 
     var store: SignalServiceStore?
-    var contactsDelegate: SignalRecipientsDelegate?
+    var contactsDelegate: SignalRecipientsDisplayDelegate?
 
     var avatarId: String?
 
