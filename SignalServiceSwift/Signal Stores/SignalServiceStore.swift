@@ -270,8 +270,7 @@ public class SignalServiceStore {
     }
 
     func messages(for chat: SignalChat) -> [SignalMessage] {
-        let messages = self.fetchMessages()
-        let chatMessages = messages.compactMap({ message -> SignalMessage? in
+        let chatMessages = self.messages.compactMap({ message -> SignalMessage? in
             message.chatId == chat.uniqueId ? message : nil
         }).sorted { (a, b) -> Bool in
             a.timestamp < b.timestamp
@@ -280,25 +279,25 @@ public class SignalServiceStore {
         return chatMessages
     }
 
-    func fetchMessages() -> [SignalMessage] {
-        guard let persistenceStore = self.persistenceStore else { return [] }
-
-        let info: [SignalMessage] = persistenceStore.retrieveAllObjects(ofType: .infoMessage).compactMap { data in
-            try? self.decoder.decode(InfoSignalMessage.self, from: data)
-        }
-
-        let incoming: [SignalMessage] = persistenceStore.retrieveAllObjects(ofType: .incomingMessage).compactMap { data in
-            try? self.decoder.decode(IncomingSignalMessage.self, from: data)
-        }
-
-        let outgoing: [SignalMessage] = persistenceStore.retrieveAllObjects(ofType: .outgoingMessage).compactMap { data in
-            try? self.decoder.decode(OutgoingSignalMessage.self, from: data)
-        }
-
-        let messages = info + incoming + outgoing
-
-        return messages
-    }
+//    func fetchMessages() -> [SignalMessage] {
+//        guard let persistenceStore = self.persistenceStore else { return [] }
+//
+//        let info: [SignalMessage] = persistenceStore.retrieveAllObjects(ofType: .infoMessage).compactMap { data in
+//            try? self.decoder.decode(InfoSignalMessage.self, from: data)
+//        }
+//
+//        let incoming: [SignalMessage] = persistenceStore.retrieveAllObjects(ofType: .incomingMessage).compactMap { data in
+//            try? self.decoder.decode(IncomingSignalMessage.self, from: data)
+//        }
+//
+//        let outgoing: [SignalMessage] = persistenceStore.retrieveAllObjects(ofType: .outgoingMessage).compactMap { data in
+//            try? self.decoder.decode(OutgoingSignalMessage.self, from: data)
+//        }
+//
+//        let messages = info + incoming + outgoing
+//
+//        return messages
+//    }
 
     func save(_ recipient: SignalAddress) throws {
         let data = try self.encoder.encode(recipient)
