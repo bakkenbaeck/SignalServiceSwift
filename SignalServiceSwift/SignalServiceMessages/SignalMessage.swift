@@ -37,6 +37,8 @@ public class SignalMessage: Codable, Equatable {
         return nil
     }
 
+    public var attachmentImage: UIImage?
+
     public init(body: String, chatId: String) {
         self.body = body
         self.chatId = chatId
