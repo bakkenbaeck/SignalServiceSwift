@@ -35,9 +35,10 @@ class FilePersistenceStore: PersistenceStore {
 
         _ = try? self.dbConnection.run(self.table.create { t in
             t.column(self.idField, primaryKey: true)
-            t.column(self.identifierField, unique: true)
+            t.column(self.identifierField)
             t.column(self.dataField)
             t.column(self.typeField)
+            t.unique(self.identifierField, self.typeField)
         })
 
         NSLog("Did finish database setup.")
@@ -45,7 +46,7 @@ class FilePersistenceStore: PersistenceStore {
 
     func retrieveUser() -> User? {
         var user: User? = nil
-        let result = self.table.filter(self.typeField == "user")
+        let result = self.table.filter(self.typeField == "user").select(self.dataField)
 
         do {
             if let data = try self.dbConnection.pluck(result) {
@@ -142,9 +143,9 @@ class FilePersistenceStore: PersistenceStore {
     func deleteValue(key: String, type: SignalServiceStore.PersistedType) -> Bool {
         let result: Bool
 
-        let delete = self.table.filter(self.identifierField == key.description && self.typeField == type.rawValue)
+        let delete = self.table.filter(self.identifierField == key && self.typeField == type.rawValue)
         do {
-            result = try self.dbConnection.run(delete.delete()) == 1
+            result = try self.dbConnection.run(delete.delete()) > 0
         } catch (let error) {
             NSLog("Failed to delete data in the db: %@", error.localizedDescription)
             result = false
@@ -157,9 +158,9 @@ class FilePersistenceStore: PersistenceStore {
 extension FilePersistenceStore: SignalLibraryStoreDelegate {
     func deleteSignalLibraryValue(key: String, type: SignalLibraryStore.LibraryStoreType)  -> Bool {
         let result: Bool
-        let delete = self.table.filter(self.identifierField == key.description && self.typeField == type.rawValue)
+        let delete = self.table.filter(self.identifierField == key && self.typeField == type.rawValue)
         do {
-            result = try self.dbConnection.run(delete.delete()) == 1
+            result = try self.dbConnection.run(delete.delete()) > 0
         } catch (let error) {
             result = false
             NSLog("Failed to delete data in the db: %@", error.localizedDescription)
@@ -195,7 +196,7 @@ extension FilePersistenceStore: SignalLibraryStoreDelegate {
     }
 
     func retrieveSignalLibraryValue(key: String, type: SignalLibraryStore.LibraryStoreType) -> Data? {
-        let result = self.table.filter(self.typeField == type.rawValue && self.identifierField == key.description)
+        let result = self.table.filter(self.typeField == type.rawValue && self.identifierField == key)
         var object: Data?
 
         do {

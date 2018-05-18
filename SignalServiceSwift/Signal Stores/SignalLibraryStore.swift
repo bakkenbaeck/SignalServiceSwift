@@ -94,7 +94,10 @@ public class SignalLibraryStore: NSObject, SignalLibraryStoreProtocol {
 
     private(set) var preKeyStore: [UInt32: SignalLibraryPreKeyRecord] {
         didSet {
-            for item in self.preKeyStore {
+            let newValues = self.preKeyStore.filter { v -> Bool in
+                return !oldValue.keys.contains(v.key)
+            }
+            for item in newValues {
                 let prekeyData = try! JSONEncoder().encode(item.value)
                 self.delegate.storeSignalLibraryValue(prekeyData, key: "prekey: \(item.key)", type: .preKey)
             }
@@ -112,7 +115,10 @@ public class SignalLibraryStore: NSObject, SignalLibraryStoreProtocol {
 
     private(set) var identityKeyStore: [String: SignalLibraryIdentityKeyRecord] {
         didSet {
-            for item in self.identityKeyStore {
+            let newValues = self.identityKeyStore.filter { v -> Bool in
+                return !oldValue.keys.contains(v.key)
+            }
+            for item in newValues {
                 let identityKeyData = try! JSONEncoder().encode(item.value)
                 self.delegate.storeSignalLibraryValue(identityKeyData, key: item.key, type: .identityKey)
             }

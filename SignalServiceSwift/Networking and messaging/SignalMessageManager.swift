@@ -36,7 +36,7 @@ class SignalMessageManager {
         }
     }
 
-    func sendMessage(_ message: OutgoingSignalMessage, to recipient: SignalAddress, in chat: SignalChat, shouldPersistMessage: Bool = true, completion: @escaping (_ success: Bool) -> Void) {
+    func sendMessage(_ message: OutgoingSignalMessage, to recipient: SignalAddress, in chat: SignalChat, completion: @escaping (_ success: Bool) -> Void) {
 
         // no need to send a message to ourselves
         guard recipient.name != self.sender.username else {
@@ -51,33 +51,21 @@ class SignalMessageManager {
             NSLog("Error. Could not send messages. Error encrypting.")
 
             message.messageState = .unsent
-
-            if shouldPersistMessage {
-                try? self.store.save(message)
-            }
+            completion(false)
 
             return
         }
 
         self.networkClient.sendMessage(messagesDict, from: self.sender, to: recipient.name) { success, params, statusCode in
             if success {
-                if !(message is TranscriptSignalMessage || message is ReadReceiptSignalMessage) && !message.didSentSyncTranscript {
-                    message.didSentSyncTranscript = true
-//                    let transcriptMessage = TranscriptSignalMessage(message: message, store: self.store)
-//                    let selfRecipient = SignalAddress(name: self.sender.username, deviceId: 1)
+//                if !(message is TranscriptSignalMessage || message is ReadReceiptSignalMessage) && !message.didSentSyncTranscript {
+//                    message.didSentSyncTranscript = true
+//                }
 
-//                    self.sendMessage(transcriptMessage, to: selfRecipient, in: chat, attachments: []) { success in
-                    if shouldPersistMessage {
-                        try? self.store.save(message)
-                    }
-//                    }
-                }
+                completion(success)
             } else {
                 defer {
                     message.messageState = .unsent
-                    if shouldPersistMessage {
-                        try? self.store.save(message)
-                    }
                 }
 
                 let retrySending: (() -> Void) = { () -> Void in
@@ -316,7 +304,7 @@ class SignalMessageManager {
 
         // Only send it to the requesting party.
         let recipient = SignalAddress(name: envelope.source, deviceId: Int32(envelope.sourceDevice))
-        self.sendMessage(infoMessage, to: recipient, in: groupChat, shouldPersistMessage: false) { _ in }
+        self.sendMessage(infoMessage, to: recipient, in: groupChat) { _ in }
     }
 
     private func handleEnvelope(_ envelope: Signalservice_Envelope, dataMessage: Signalservice_DataMessage) {
@@ -384,6 +372,7 @@ class SignalMessageManager {
         self.sendMessage(syncGroupRequestMessage, to: recipient, in: newGroupChat) { success in
             if success {
                 NSLog("Sent group info request to %@", recipient.name)
+                try? self.store.save(syncGroupRequestMessage)
             }
         }
     }

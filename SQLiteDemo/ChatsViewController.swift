@@ -61,6 +61,8 @@ class ChatsViewController: UIViewController {
 
     var persistenceStore = FilePersistenceStore()
 
+    var chats: [SignalChat] = []
+
     @IBOutlet var tableView: UITableView!
 
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
@@ -75,6 +77,8 @@ class ChatsViewController: UIViewController {
 
             self.signalClient.startSocket()
             self.signalClient.shouldKeepSocketAlive = true
+            self.chats = self.signalClient.store.fetchAllChats()
+
         } else {
             self.user = User(privateKey: "0989d7b7ccfe3baf39ed441d001df834173e0729916210d14f60068d1d22c595")
 
@@ -82,6 +86,8 @@ class ChatsViewController: UIViewController {
 
             self.register(user: self.user)
         }
+
+        self.signalClient.store.chatDelegate = self
     }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -90,9 +96,9 @@ class ChatsViewController: UIViewController {
             fatalError()
         }
 
-        destination.chat = self.signalClient.store.chat(at: indexPath.row)
+        destination.chat = self.chats[indexPath.row]
         destination.delegate = self
-
+        
         self.signalClient.store.messageDelegate = destination
     }
 
@@ -125,6 +131,7 @@ class ChatsViewController: UIViewController {
                     self.signalClient.startSocket()
                     self.signalClient.shouldKeepSocketAlive = true
                     self.persistenceStore.storeUser(user)
+                    self.chats = self.signalClient.store.fetchAllChats()
 
                 case .failure(_, _, let error):
                     NSLog(error.localizedDescription)
@@ -162,7 +169,7 @@ class ChatsViewController: UIViewController {
 
 extension ChatsViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.signalClient.store.numberOfChats
+        return self.chats.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -187,7 +194,7 @@ extension ChatsViewController: UITableViewDataSource {
 //    }
 
     private func configureCell(_ cell: ChatCell, at indexPath: IndexPath) {
-        let chat = self.signalClient.store.chat(at: indexPath.row)!
+        let chat = self.chats[indexPath.row]
         cell.title = chat.displayName
         cell.avatarImage = chat.image
 
@@ -205,6 +212,8 @@ extension ChatsViewController: SignalServiceStoreChatDelegate {
     }
 
     func signalServiceStoreDidChangeChats() {
+        self.chats = self.signalClient.store.fetchAllChats()
+
         DispatchQueue.main.async {
             self.tableView.reloadData()
         }
