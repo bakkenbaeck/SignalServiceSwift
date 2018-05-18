@@ -223,13 +223,9 @@ public class SignalServiceStore {
     }
 
     func attachment(with id: String) -> SignalServiceAttachmentPointer? {
-        guard let data = self.persistenceStore?.retrieveObject(ofType: .attachmentPointer, key: id),
-            let pointer = try? self.decoder.decode(SignalServiceAttachmentPointer.self, from: data)
-            else {
-                return nil
+        return self.attachmentPointers.first { pointer -> Bool in
+            pointer.uniqueId == id
         }
-
-        return pointer
     }
 
     public func fetchAllChats() -> [SignalChat] {

@@ -28,10 +28,8 @@ public class IncomingSignalMessage: SignalMessage {
     var store: SignalServiceStore?
 
     public override var attachment: Data? {
-        if let id = self.attachmentPointerIds.first, let data = self.store?.attachment(with: id)?.attachmentData {
-            self.attachmentImage = UIImage(data: data)
-
-            return data
+        if let id = self.attachmentPointerIds.first {
+            return self.store?.attachment(with: id)?.attachmentData
         }
 
         return super.attachment
