@@ -291,8 +291,12 @@ public class SignalServiceStore {
 
         let messages: [SignalMessage] = persistenceStore.retrieveAllObjects(ofType: .message, foreignKey: chat.uniqueId).compactMap { data in
             let info = try? self.decoder.decode(InfoSignalMessage.self, from: data)
+
             let outgoing = try? self.decoder.decode(OutgoingSignalMessage.self, from: data)
+            outgoing?.store = self
+
             let incoming = try? self.decoder.decode(IncomingSignalMessage.self, from: data)
+            incoming?.store = self
 
             return (info ?? outgoing) ?? incoming
         }
