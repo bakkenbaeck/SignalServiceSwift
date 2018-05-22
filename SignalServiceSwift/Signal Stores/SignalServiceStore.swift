@@ -7,7 +7,7 @@
 //
 
 public protocol PersistenceStore: SignalLibraryStoreDelegate {
-    func retrieveAllObjects(ofType type: SignalServiceStore.PersistedType, foreignKey: String?) -> [Data]
+    func retrieveAllObjects(ofType type: SignalServiceStore.PersistedType, range: Range<Int>?, foreignKey: String?) -> [Data]
 
     func retrieveObject(ofType type: SignalServiceStore.PersistedType, key: String, foreignKey: String?) -> Data?
 
@@ -75,11 +75,11 @@ public class SignalServiceStore {
         self.contactsDelegate = contactsDelegate
         self.persistenceStore = persistenceStore
 
-        let chatsData = self.persistenceStore?.retrieveAllObjects(ofType: .chat, foreignKey: nil) ?? []
+        let chatsData = self.persistenceStore?.retrieveAllObjects(ofType: .chat, range: nil, foreignKey: nil) ?? []
 //        let incomingMessagesData = self.persistenceStore?.retrieveAllObjects(ofType: .incomingMessage) ?? []
 //        let outgoingMessagesData = self.persistenceStore?.retrieveAllObjects(ofType: .outgoingMessage) ?? []
 //        let infoMessagesData = self.persistenceStore?.retrieveAllObjects(ofType: .infoMessage) ?? []
-        let recipientsData = self.persistenceStore?.retrieveAllObjects(ofType: .recipient, foreignKey: nil) ?? []
+        let recipientsData = self.persistenceStore?.retrieveAllObjects(ofType: .recipient, range: nil, foreignKey: nil) ?? []
 //        let attachmentsData = self.persistenceStore?.retrieveAllObjects(ofType: .attachmentPointer, foreignKey: nil) ?? []
 //        var messages: [SignalMessage] = []
 
@@ -240,7 +240,7 @@ public class SignalServiceStore {
     }
 
     public func fetchAllChats() -> [SignalChat] {
-        guard let dataAry = self.persistenceStore?.retrieveAllObjects(ofType: .chat, foreignKey: nil) else { return [] }
+        guard let dataAry = self.persistenceStore?.retrieveAllObjects(ofType: .chat, range: nil, foreignKey: nil) else { return [] }
 
         return dataAry.compactMap({ data in
             let chat = try? self.decoder.decode(SignalChat.self, from: data)
@@ -276,8 +276,8 @@ public class SignalServiceStore {
         }
     }
 
-    func messages(for chat: SignalChat) -> [SignalMessage] {
-        let chatMessages = self.fetchMessages(for: chat).compactMap({ message -> SignalMessage? in
+    public func messages(for chat: SignalChat, range: Range<Int>) -> [SignalMessage] {
+        let chatMessages = self.fetchMessages(for: chat, range: range).compactMap({ message -> SignalMessage? in
             message.chatId == chat.uniqueId ? message : nil
         }).sorted { (a, b) -> Bool in
             a.timestamp < b.timestamp
@@ -286,10 +286,10 @@ public class SignalServiceStore {
         return chatMessages
     }
 
-    func fetchMessages(for chat: SignalChat) -> [SignalMessage] {
+    func fetchMessages(for chat: SignalChat, range: Range<Int>) -> [SignalMessage] {
         guard let persistenceStore = self.persistenceStore else { return [] }
 
-        let messages: [SignalMessage] = persistenceStore.retrieveAllObjects(ofType: .message, foreignKey: chat.uniqueId).compactMap { data in
+        let messages: [SignalMessage] = persistenceStore.retrieveAllObjects(ofType: .message, range: range, foreignKey: chat.uniqueId).compactMap { data in
             let info = try? self.decoder.decode(InfoSignalMessage.self, from: data)
 
             let outgoing = try? self.decoder.decode(OutgoingSignalMessage.self, from: data)

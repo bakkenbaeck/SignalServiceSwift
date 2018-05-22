@@ -102,6 +102,9 @@ class MessagesViewController: UIViewController {
 }
 
 extension MessagesViewController: UITableViewDelegate {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        print(scrollView.contentOffset)
+    }
 }
 
 extension MessagesViewController: UITableViewDataSource {

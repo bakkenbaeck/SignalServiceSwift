@@ -73,7 +73,7 @@ class FilePersistenceStore: PersistenceStore {
         }
     }
 
-    func retrieveAllObjects(ofType type: SignalServiceStore.PersistedType, foreignKey: String?) -> [Data] {
+    func retrieveAllObjects(ofType type: SignalServiceStore.PersistedType, range: Range<Int>?, foreignKey: String?) -> [Data] {
         let result: Table
 
         if let foreignKey = foreignKey {
@@ -85,7 +85,7 @@ class FilePersistenceStore: PersistenceStore {
         var objects = [Data]()
 
         do {
-            for row in try self.dbConnection.prepare(result) {
+            for row in try self.dbConnection.prepare(result.limit(range?.upperBound ?? .max, offset: range?.lowerBound ?? 0)) {
                 if let data = row[self.dataField].data(using: .utf8) {
                     objects.append(data)
                 }

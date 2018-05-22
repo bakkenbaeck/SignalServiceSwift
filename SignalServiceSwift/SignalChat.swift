@@ -116,9 +116,9 @@ public class SignalChat: Equatable, Codable {
         }
     }
 
-    public var messages: [SignalMessage] {
-        return self.store?.messages(for: self) ?? []
-    }
+    public lazy var messages: [SignalMessage] = {
+        return self.store?.messages(for: self, range: 0..<100) ?? []
+    }()
 
     public var isArchived: Bool {
         return (self.lastArchivalDate?.timeIntervalSinceNow ?? 0) > 0
