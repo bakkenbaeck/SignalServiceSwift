@@ -7,13 +7,23 @@
 //
 
 public protocol PersistenceStore: SignalLibraryStoreDelegate {
-    func retrieveAllObjects(ofType type: SignalServiceStore.PersistedType) -> [Data]
+    func retrieveAllObjects(ofType type: SignalServiceStore.PersistedType, foreignKey: String?) -> [Data]
 
-    func retrieveObject(ofType type: SignalServiceStore.PersistedType, key: String) -> Data?
+    func retrieveObject(ofType type: SignalServiceStore.PersistedType, key: String, foreignKey: String?) -> Data?
 
     func update(_ data: Data, key: String, type: SignalServiceStore.PersistedType)
     func store(_ data: Data, key: String, type: SignalServiceStore.PersistedType)
 }
+//
+//extension PersistenceStore {
+//    func retrieveAllObjects(ofType type: SignalServiceStore.PersistedType, foreignKey: String? = nil) -> [Data] {
+//        return []
+//    }
+//
+//    func retrieveObject(ofType type: SignalServiceStore.PersistedType, key: String, foreignKey: String? = nil) -> Data? {
+//        return nil
+//    }
+//}
 
 public protocol SignalServiceStoreChatDelegate {
     func signalServiceStoreWillChangeChats()
@@ -36,10 +46,10 @@ public class SignalServiceStore {
 
     public enum PersistedType: String {
         case chat
-        case incomingMessage
-        case outgoingMessage
+        case message
+//        case outgoingMessage
         case recipient
-        case infoMessage
+//        case infoMessage
         case attachmentPointer
         case sender
     }
@@ -53,11 +63,11 @@ public class SignalServiceStore {
 
     private var chats: [SignalChat] = []
 
-    private var messages: [SignalMessage] = []
+//    private var messages: [SignalMessage] = []
 
     private var recipients: [SignalAddress] = []
 
-    private var attachmentPointers: [SignalServiceAttachmentPointer] = []
+//    private var attachmentPointers: [SignalServiceAttachmentPointer] = []
 
     private var persistenceStore: PersistenceStore?
 
@@ -65,14 +75,13 @@ public class SignalServiceStore {
         self.contactsDelegate = contactsDelegate
         self.persistenceStore = persistenceStore
 
-        let chatsData = self.persistenceStore?.retrieveAllObjects(ofType: .chat) ?? []
-        let incomingMessagesData = self.persistenceStore?.retrieveAllObjects(ofType: .incomingMessage) ?? []
-        let outgoingMessagesData = self.persistenceStore?.retrieveAllObjects(ofType: .outgoingMessage) ?? []
-        let infoMessagesData = self.persistenceStore?.retrieveAllObjects(ofType: .infoMessage) ?? []
-        let recipientsData = self.persistenceStore?.retrieveAllObjects(ofType: .recipient) ?? []
-        let attachmentsData = self.persistenceStore?.retrieveAllObjects(ofType: .attachmentPointer) ?? []
-
-        var messages: [SignalMessage] = []
+        let chatsData = self.persistenceStore?.retrieveAllObjects(ofType: .chat, foreignKey: nil) ?? []
+//        let incomingMessagesData = self.persistenceStore?.retrieveAllObjects(ofType: .incomingMessage) ?? []
+//        let outgoingMessagesData = self.persistenceStore?.retrieveAllObjects(ofType: .outgoingMessage) ?? []
+//        let infoMessagesData = self.persistenceStore?.retrieveAllObjects(ofType: .infoMessage) ?? []
+        let recipientsData = self.persistenceStore?.retrieveAllObjects(ofType: .recipient, foreignKey: nil) ?? []
+//        let attachmentsData = self.persistenceStore?.retrieveAllObjects(ofType: .attachmentPointer, foreignKey: nil) ?? []
+//        var messages: [SignalMessage] = []
 
         do {
             // chats
@@ -84,28 +93,28 @@ public class SignalServiceStore {
                 self.chats.append(chat)
             }
 
-            // messages
-            for data in incomingMessagesData {
-                let message = try self.decoder.decode(IncomingSignalMessage.self, from: data)
-                message.store = self
-                messages.append(message)
-            }
-            for data in outgoingMessagesData {
-                let message = try self.decoder.decode(OutgoingSignalMessage.self, from: data)
-                message.store = self
-                messages.append(message)
-            }
-            for data in infoMessagesData {
-                let message = try self.decoder.decode(InfoSignalMessage.self, from: data)
-                //                 message.store = self
-                messages.append(message)
-            }
-
-            messages.sort { (a, b) -> Bool in
-                a.timestamp > b.timestamp
-            }
-
-            self.messages.append(contentsOf: messages)
+//            // messages
+//            for data in incomingMessagesData {
+//                let message = try self.decoder.decode(IncomingSignalMessage.self, from: data)
+//                message.store = self
+//                messages.append(message)
+//            }
+//            for data in outgoingMessagesData {
+//                let message = try self.decoder.decode(OutgoingSignalMessage.self, from: data)
+//                message.store = self
+//                messages.append(message)
+//            }
+//            for data in infoMessagesData {
+//                let message = try self.decoder.decode(InfoSignalMessage.self, from: data)
+//                //                 message.store = self
+//                messages.append(message)
+//            }
+//
+//            messages.sort { (a, b) -> Bool in
+//                a.timestamp > b.timestamp
+//            }
+//
+//            self.messages.append(contentsOf: messages)
 
             // recipients
             var recipients = [SignalAddress]()
@@ -117,13 +126,13 @@ public class SignalServiceStore {
 
             self.recipients.append(contentsOf: recipients)
 
-            var attachments = [SignalServiceAttachmentPointer]()
-            for data in attachmentsData {
-                let attachment = try self.decoder.decode(SignalServiceAttachmentPointer.self, from: data)
-                attachments.append(attachment)
-            }
-
-            self.attachmentPointers.append(contentsOf: attachments)
+//            var attachments = [SignalServiceAttachmentPointer]()
+//            for data in attachmentsData {
+//                let attachment = try self.decoder.decode(SignalServiceAttachmentPointer.self, from: data)
+//                attachments.append(attachment)
+//            }
+//
+//            self.attachmentPointers.append(contentsOf: attachments)
 
         } catch (let error) {
             NSLog("Could not decode chat or message: %@", error.localizedDescription)
@@ -131,7 +140,7 @@ public class SignalServiceStore {
     }
 
     func fetchSender() -> SignalSender? {
-        guard let data = self.persistenceStore?.retrieveObject(ofType: .sender, key: "sender") else { return nil }
+        guard let data = self.persistenceStore?.retrieveObject(ofType: .sender, key: "sender", foreignKey: nil) else { return nil }
         let sender = try? self.decoder.decode(SignalSender.self, from: data)
 
         return sender
@@ -145,7 +154,7 @@ public class SignalServiceStore {
     func fetchOrCreateRecipient(name: String, deviceId: Int32) -> SignalAddress {
         let recipient: SignalAddress
 
-        if let data = self.persistenceStore?.retrieveObject(ofType: .recipient, key: name),
+        if let data = self.persistenceStore?.retrieveObject(ofType: .recipient, key: name, foreignKey: nil),
             let existingRecipient = try? self.decoder.decode(SignalAddress.self, from: data)
         {
             recipient = existingRecipient
@@ -223,13 +232,15 @@ public class SignalServiceStore {
     }
 
     func attachment(with id: String) -> SignalServiceAttachmentPointer? {
-        return self.attachmentPointers.first { pointer -> Bool in
-            pointer.uniqueId == id
+        if let data = self.persistenceStore?.retrieveObject(ofType: .attachmentPointer, key: id, foreignKey: nil) {
+            return try? self.decoder.decode(SignalServiceAttachmentPointer.self, from: data)
         }
+
+        return nil
     }
 
     public func fetchAllChats() -> [SignalChat] {
-        guard let dataAry = self.persistenceStore?.retrieveAllObjects(ofType: .chat) else { return [] }
+        guard let dataAry = self.persistenceStore?.retrieveAllObjects(ofType: .chat, foreignKey: nil) else { return [] }
 
         return dataAry.compactMap({ data in
             let chat = try? self.decoder.decode(SignalChat.self, from: data)
@@ -266,7 +277,7 @@ public class SignalServiceStore {
     }
 
     func messages(for chat: SignalChat) -> [SignalMessage] {
-        let chatMessages = self.messages.compactMap({ message -> SignalMessage? in
+        let chatMessages = self.fetchMessages(for: chat).compactMap({ message -> SignalMessage? in
             message.chatId == chat.uniqueId ? message : nil
         }).sorted { (a, b) -> Bool in
             a.timestamp < b.timestamp
@@ -275,25 +286,19 @@ public class SignalServiceStore {
         return chatMessages
     }
 
-//    func fetchMessages() -> [SignalMessage] {
-//        guard let persistenceStore = self.persistenceStore else { return [] }
-//
-//        let info: [SignalMessage] = persistenceStore.retrieveAllObjects(ofType: .infoMessage).compactMap { data in
-//            try? self.decoder.decode(InfoSignalMessage.self, from: data)
-//        }
-//
-//        let incoming: [SignalMessage] = persistenceStore.retrieveAllObjects(ofType: .incomingMessage).compactMap { data in
-//            try? self.decoder.decode(IncomingSignalMessage.self, from: data)
-//        }
-//
-//        let outgoing: [SignalMessage] = persistenceStore.retrieveAllObjects(ofType: .outgoingMessage).compactMap { data in
-//            try? self.decoder.decode(OutgoingSignalMessage.self, from: data)
-//        }
-//
-//        let messages = info + incoming + outgoing
-//
-//        return messages
-//    }
+    func fetchMessages(for chat: SignalChat) -> [SignalMessage] {
+        guard let persistenceStore = self.persistenceStore else { return [] }
+
+        let messages: [SignalMessage] = persistenceStore.retrieveAllObjects(ofType: .message, foreignKey: chat.uniqueId).compactMap { data in
+            let info = try? self.decoder.decode(InfoSignalMessage.self, from: data)
+            let outgoing = try? self.decoder.decode(OutgoingSignalMessage.self, from: data)
+            let incoming = try? self.decoder.decode(IncomingSignalMessage.self, from: data)
+
+            return (info ?? outgoing) ?? incoming
+        }
+
+        return messages
+    }
 
     func save(_ recipient: SignalAddress) throws {
         let data = try self.encoder.encode(recipient)
@@ -303,46 +308,47 @@ public class SignalServiceStore {
     }
 
     func save(_ message: SignalMessage) throws {
-        let messageDataAndType: (data: Data, type: PersistedType)
+//        let messageDataAndType: (data: Data, type: PersistedType)
+        let data: Data
 
         if let message = message as? OutgoingSignalMessage {
-            messageDataAndType.data = try self.encoder.encode(message)
-            messageDataAndType.type = .outgoingMessage
+            data = try self.encoder.encode(message)
+//            messageDataAndType.type = .outgoingMessage
         } else if let message = message as? IncomingSignalMessage {
-            messageDataAndType.data = try self.encoder.encode(message)
-            messageDataAndType.type = .incomingMessage
+            data = try self.encoder.encode(message)
+//            messageDataAndType.type = .incomingMessage
         } else if let message = message as? InfoSignalMessage {
-            messageDataAndType.data = try self.encoder.encode(message)
-            messageDataAndType.type = .infoMessage
+            data = try self.encoder.encode(message)
+//            messageDataAndType.type = .infoMessage
         } else {
             fatalError("Unsupported message type: \(message)")
         }
 
         // update?
-        if self.messages.contains(where: { msg -> Bool in msg.uniqueId == message.uniqueId}) {
-            self.persistenceStore?.store(messageDataAndType.data, key: message.uniqueId, type: messageDataAndType.type)
-
-            if let chat = self.chat(chatId: message.chatId) {
-                guard let index = chat.visibleMessages.index(of: message) else {
-                    NSLog("Message type visible in chat.")
-                    return
-                }
-
-                let indexPath = IndexPath(item: index, section: 0)
-                DispatchQueue.main.async {
-                    self.messageDelegate?.signalServiceStoreWillChangeMessages()
-                    self.messageDelegate?.signalServiceStoreDidChangeMessage(message, at: indexPath, for: .update)
-                    self.messageDelegate?.signalServiceStoreDidChangeMessages()
-                }
-            } else {
-                NSLog("Error: No chat for message: \(message).")
-            }
-        } else {
+//        if self.messages.contains(where: { msg -> Bool in msg.uniqueId == message.uniqueId}) {
+//            self.persistenceStore?.store(data, key: message.uniqueId, type: .message)
+//
+//            if let chat = self.chat(chatId: message.chatId) {
+//                guard let index = chat.visibleMessages.index(of: message) else {
+//                    NSLog("Message type visible in chat.")
+//                    return
+//                }
+//
+//                let indexPath = IndexPath(item: index, section: 0)
+//                DispatchQueue.main.async {
+//                    self.messageDelegate?.signalServiceStoreWillChangeMessages()
+//                    self.messageDelegate?.signalServiceStoreDidChangeMessage(message, at: indexPath, for: .update)
+//                    self.messageDelegate?.signalServiceStoreDidChangeMessages()
+//                }
+//            } else {
+//                NSLog("Error: No chat for message: \(message).")
+//            }
+//        } else {
             DispatchQueue.main.async {
                 self.messageDelegate?.signalServiceStoreWillChangeMessages()
 
-                self.messages.append(message)
-                self.persistenceStore?.store(messageDataAndType.data, key: message.uniqueId, type: messageDataAndType.type)
+//                self.messages.append(message)
+                self.persistenceStore?.store(data, key: message.uniqueId, type: .message)
 
                 if let chat = self.chat(chatId: message.chatId) {
                     guard let index = chat.visibleMessages.index(of: message) else {
@@ -360,7 +366,7 @@ public class SignalServiceStore {
 
                 self.messageDelegate?.signalServiceStoreDidChangeMessages()
             }
-        }
+//        }
     }
 
     func save(_ chat: SignalChat) throws {
@@ -397,7 +403,7 @@ public class SignalServiceStore {
 
     func save(attachmentPointer: SignalServiceAttachmentPointer) throws {
         let data = try self.encoder.encode(attachmentPointer)
-        self.attachmentPointers.append(attachmentPointer)
+//        self.attachmentPointers.append(attachmentPointer)
         self.persistenceStore?.store(data, key: attachmentPointer.uniqueId, type: .attachmentPointer)
     }
 

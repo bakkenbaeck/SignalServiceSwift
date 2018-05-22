@@ -17,7 +17,7 @@ class FilePersistenceStore: PersistenceStore {
     let table: Table
     
     let typeField: Expression<String>
-    let dataField: Expression<Data>
+    let dataField: Expression<String>
     let identifierField: Expression<String>
     let idField: Expression<Int64>
 
@@ -30,7 +30,7 @@ class FilePersistenceStore: PersistenceStore {
         self.table = Table("objects")
         self.idField = Expression<Int64>("id")
         self.identifierField = Expression<String>("uuid")
-        self.dataField = Expression<Data>("data")
+        self.dataField = Expression<String>("data")
         self.typeField = Expression<String>("type")
 
         _ = try? self.dbConnection.run(self.table.create { t in
@@ -49,8 +49,8 @@ class FilePersistenceStore: PersistenceStore {
         let result = self.table.filter(self.typeField == "user").select(self.dataField)
 
         do {
-            if let data = try self.dbConnection.pluck(result) {
-                user = try! JSONDecoder().decode(User.self, from: data[self.dataField])
+            if let row = try self.dbConnection.pluck(result), let data = row[self.dataField].data(using: .utf8) {
+                user = try! JSONDecoder().decode(User.self, from: data)
                 NSLog("Did retrieve user from DB.")
             }
         } catch (let error) {
@@ -63,7 +63,7 @@ class FilePersistenceStore: PersistenceStore {
     func storeUser(_ user: User) {
         let key = user.toshiAddress
         let data = try! JSONEncoder().encode(user)
-        let insert = self.table.insert(self.identifierField <- key, self.dataField <- data, self.typeField <- "user")
+        let insert = self.table.insert(self.identifierField <- key, self.dataField <- String(data: data, encoding: .utf8)!, self.typeField <- "user")
 
         do {
             try self.dbConnection.run(insert)
@@ -73,13 +73,22 @@ class FilePersistenceStore: PersistenceStore {
         }
     }
 
-    func retrieveAllObjects(ofType type: SignalServiceStore.PersistedType) -> [Data] {
-        let result = self.table.filter(self.typeField == type.rawValue)
+    func retrieveAllObjects(ofType type: SignalServiceStore.PersistedType, foreignKey: String?) -> [Data] {
+        let result: Table
+
+        if let foreignKey = foreignKey {
+            result = self.table.filter(self.typeField == type.rawValue && self.dataField.like("%\(foreignKey)%"))
+        } else {
+            result = self.table.filter(self.typeField == type.rawValue)
+        }
+
         var objects = [Data]()
 
         do {
-            for data in try self.dbConnection.prepare(result) {
-                objects.append(data[self.dataField])
+            for row in try self.dbConnection.prepare(result) {
+                if let data = row[self.dataField].data(using: .utf8) {
+                    objects.append(data)
+                }
             }
         } catch (let error) {
             NSLog("Could not retrieve data from db: %@", error.localizedDescription)
@@ -88,14 +97,16 @@ class FilePersistenceStore: PersistenceStore {
         return objects
     }
 
-    func retrieveObject(ofType type: SignalServiceStore.PersistedType, key: String) -> Data? {
+    func retrieveObject(ofType type: SignalServiceStore.PersistedType, key: String, foreignKey: String?) -> Data? {
         let result = self.table.filter(self.typeField == type.rawValue && self.identifierField == key)
         var object: Data?
 
         do {
-            for data in try self.dbConnection.prepare(result) {
-                object = data[self.dataField]
-                break
+            for row in try self.dbConnection.prepare(result) {
+                if let data = row[self.dataField].data(using: .utf8) {
+                    object = data
+                    break
+                }
             }
         } catch (let error) {
             NSLog("Could not retrieve data from db: %@", error.localizedDescription)
@@ -108,14 +119,14 @@ class FilePersistenceStore: PersistenceStore {
         let object = self.table.filter(self.identifierField == key && self.typeField == type.rawValue)
 
         do {
-            try self.dbConnection.run(object.update(self.dataField <- data))
+            try self.dbConnection.run(object.update(self.dataField <- String(data: data, encoding: .utf8)!))
         } catch (let error) {
             NSLog("Failed to update data in the db: %@", error.localizedDescription)
         }
     }
 
     func store(_ data: Data, key: String, type: SignalServiceStore.PersistedType) {
-        let insert = self.table.insert(self.identifierField <- key, self.dataField <- data, self.typeField <- type.rawValue)
+        let insert = self.table.insert(self.identifierField <- key, self.dataField <- String(data: data, encoding: .utf8)!, self.typeField <- type.rawValue)
 
         do {
             try self.dbConnection.run(insert)
@@ -170,7 +181,8 @@ extension FilePersistenceStore: SignalLibraryStoreDelegate {
     }
 
     func storeSignalLibraryValue(_ value: Data, key: String, type: SignalLibraryStore.LibraryStoreType) {
-        let insert = self.table.insert(self.identifierField <- key, self.dataField <- value, self.typeField <- type.rawValue)
+        let data = String(data: value, encoding: .utf8) ?? value.hexadecimalString
+        let insert = self.table.insert(self.identifierField <- key, self.dataField <- data, self.typeField <- type.rawValue)
 
         do {
             try self.dbConnection.run(insert)
@@ -200,9 +212,11 @@ extension FilePersistenceStore: SignalLibraryStoreDelegate {
         var object: Data?
 
         do {
-            for data in try self.dbConnection.prepare(result) {
-                object = data[self.dataField]
-                break
+            for row in try self.dbConnection.prepare(result) {
+                if let data = (row[self.dataField].hexadecimalData ?? row[self.dataField].data(using: .utf8)) {
+                    object = data
+                    break
+                }
             }
         } catch (let error) {
             NSLog("Could not retrieve data from db: %@", error.localizedDescription)
@@ -216,8 +230,10 @@ extension FilePersistenceStore: SignalLibraryStoreDelegate {
         var objects = [Data]()
 
         do {
-            for data in try self.dbConnection.prepare(result) {
-                objects.append(data[self.dataField])
+            for row in try self.dbConnection.prepare(result) {
+                if let data = row[self.dataField].data(using: .utf8) {
+                    objects.append(data)
+                }
             }
         } catch (let error) {
             NSLog("Could not retrieve data from db: %@", error.localizedDescription)

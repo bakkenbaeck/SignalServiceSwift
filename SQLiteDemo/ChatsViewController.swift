@@ -160,10 +160,10 @@ class ChatsViewController: UIViewController {
 
     @IBAction func didTapCreateChatButton(_ sender: Any) {
         // Group message test
-        self.signalClient.sendGroupMessage("", type: .new, to: [self.testContact, self.otherContact, self.ellenContact, self.user.address])
+//        self.signalClient.sendGroupMessage("", type: .new, to: [self.testContact, self.otherContact, self.ellenContact, self.user.address])
 //        // 1:1 chat test.
-//        let chat = self.signalClient.store.fetchOrCreateChat(with: self.ellenContact.name)
-//        self.didRequestSendRandomMessage(in: chat)
+        let chat = self.signalClient.store.fetchOrCreateChat(with: self.ellenContact.name)
+        self.didRequestSendRandomMessage(in: chat)
     }
 }
 
