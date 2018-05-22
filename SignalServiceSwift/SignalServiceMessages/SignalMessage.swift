@@ -33,14 +33,25 @@ public class SignalMessage: Codable, Equatable {
     /// Id of all our attachments.
     public var attachmentPointerIds: [String]
 
+    var store: SignalServiceStore?
+
+    private var cachedAttachment: Data?
+
     public var attachment: Data? {
-        return nil
+        if let data = self.cachedAttachment {
+            return data
+        } else if let id = self.attachmentPointerIds.first {
+            self.cachedAttachment = self.store?.attachment(with: id)?.attachmentData
+        }
+
+        return self.cachedAttachment
     }
 
-    public init(body: String, chatId: String) {
+    public init(body: String, chatId: String, store: SignalServiceStore) {
         self.body = body
         self.chatId = chatId
         self.attachmentPointerIds = []
+        self.store = store
     }
 
     public static func == (lhs: SignalMessage, rhs: SignalMessage) -> Bool {

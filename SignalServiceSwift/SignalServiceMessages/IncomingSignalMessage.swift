@@ -25,21 +25,10 @@ public class IncomingSignalMessage: SignalMessage {
             attachmentPointerIds
     }
 
-    var store: SignalServiceStore?
-
-    public override var attachment: Data? {
-        if let id = self.attachmentPointerIds.first {
-            return self.store?.attachment(with: id)?.attachmentData
-        }
-
-        return super.attachment
-    }
-
     public init(body: String, chatId: String, senderId: String, timestamp: UInt64, store: SignalServiceStore) {
-        self.store = store
         self.senderId = senderId
 
-        super.init(body: body, chatId: chatId)
+        super.init(body: body, chatId: chatId, store: store)
 
         self.timestamp = timestamp
     }

@@ -116,16 +116,6 @@ public class OutgoingSignalMessage: SignalMessage {
         }
     }
 
-    public override var attachment: Data? {
-        if let id = self.attachmentPointerIds.first {
-            return self.store?.attachment(with: id)?.attachmentData
-        }
-
-        return super.attachment
-    }
-
-    var store: SignalServiceStore?
-
     public enum GroupMetaMessageType: Int, Codable {
         case none
         case new
@@ -156,9 +146,7 @@ public class OutgoingSignalMessage: SignalMessage {
         self.recipientId = recipientId
         self.groupMetaMessageType = groupMessageType
 
-        super.init(body: body, chatId: chatId)
-
-        self.store = store
+        super.init(body: body, chatId: chatId, store: store)
     }
 
     public required init(from decoder: Decoder) throws {

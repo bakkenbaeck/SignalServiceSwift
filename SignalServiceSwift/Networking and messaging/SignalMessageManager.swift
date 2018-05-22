@@ -245,7 +245,7 @@ class SignalMessageManager {
                 try self.store.save(newGroupChat)
 
                 // create info message informing of update
-                let infoMessage = InfoSignalMessage(senderId: envelope.source, chatId: newGroupChat.uniqueId, messageType: .groupUpdate, customMessage: updateInfo.customMessage, additionalInfo: updateInfo.additionalInfo)
+                let infoMessage = InfoSignalMessage(senderId: envelope.source, chatId: newGroupChat.uniqueId, messageType: .groupUpdate, customMessage: updateInfo.customMessage, additionalInfo: updateInfo.additionalInfo, store: self.store)
 
                 try self.store.save(infoMessage)
             } catch (let error) {
@@ -267,7 +267,7 @@ class SignalMessageManager {
                 let localizedGroupInfoString = NSLocalizedString("GROUP_MEMBER_LEFT", comment: "Displayed when a member leaves a group")
                 let updateGroupInfoMessage = String(format: localizedGroupInfoString, envelope.source)
 
-                let infoMessage = InfoSignalMessage(senderId: envelope.source, chatId: oldGroupChat.uniqueId, messageType: .groupQuit, customMessage: updateGroupInfoMessage, additionalInfo: oldGroupChat.contactsDelegate?.displayName(for: envelope.source))
+                let infoMessage = InfoSignalMessage(senderId: envelope.source, chatId: oldGroupChat.uniqueId, messageType: .groupQuit, customMessage: updateGroupInfoMessage, additionalInfo: oldGroupChat.contactsDelegate?.displayName(for: envelope.source), store: self.store)
                 try self.store.save(infoMessage)
             } catch (let error) {
                 NSLog("Could not save group chat. %@", error.localizedDescription)

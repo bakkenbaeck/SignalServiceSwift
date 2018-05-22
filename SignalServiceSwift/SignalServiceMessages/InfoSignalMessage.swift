@@ -46,13 +46,13 @@ public class InfoSignalMessage: SignalMessage {
     /// Id of the message sender.
     public var senderId: String
 
-    public init(senderId: String, chatId: String, messageType: MessageType, customMessage: String = "", additionalInfo: String? = nil) {
+    public init(senderId: String, chatId: String, messageType: MessageType, customMessage: String = "", additionalInfo: String? = nil, store: SignalServiceStore) {
         self.customMessage = customMessage
         self.additionalInfo = additionalInfo ?? ""
         self.senderId = senderId
         self.messageType = messageType
 
-        super.init(body: "", chatId: chatId)
+        super.init(body: "", chatId: chatId, store: store)
     }
 
     public required init(from decoder: Decoder) throws {
