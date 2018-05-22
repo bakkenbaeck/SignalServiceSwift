@@ -7,7 +7,11 @@
 //
 
 /// The base signal message class.
-public class SignalMessage: Codable, Equatable {
+public class SignalMessage: Codable, Equatable, Hashable {
+    public var hashValue: Int {
+        return self.body.appending(self.chatId).appending(self.uniqueId).hashValue
+    }
+
     private enum CodingKeys: String, CodingKey {
         case body,
             chatId,
