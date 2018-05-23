@@ -312,65 +312,58 @@ public class SignalServiceStore {
     }
 
     func save(_ message: SignalMessage) throws {
-//        let messageDataAndType: (data: Data, type: PersistedType)
         let data: Data
 
         if let message = message as? OutgoingSignalMessage {
             data = try self.encoder.encode(message)
-//            messageDataAndType.type = .outgoingMessage
         } else if let message = message as? IncomingSignalMessage {
             data = try self.encoder.encode(message)
-//            messageDataAndType.type = .incomingMessage
         } else if let message = message as? InfoSignalMessage {
             data = try self.encoder.encode(message)
-//            messageDataAndType.type = .infoMessage
         } else {
             fatalError("Unsupported message type: \(message)")
         }
 
-        // update?
-//        if self.messages.contains(where: { msg -> Bool in msg.uniqueId == message.uniqueId}) {
-//            self.persistenceStore?.store(data, key: message.uniqueId, type: .message)
-//
-//            if let chat = self.chat(chatId: message.chatId) {
-//                guard let index = chat.visibleMessages.index(of: message) else {
-//                    NSLog("Message type visible in chat.")
-//                    return
-//                }
-//
-//                let indexPath = IndexPath(item: index, section: 0)
-//                DispatchQueue.main.async {
-//                    self.messageDelegate?.signalServiceStoreWillChangeMessages()
-//                    self.messageDelegate?.signalServiceStoreDidChangeMessage(message, at: indexPath, for: .update)
-//                    self.messageDelegate?.signalServiceStoreDidChangeMessages()
-//                }
-//            } else {
-//                NSLog("Error: No chat for message: \(message).")
-//            }
-//        } else {
-            DispatchQueue.main.async {
-                self.messageDelegate?.signalServiceStoreWillChangeMessages()
-
-//                self.messages.append(message)
+        DispatchQueue.main.async {
+            // update?
+            if let chat = self.chat(chatId: message.chatId), chat.messages.contains(message) {
                 self.persistenceStore?.store(data, key: message.uniqueId, type: .message)
 
+                guard let visibleIndex = chat.visibleMessages.index(of: message) else {
+                    NSLog("Message type not visible in chat.")
+                    return
+                }
+
+                let index = chat.messages.index(of: message)!
+                chat.messages[index] = message
+
+                let indexPath = IndexPath(item: visibleIndex, section: 0)
+                self.messageDelegate?.signalServiceStoreWillChangeMessages()
+                self.messageDelegate?.signalServiceStoreDidChangeMessage(message, at: indexPath, for: .update)
+                self.messageDelegate?.signalServiceStoreDidChangeMessages()
+
+            } else {
+                // new message
                 if let chat = self.chat(chatId: message.chatId) {
+                    self.persistenceStore?.store(data, key: message.uniqueId, type: .message)
+                    chat.messages.append(message)
+
                     guard let index = chat.visibleMessages.index(of: message) else {
-                        NSLog("Message type visible in chat.")
+                        NSLog("Message type not visible in chat.")
                         return
                     }
+
+                    self.messageDelegate?.signalServiceStoreWillChangeMessages()
 
                     let indexPath = IndexPath(item: index, section: 0)
 
                     self.messageDelegate?.signalServiceStoreDidChangeMessage(message, at: indexPath, for: .insert)
-
+                    self.messageDelegate?.signalServiceStoreDidChangeMessages()
                 } else {
                     NSLog("Error: No chat for message: \(message).")
                 }
-
-                self.messageDelegate?.signalServiceStoreDidChangeMessages()
             }
-//        }
+        }
     }
 
     func save(_ chat: SignalChat) throws {
