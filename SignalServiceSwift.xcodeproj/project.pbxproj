@@ -8,14 +8,11 @@
 
 /* Begin PBXBuildFile section */
 		9F0A199820A06F030051B268 /* Date+Intervals.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F0A199720A06F030051B268 /* Date+Intervals.swift */; };
-		9F0A19B520A09F7E0051B268 /* MessagesImageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F0A19B020A09F7E0051B268 /* MessagesImageCell.swift */; };
 		9F0A19B620A09F7E0051B268 /* MessagesTextCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F0A19B120A09F7E0051B268 /* MessagesTextCell.swift */; };
-		9F0A19B820A09F7E0051B268 /* MessagesBasicCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F0A19B320A09F7E0051B268 /* MessagesBasicCell.swift */; };
 		9F0A19B920A09F7E0051B268 /* StatusCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F0A19B420A09F7E0051B268 /* StatusCell.swift */; };
 		9F0A19BB20A0A14D0051B268 /* TinyConstraints.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9F0A19BA20A0A14D0051B268 /* TinyConstraints.framework */; };
 		9F0A19BC20A0A15B0051B268 /* TinyConstraints.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9F0A19BA20A0A14D0051B268 /* TinyConstraints.framework */; };
 		9F0A19BD20A0A15B0051B268 /* TinyConstraints.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 9F0A19BA20A0A14D0051B268 /* TinyConstraints.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		9F0A19C020A0A1830051B268 /* MessagesErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F0A19BE20A0A1830051B268 /* MessagesErrorView.swift */; };
 		9F0A19C420A0A2B00051B268 /* SweetUIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9F0A19C320A0A2AF0051B268 /* SweetUIKit.framework */; };
 		9F0A19C520A0A2B80051B268 /* SweetUIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9F0A19C320A0A2AF0051B268 /* SweetUIKit.framework */; };
 		9F0A19C620A0A2B80051B268 /* SweetUIKit.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 9F0A19C320A0A2AF0051B268 /* SweetUIKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -205,12 +202,9 @@
 
 /* Begin PBXFileReference section */
 		9F0A199720A06F030051B268 /* Date+Intervals.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Intervals.swift"; sourceTree = "<group>"; };
-		9F0A19B020A09F7E0051B268 /* MessagesImageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessagesImageCell.swift; sourceTree = "<group>"; };
 		9F0A19B120A09F7E0051B268 /* MessagesTextCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessagesTextCell.swift; sourceTree = "<group>"; };
-		9F0A19B320A09F7E0051B268 /* MessagesBasicCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessagesBasicCell.swift; sourceTree = "<group>"; };
 		9F0A19B420A09F7E0051B268 /* StatusCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatusCell.swift; sourceTree = "<group>"; };
 		9F0A19BA20A0A14D0051B268 /* TinyConstraints.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = TinyConstraints.framework; path = Carthage/Build/iOS/TinyConstraints.framework; sourceTree = "<group>"; };
-		9F0A19BE20A0A1830051B268 /* MessagesErrorView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessagesErrorView.swift; sourceTree = "<group>"; };
 		9F0A19C320A0A2AF0051B268 /* SweetUIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SweetUIKit.framework; path = Carthage/Build/iOS/SweetUIKit.framework; sourceTree = "<group>"; };
 		9F27B9EE2090B40C0032C7DD /* SignalLibraryStoreProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignalLibraryStoreProtocol.swift; sourceTree = "<group>"; };
 		9F27B9F02090C61F0032C7DD /* InfoSignalMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoSignalMessage.swift; sourceTree = "<group>"; };
@@ -408,10 +402,7 @@
 		9F0A19AF20A09F7E0051B268 /* Cells */ = {
 			isa = PBXGroup;
 			children = (
-				9F0A19BE20A0A1830051B268 /* MessagesErrorView.swift */,
-				9F0A19B020A09F7E0051B268 /* MessagesImageCell.swift */,
 				9F0A19B120A09F7E0051B268 /* MessagesTextCell.swift */,
-				9F0A19B320A09F7E0051B268 /* MessagesBasicCell.swift */,
 				9F0A19B420A09F7E0051B268 /* StatusCell.swift */,
 			);
 			path = Cells;
@@ -826,18 +817,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9F0A19C020A0A1830051B268 /* MessagesErrorView.swift in Sources */,
 				9FE925F6208A099B008ABCE4 /* FilePersistenceStore.swift in Sources */,
 				9FE925F7208A099B008ABCE4 /* Cells.swift in Sources */,
 				9FE925E5208A08F6008ABCE4 /* MessagesViewController.swift in Sources */,
 				9FE925F3208A0992008ABCE4 /* UserBootstrapParams.swift in Sources */,
-				9F0A19B820A09F7E0051B268 /* MessagesBasicCell.swift in Sources */,
 				9FE92608208A0BAD008ABCE4 /* User.swift in Sources */,
 				9F0A19B920A09F7E0051B268 /* StatusCell.swift in Sources */,
 				9FE925E3208A08F6008ABCE4 /* ChatsViewController.swift in Sources */,
 				9F0A19B620A09F7E0051B268 /* MessagesTextCell.swift in Sources */,
 				9FE925E1208A08F6008ABCE4 /* AppDelegate.swift in Sources */,
-				9F0A19B520A09F7E0051B268 /* MessagesImageCell.swift in Sources */,
 				9FE925FA208A09B1008ABCE4 /* SofaMessage.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -17,8 +17,9 @@ class FilePersistenceStore: PersistenceStore {
     let table: Table
     
     let typeField: Expression<String>
-    let dataField: Expression<String>
+    let dataField: Expression<Data>
     let identifierField: Expression<String>
+    let foreignKeyField: Expression<String?>
     let idField: Expression<Int64>
 
     init() {
@@ -30,14 +31,16 @@ class FilePersistenceStore: PersistenceStore {
         self.table = Table("objects")
         self.idField = Expression<Int64>("id")
         self.identifierField = Expression<String>("uuid")
-        self.dataField = Expression<String>("data")
+        self.dataField = Expression<Data>("data")
         self.typeField = Expression<String>("type")
+        self.foreignKeyField = Expression<String?>("foreignKey")
 
         _ = try? self.dbConnection.run(self.table.create { t in
             t.column(self.idField, primaryKey: true)
             t.column(self.identifierField)
             t.column(self.dataField)
             t.column(self.typeField)
+            t.column(self.foreignKeyField)
             t.unique(self.identifierField, self.typeField)
         })
 
@@ -49,7 +52,8 @@ class FilePersistenceStore: PersistenceStore {
         let result = self.table.filter(self.typeField == "user").select(self.dataField)
 
         do {
-            if let row = try self.dbConnection.pluck(result), let data = row[self.dataField].data(using: .utf8) {
+            if let row = try self.dbConnection.pluck(result) {
+                let data = row[self.dataField]
                 user = try! JSONDecoder().decode(User.self, from: data)
                 NSLog("Did retrieve user from DB.")
             }
@@ -63,7 +67,7 @@ class FilePersistenceStore: PersistenceStore {
     func storeUser(_ user: User) {
         let key = user.toshiAddress
         let data = try! JSONEncoder().encode(user)
-        let insert = self.table.insert(self.identifierField <- key, self.dataField <- String(data: data, encoding: .utf8)!, self.typeField <- "user")
+        let insert = self.table.insert(self.identifierField <- key, self.dataField <- data, self.typeField <- "user")
 
         do {
             try self.dbConnection.run(insert)
@@ -77,7 +81,7 @@ class FilePersistenceStore: PersistenceStore {
         let result: Table
 
         if let foreignKey = foreignKey {
-            result = self.table.filter(self.typeField == type.rawValue && self.dataField.like("%\(foreignKey)%"))
+            result = self.table.filter(self.typeField == type.rawValue && self.foreignKeyField == foreignKey)
         } else {
             result = self.table.filter(self.typeField == type.rawValue)
         }
@@ -86,9 +90,7 @@ class FilePersistenceStore: PersistenceStore {
 
         do {
             for row in try self.dbConnection.prepare(result.limit(range?.upperBound ?? .max, offset: range?.lowerBound ?? 0)) {
-                if let data = row[self.dataField].data(using: .utf8) {
-                    objects.append(data)
-                }
+                objects.append(row[self.dataField])
             }
         } catch (let error) {
             NSLog("Could not retrieve data from db: %@", error.localizedDescription)
@@ -102,12 +104,7 @@ class FilePersistenceStore: PersistenceStore {
         var object: Data?
 
         do {
-            for row in try self.dbConnection.prepare(result) {
-                if let data = row[self.dataField].data(using: .utf8) {
-                    object = data
-                    break
-                }
-            }
+            object = try self.dbConnection.pluck(result)?[self.dataField]
         } catch (let error) {
             NSLog("Could not retrieve data from db: %@", error.localizedDescription)
         }
@@ -119,14 +116,14 @@ class FilePersistenceStore: PersistenceStore {
         let object = self.table.filter(self.identifierField == key && self.typeField == type.rawValue)
 
         do {
-            try self.dbConnection.run(object.update(self.dataField <- String(data: data, encoding: .utf8)!))
+            try self.dbConnection.run(object.update(self.dataField <- data))
         } catch (let error) {
             NSLog("Failed to update data in the db: %@", error.localizedDescription)
         }
     }
 
-    func store(_ data: Data, key: String, type: SignalServiceStore.PersistedType) {
-        let insert = self.table.insert(self.identifierField <- key, self.dataField <- String(data: data, encoding: .utf8)!, self.typeField <- type.rawValue)
+    func store(_ data: Data, key: String, foreignKey: String?, type: SignalServiceStore.PersistedType) {
+        let insert = self.table.insert(self.identifierField <- key, self.foreignKeyField <- foreignKey, self.dataField <- data, self.typeField <- type.rawValue)
 
         do {
             try self.dbConnection.run(insert)
@@ -138,7 +135,7 @@ class FilePersistenceStore: PersistenceStore {
                     // so we attempt to override it instead, by first deleting the outdated version
                     // and calling ourselves again. 😬
                     if self.deleteValue(key: key, type: type) {
-                        self.store(data, key: key, type: type)
+                        self.store(data, key: key, foreignKey: foreignKey, type: type)
                     } else {
                         NSLog("Failed to delete library data in the db: %@", message)
                     }
@@ -180,8 +177,7 @@ extension FilePersistenceStore: SignalLibraryStoreDelegate {
         return result
     }
 
-    func storeSignalLibraryValue(_ value: Data, key: String, type: SignalLibraryStore.LibraryStoreType) {
-        let data = String(data: value, encoding: .utf8) ?? value.hexadecimalString
+    func storeSignalLibraryValue(_ data: Data, key: String, type: SignalLibraryStore.LibraryStoreType) {
         let insert = self.table.insert(self.identifierField <- key, self.dataField <- data, self.typeField <- type.rawValue)
 
         do {
@@ -194,7 +190,7 @@ extension FilePersistenceStore: SignalLibraryStoreDelegate {
                     // so we attempt to override it instead, by first deleting the outdated version
                     // and calling ourselves again. 😬
                     if self.deleteSignalLibraryValue(key: key, type: type) {
-                        self.storeSignalLibraryValue(value, key: key, type: type)
+                        self.storeSignalLibraryValue(data, key: key, type: type)
                     } else {
                         NSLog("Failed to delete library data in the db: %@", message)
                     }
@@ -212,12 +208,7 @@ extension FilePersistenceStore: SignalLibraryStoreDelegate {
         var object: Data?
 
         do {
-            for row in try self.dbConnection.prepare(result) {
-                if let data = (row[self.dataField].hexadecimalData ?? row[self.dataField].data(using: .utf8)) {
-                    object = data
-                    break
-                }
-            }
+            object = try self.dbConnection.pluck(result)?[self.dataField]
         } catch (let error) {
             NSLog("Could not retrieve data from db: %@", error.localizedDescription)
         }
@@ -231,9 +222,7 @@ extension FilePersistenceStore: SignalLibraryStoreDelegate {
 
         do {
             for row in try self.dbConnection.prepare(result) {
-                if let data = row[self.dataField].data(using: .utf8) {
-                    objects.append(data)
-                }
+                objects.append(row[self.dataField])
             }
         } catch (let error) {
             NSLog("Could not retrieve data from db: %@", error.localizedDescription)

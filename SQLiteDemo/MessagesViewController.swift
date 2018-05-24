@@ -35,6 +35,16 @@ class MessagesViewController: UIViewController {
 
     var chat: SignalChat!
 
+    var shouldScrollToBottom = false {
+        didSet {
+            NSLog("Changed to %@", String(describing: self.shouldScrollToBottom))
+        }
+    }
+
+    lazy var messages: [SignalMessage] = {
+        return self.chat.visibleMessages
+    }()
+
     var delegate: MessagesViewControllerDelegate?
 
     private lazy var tableView: UITableView = {
@@ -51,7 +61,6 @@ class MessagesViewController: UIViewController {
         view.contentInsetAdjustmentBehavior = .never
 
         view.register(UITableViewCell.self)
-        view.register(MessagesImageCell.self)
         view.register(MessagesTextCell.self)
         view.register(StatusCell.self)
 
@@ -74,7 +83,29 @@ class MessagesViewController: UIViewController {
 
         self.addSubviewsAndConstraints()
 
-        self.tableView.transform = CGAffineTransform(scaleX: 1, y: -1)
+        self.shouldScrollToBottom = true
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+
+        self.scrollTableViewToBottom(animated: false)
+    }
+
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+
+        if self.shouldScrollToBottom {
+            self.shouldScrollToBottom = false
+            self.tableView.setContentOffset(CGPoint(x: 0.0, y: .greatestFiniteMagnitude), animated: false)
+        }
+    }
+
+    private func scrollTableViewToBottom(animated: Bool) {
+        guard !self.messages.isEmpty else { return }
+
+        let indexPath = IndexPath(row: self.messages.count - 1, section: 0)
+        self.tableView.scrollToRow(at: indexPath, at: .none, animated: animated)
     }
 
     private func addSubviewsAndConstraints() {
@@ -87,29 +118,22 @@ class MessagesViewController: UIViewController {
     }
 
     @objc func sendRandomMessage(_ sender: Any) {
+        self.shouldScrollToBottom = true
         self.delegate?.didRequestSendRandomMessage(in: self.chat)
     }
 
     private func message(at indexPath: IndexPath) -> SignalMessage {
-        let reversedIndexPath = self.reversedIndexPath(indexPath)
-
-        return self.chat.visibleMessages[reversedIndexPath.row]
-    }
-
-    private func reversedIndexPath(_ indexPath: IndexPath) -> IndexPath {
-        return IndexPath(row: (self.chat.visibleMessages.count - 1) - indexPath.row, section: indexPath.section)
+        return self.messages[indexPath.row]
     }
 }
 
 extension MessagesViewController: UITableViewDelegate {
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        print(scrollView.contentOffset)
-    }
+
 }
 
 extension MessagesViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.chat.visibleMessages.count
+        return self.messages.count
     }
 
     func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -118,8 +142,6 @@ extension MessagesViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = self.configuredCell(for: indexPath)
-
-        cell.transform = tableView.transform
 
         return cell
     }
@@ -142,16 +164,17 @@ extension MessagesViewController: UITableViewDataSource {
             return cell
         } else {
             let cell = self.tableView.dequeue(MessagesTextCell.self, for: indexPath)
-            cell.isOutGoing = message is OutgoingSignalMessage
-            cell.messageText = SofaMessage(content: message.body).body
+            cell.isOutgoingMessage = message is OutgoingSignalMessage
+            cell.messageBody = SofaMessage(content: message.body).body
 
-            cell.sentState = (message as? OutgoingSignalMessage)?.messageState ?? .none
+            //cell.sentState = (message as? OutgoingSignalMessage)?.messageState ?? .none
             //cell.text = self.dateFormatter.string(from: Date(milisecondTimeIntervalSinceEpoch: message.timestamp))
 
             if let attachment = message.attachment, let image = UIImage(data: attachment) {
                 cell.messageImage = image
+            } else {
+                cell.messageImage = nil
             }
-
 
             return cell
         }
@@ -169,15 +192,21 @@ extension MessagesViewController: SignalServiceStoreMessageDelegate {
         switch changeType {
         case .insert:
             (message as? IncomingSignalMessage)?.isRead = true
-            self.tableView.insertRows(at: [self.reversedIndexPath(indexPath)], with: .middle)
+            self.messages.append(message)
+            self.tableView.insertRows(at: [indexPath], with: .middle)
         case .delete:
-            self.tableView.deleteRows(at: [self.reversedIndexPath(indexPath)], with: .right)
+            self.tableView.deleteRows(at: [indexPath], with: .right)
         case .update:
-            self.tableView.reloadRows(at: [self.reversedIndexPath(indexPath)], with: .fade)
+            self.tableView.reloadRows(at: [indexPath], with: .fade)
         }
     }
 
     func signalServiceStoreDidChangeMessages() {
         self.tableView.endUpdates()
+
+        if self.shouldScrollToBottom {
+            self.shouldScrollToBottom = false
+            self.scrollTableViewToBottom(animated: true)
+        }
     }
 }

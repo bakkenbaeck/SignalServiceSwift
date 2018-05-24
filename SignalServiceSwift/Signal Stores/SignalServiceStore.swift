@@ -12,7 +12,7 @@ public protocol PersistenceStore: SignalLibraryStoreDelegate {
     func retrieveObject(ofType type: SignalServiceStore.PersistedType, key: String, foreignKey: String?) -> Data?
 
     func update(_ data: Data, key: String, type: SignalServiceStore.PersistedType)
-    func store(_ data: Data, key: String, type: SignalServiceStore.PersistedType)
+    func store(_ data: Data, key: String, foreignKey: String?, type: SignalServiceStore.PersistedType)
 }
 //
 //extension PersistenceStore {
@@ -148,7 +148,7 @@ public class SignalServiceStore {
 
     func storeSender(_ sender: SignalSender) {
         guard let data = try? self.encoder.encode(sender) else { return }
-        self.persistenceStore?.store(data, key: "sender", type: .sender)
+        self.persistenceStore?.store(data, key: "sender", foreignKey: nil, type: .sender)
     }
 
     func fetchOrCreateRecipient(name: String, deviceId: Int32) -> SignalAddress {
@@ -308,7 +308,7 @@ public class SignalServiceStore {
         let data = try self.encoder.encode(recipient)
 
         self.recipients.append(recipient)
-        self.persistenceStore?.store(data, key: recipient.name, type: .recipient)
+        self.persistenceStore?.store(data, key: recipient.name, foreignKey: nil, type: .recipient)
     }
 
     func save(_ message: SignalMessage) throws {
@@ -327,7 +327,7 @@ public class SignalServiceStore {
         DispatchQueue.main.async {
             // update?
             if let chat = self.chat(chatId: message.chatId), chat.messages.contains(message) {
-                self.persistenceStore?.store(data, key: message.uniqueId, type: .message)
+                self.persistenceStore?.store(data, key: message.uniqueId, foreignKey: message.chatId, type: .message)
 
                 guard let visibleIndex = chat.visibleMessages.index(of: message) else {
                     NSLog("Message type not visible in chat.")
@@ -345,7 +345,7 @@ public class SignalServiceStore {
             } else {
                 // new message
                 if let chat = self.chat(chatId: message.chatId) {
-                    self.persistenceStore?.store(data, key: message.uniqueId, type: .message)
+                    self.persistenceStore?.store(data, key: message.uniqueId, foreignKey: message.chatId, type: .message)
                     chat.messages.append(message)
 
                     guard let index = chat.visibleMessages.index(of: message) else {
@@ -377,7 +377,7 @@ public class SignalServiceStore {
         // insert
         if self.chat(chatId: chat.uniqueId) == nil {
             self.chats.append(chat)
-            self.persistenceStore?.store(data, key: chat.uniqueId, type: .chat)
+            self.persistenceStore?.store(data, key: chat.uniqueId, foreignKey: nil, type: .chat)
 
             let indexPath = IndexPath(item: self.chats.index(of: chat)!, section: 0)
             DispatchQueue.main.async {
@@ -401,7 +401,7 @@ public class SignalServiceStore {
     func save(attachmentPointer: SignalServiceAttachmentPointer) throws {
         let data = try self.encoder.encode(attachmentPointer)
 //        self.attachmentPointers.append(attachmentPointer)
-        self.persistenceStore?.store(data, key: attachmentPointer.uniqueId, type: .attachmentPointer)
+        self.persistenceStore?.store(data, key: attachmentPointer.uniqueId, foreignKey: nil, type: .attachmentPointer)
     }
 
     func deleteAllChatsAndMessages() {
