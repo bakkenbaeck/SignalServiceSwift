@@ -37,7 +37,6 @@ class SignalMessageManager {
     }
 
     func sendMessage(_ message: OutgoingSignalMessage, to recipient: SignalAddress, in chat: SignalChat, completion: @escaping (_ success: Bool) -> Void) {
-
         // no need to send a message to ourselves
         guard recipient.name != self.sender.username else {
             // self.handleReceiptSentToSelf(message, in: chat)
@@ -45,61 +44,60 @@ class SignalMessageManager {
             return
         }
 
-//        var retryAttempts = 3
-        let messagesDict = self.deviceMessage(message, to: recipient, in: chat)
-        if messagesDict.isEmpty {
-            NSLog("Error. Could not send messages. Error encrypting.")
+        var retryAttempts = 3
 
-            message.messageState = .unsent
-            completion(false)
+        while retryAttempts > 0 {
+            let messagesDict = self.deviceMessage(message, to: recipient, in: chat)
+            if messagesDict.isEmpty {
+                NSLog("Error. Could not send messages. Error encrypting.")
 
-            return
-        }
+                message.messageState = .unsent
+                completion(false)
 
-        self.networkClient.sendMessage(messagesDict, from: self.sender, to: recipient.name) { success, params, statusCode in
-            if success {
-//                if !(message is TranscriptSignalMessage || message is ReadReceiptSignalMessage) && !message.didSentSyncTranscript {
-//                    message.didSentSyncTranscript = true
-//                }
+                return
+            }
 
-                completion(success)
-            } else {
-                defer {
-                    message.messageState = .unsent
-                }
+            self.networkClient.sendMessage(messagesDict, from: self.sender, to: recipient.name) { success, params, statusCode in
+                if success {
+                    retryAttempts = 0
 
-                let retrySending: (() -> Void) = { () -> Void in
-//                    if retryAttempts <= 0 {
-//                        // Since we've already repeatedly failed to send to the messaging API,
-//                        // it's unlikely that repeating the whole process will succeed.
-//                        return
-//                    }
-                    //
-//                    retryAttempts -= 1
-
-//                    NSLog("Retrying: %@.", messagesDict)
-
-//                    self.sendMessage(message, to: recipient, in: chat, attachments: attachments, completion: completion)
                     completion(success)
-                }
-
-                switch statusCode {
-                case 409:
-                    // TODO: Not yet 100% sure what this is supposed to mean.
-                    // At the moment I only get this when sending a message to self.
-                    if DebugLevel.current == .verbose {
-                        NSLog("Mismatched devices for recipient: %@.", recipient.name)
+                } else {
+                    defer {
+                        message.messageState = .unsent
                     }
 
-                    self.handleMismatchedDevices(params, recipientAddress: recipient.name, completion: retrySending)
-                case 410:
-                    // Stale devices. Usually a sign that the user re-installed or re-registered with the server.
-                    if DebugLevel.current == .verbose {
-                        NSLog("Stale devices for recipient: %@.", recipient.name)
+                    let retrySending: (() -> Void) = { () -> Void in
+                        if retryAttempts <= 0 {
+                            // Since we've already repeatedly failed to send to the messaging API,
+                            // it's unlikely that repeating the whole process will succeed.
+                            completion(success)
+
+                            return
+                        }
+
+                        NSLog("Retrying: %@.", messagesDict)
+                        self.sendMessage(message, to: recipient, in: chat, completion: completion)
                     }
-                    self.handleStaleDevices(params, recipientAddress: recipient.name, completion: retrySending)
-                default:
-                    retrySending()
+
+                    switch statusCode {
+                    case 409:
+                        // TODO: Not yet 100% sure what this is supposed to mean.
+                        // At the moment I only get this when sending a message to self.
+                        if DebugLevel.current == .verbose {
+                            NSLog("Mismatched devices for recipient: %@.", recipient.name)
+                        }
+
+                        self.handleMismatchedDevices(params, recipientAddress: recipient.name, completion: retrySending)
+                    case 410:
+                        // Stale devices. Usually a sign that the user re-installed or re-registered with the server.
+                        if DebugLevel.current == .verbose {
+                            NSLog("Stale devices for recipient: %@.", recipient.name)
+                        }
+                        self.handleStaleDevices(params, recipientAddress: recipient.name, completion: retrySending)
+                    default:
+                        retrySending()
+                    }
                 }
             }
         }

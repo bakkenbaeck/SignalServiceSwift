@@ -35,11 +35,7 @@ class MessagesViewController: UIViewController {
 
     var chat: SignalChat!
 
-    var shouldScrollToBottom = false {
-        didSet {
-            NSLog("Changed to %@", String(describing: self.shouldScrollToBottom))
-        }
-    }
+    var shouldScrollToBottom = false 
 
     lazy var messages: [SignalMessage] = {
         return self.chat.visibleMessages
