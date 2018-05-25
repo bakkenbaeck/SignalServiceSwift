@@ -36,7 +36,7 @@ class SignalMessageManager {
         }
     }
 
-    func sendMessage(_ message: OutgoingSignalMessage, to recipient: SignalAddress, in chat: SignalChat, completion: @escaping (_ success: Bool) -> Void) {
+    func sendMessage(_ message: OutgoingSignalMessage, to recipient: SignalAddress, in chat: SignalChat, retryAttempts: UInt = 3, completion: @escaping (_ success: Bool) -> Void) {
         // no need to send a message to ourselves
         guard recipient.name != self.sender.username else {
             // self.handleReceiptSentToSelf(message, in: chat)
@@ -44,60 +44,54 @@ class SignalMessageManager {
             return
         }
 
-        var retryAttempts = 3
+        let messagesDict = self.deviceMessage(message, to: recipient, in: chat)
+        if messagesDict.isEmpty {
+            NSLog("Error. Could not send messages. Error encrypting.")
 
-        while retryAttempts > 0 {
-            let messagesDict = self.deviceMessage(message, to: recipient, in: chat)
-            if messagesDict.isEmpty {
-                NSLog("Error. Could not send messages. Error encrypting.")
+            message.messageState = .unsent
+            completion(false)
 
-                message.messageState = .unsent
-                completion(false)
+            return
+        }
 
-                return
-            }
+        self.networkClient.sendMessage(messagesDict, from: self.sender, to: recipient.name) { success, params, statusCode in
+            if success {
+                completion(success)
+            } else {
+                defer {
+                    message.messageState = .unsent
+                }
 
-            self.networkClient.sendMessage(messagesDict, from: self.sender, to: recipient.name) { success, params, statusCode in
-                if success {
-                    retryAttempts = 0
+                let retrySending: (() -> Void) = { () -> Void in
+                    if retryAttempts <= 0 {
+                        // Since we've already repeatedly failed to send to the messaging API,
+                        // it's unlikely that repeating the whole process will succeed.
+                        completion(success)
 
-                    completion(success)
-                } else {
-                    defer {
-                        message.messageState = .unsent
+                        return
                     }
 
-                    let retrySending: (() -> Void) = { () -> Void in
-                        if retryAttempts <= 0 {
-                            // Since we've already repeatedly failed to send to the messaging API,
-                            // it's unlikely that repeating the whole process will succeed.
-                            completion(success)
+                    NSLog("Retrying: %@.", messagesDict)
+                    self.sendMessage(message, to: recipient, in: chat, retryAttempts: retryAttempts - 1, completion: completion)
+                }
 
-                            return
-                        }
-
-                        NSLog("Retrying: %@.", messagesDict)
-                        self.sendMessage(message, to: recipient, in: chat, completion: completion)
+                switch statusCode {
+                case 409:
+                    // TODO: Not yet 100% sure what this is supposed to mean.
+                    // At the moment I only get this when sending a message to self.
+                    if DebugLevel.current == .verbose {
+                        NSLog("Mismatched devices for recipient: %@.", recipient.name)
                     }
 
-                    switch statusCode {
-                    case 409:
-                        // TODO: Not yet 100% sure what this is supposed to mean.
-                        // At the moment I only get this when sending a message to self.
-                        if DebugLevel.current == .verbose {
-                            NSLog("Mismatched devices for recipient: %@.", recipient.name)
-                        }
-
-                        self.handleMismatchedDevices(params, recipientAddress: recipient.name, completion: retrySending)
-                    case 410:
-                        // Stale devices. Usually a sign that the user re-installed or re-registered with the server.
-                        if DebugLevel.current == .verbose {
-                            NSLog("Stale devices for recipient: %@.", recipient.name)
-                        }
-                        self.handleStaleDevices(params, recipientAddress: recipient.name, completion: retrySending)
-                    default:
-                        retrySending()
+                    self.handleMismatchedDevices(params, recipientAddress: recipient.name, completion: retrySending)
+                case 410:
+                    // Stale devices. Usually a sign that the user re-installed or re-registered with the server.
+                    if DebugLevel.current == .verbose {
+                        NSLog("Stale devices for recipient: %@.", recipient.name)
                     }
+                    self.handleStaleDevices(params, recipientAddress: recipient.name, completion: retrySending)
+                default:
+                    retrySending()
                 }
             }
         }
@@ -135,21 +129,21 @@ class SignalMessageManager {
         }
     }
 
-//    func handleReceiptEnvelope(_ envelope: Signalservice_Envelope) {
-//        guard envelope.hasTimestamp else { return }
+    //    func handleReceiptEnvelope(_ envelope: Signalservice_Envelope) {
+    //        guard envelope.hasTimestamp else { return }
     //
-//        let timestamp = envelope.timestamp
-//        let messages: [IncomingSignalMessage] = self.store.messages(timestamp: timestamp, type: .incomingMessage)
-//        guard !messages.isEmpty else {
-//            NSLog("Missing message for delivery receipt %@.", String(describing: envelope))
-//            return
-//        }
+    //        let timestamp = envelope.timestamp
+    //        let messages: [IncomingSignalMessage] = self.store.messages(timestamp: timestamp, type: .incomingMessage)
+    //        guard !messages.isEmpty else {
+    //            NSLog("Missing message for delivery receipt %@.", String(describing: envelope))
+    //            return
+    //        }
     //
-//        for message in messages {
-//            message.isSent = true
-//            try? self.store.save(message)
-//        }
-//    }
+    //        for message in messages {
+    //            message.isSent = true
+    //            try? self.store.save(message)
+    //        }
+    //    }
 
     private func receivedTextMessage(_ envelope: Signalservice_Envelope, dataMessage: Signalservice_DataMessage) {
         let groupIdData = dataMessage.hasGroup ? dataMessage.group.id : nil
@@ -174,7 +168,7 @@ class SignalMessageManager {
     private func handleMismatchedDevices(_ params: [String: Any], recipientAddress: String, completion: () -> Void) {
         guard let extraDevices = params["extraDevices"] as? [Int32],
             let missingDevices = params["missingDevices"] as? [Int32] else {
-            fatalError()
+                fatalError()
         }
 
         guard !extraDevices.isEmpty || !missingDevices.isEmpty else {
@@ -272,9 +266,9 @@ class SignalMessageManager {
             }
         case .deliver:
             guard let oldGroupChat = oldGroupChat else {
-//                DebugLevel.current == .verbose {
-//                    NSLog("Ignoring deliver group message from unknown group")
-//                }
+                //                DebugLevel.current == .verbose {
+                //                    NSLog("Ignoring deliver group message from unknown group")
+                //                }
                 return
             }
 
@@ -398,8 +392,8 @@ class SignalMessageManager {
         do {
             guard let decryptedData = try sessionCipher.decrypt(cipher: cipherMessage),
                 let content = try? Signalservice_Content(serializedData: decryptedData) else {
-                NSLog("Could not decrypt message! (1)")
-                return false
+                    NSLog("Could not decrypt message! (1)")
+                    return false
             }
 
             if content.hasSyncMessage {
@@ -464,7 +458,7 @@ class SignalMessageManager {
             "destinationRegistrationId": remoteRegistrationId,
             "content": ciphertext.base64Encoded(),
             "isSilent": false
-        ]]
+            ]]
     }
 
     private func cipherMessage(from data: Data, ciphertextType: CiphertextType = .unknown) throws -> SignalLibraryMessage {
@@ -491,7 +485,7 @@ class SignalMessageManager {
         }
 
         guard let cipherMessage: SignalLibraryMessage = (preKeyMessage ?? message)
-        else { throw ErrorFromSignalError(.invalidArgument) }
+            else { throw ErrorFromSignalError(.invalidArgument) }
 
         return cipherMessage
     }
