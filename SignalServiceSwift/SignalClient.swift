@@ -145,6 +145,7 @@ public class SignalClient {
         guard let recipients = chat.recipients?.filter({ recipient -> Bool in recipient.name != self.messageSender?.sender.username }) else { return }
 
         let message = OutgoingSignalMessage(recipientId: chat.uniqueId, chatId: chat.uniqueId, body: body, groupMessageType: type, store: self.store)
+        try? self.store.save(message)
 
         let dispatchGroup = DispatchGroup()
         for attachment in attachments {
@@ -171,6 +172,7 @@ public class SignalClient {
 
     public func sendMessage(_ body: String, to recipientAddress: SignalAddress, in chat: SignalChat, attachments: [Data] = []) {
         let message = OutgoingSignalMessage(recipientId: recipientAddress.name, chatId: chat.uniqueId, body: body, store: self.store)
+        try? self.store.save(message)
 
         let dispatchGroup = DispatchGroup()
         for attachment in attachments {

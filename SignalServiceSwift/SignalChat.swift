@@ -117,6 +117,7 @@ public class SignalChat: Equatable, Codable {
     }
 
     public lazy var messages: [SignalMessage] = {
+        
         return self.store?.messages(for: self, range: 0..<100) ?? []
     }()
 
