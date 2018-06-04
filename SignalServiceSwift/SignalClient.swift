@@ -70,6 +70,14 @@ public class SignalClient {
         self.store = SignalServiceStore(persistenceStore: persistenceStore, contactsDelegate: recipientsDelegate)
     }
 
+    /// Generates the json dictionary necessary to register a user with the chat service. It saves all the generated data as well.
+    /// - Caution:
+    ///   **Calling this method again overwrites the locally stored user data!**
+    ///
+    /// - Parameters:
+    ///   - username: the server-side identifier for a user (phone number, UUID, etc).
+    ///   - password: a random string.
+    /// - Returns: A dictionary mapping the user data needed to register with the chat service.
     public func generateUserBootstrap(username: String, password: String) -> [String: Any] {
         let identityKeyPair = self.signalContext.signalKeyHelper.generateAndStoreIdentityKeyPair()!
         let signalingKey = Data.generateSecureRandomData(count: 52).base64EncodedString()
