@@ -80,12 +80,12 @@ class MessagesTextCell: UITableViewCell {
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.alignment = .right
 
-        let attributes: [NSAttributedStringKey: Any] = [
+        let attributes: [NSAttributedString.Key: Any] = [
             .font: UIFont.systemFont(ofSize: 12),
             .foregroundColor: UIColor.red
         ]
 
-        let boldAttributes: [NSAttributedStringKey: Any] = [
+        let boldAttributes: [NSAttributedString.Key: Any] = [
             .font: UIFont.boldSystemFont(ofSize: 12),
             .foregroundColor: UIColor.red
         ]
@@ -115,7 +115,7 @@ class MessagesTextCell: UITableViewCell {
         view.textContainer.lineFragmentPadding = 0
         view.textContainer.maximumNumberOfLines = 0
 
-        view.linkTextAttributes = [NSAttributedStringKey.underlineStyle.rawValue: NSUnderlineStyle.styleSingle.rawValue]
+        view.linkTextAttributes = [NSAttributedString.Key.underlineStyle: NSUnderlineStyle.single]
 
         view.setContentHuggingPriority(.required, for: .vertical)
 
@@ -155,7 +155,7 @@ class MessagesTextCell: UITableViewCell {
         return view
     }()
 
-    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
 
         self.backgroundColor = nil

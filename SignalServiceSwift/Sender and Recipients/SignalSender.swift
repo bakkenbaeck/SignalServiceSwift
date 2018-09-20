@@ -6,19 +6,27 @@
 //  Copyright © 2018 Bakken&Bæck. All rights reserved.
 //
 
-struct SignalSender: Codable {
+public struct SignalSender: Codable {
     /// Works as a base-auth username, as well as an identifier.
-    var username: String
+    public var username: String
 
     /// Base-auth password.
-    var password: String
+    public var password: String
 
     /// This device id. If multiple device is supported, check against the server to avoid conflicts.
-    var deviceId: Int32
+    public var deviceId: Int32
 
     /// Our remote unique id, it's changed if the user re-registers with the server.
-    var remoteRegistrationId: UInt32
+    public var remoteRegistrationId: UInt32
 
     /// The signaling key, used to encrypt the envelopes we receive through the websocket.
-    let signalingKey: String
+    public let signalingKey: String
+
+    public init(username: String, password: String, deviceId: Int32, remoteRegistrationId: UInt32, signalingKey: String) {
+        self.username = username
+        self.password = password
+        self.deviceId = deviceId
+        self.remoteRegistrationId = remoteRegistrationId
+        self.signalingKey = signalingKey
+    }
 }

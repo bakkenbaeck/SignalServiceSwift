@@ -6,26 +6,26 @@
 //  Copyright © 2018 Bakken&Bæck. All rights reserved.
 //
 
-struct SignalServiceAttachmentPointer: Equatable, Codable {
-    enum State: Int, Codable {
+public struct SignalServiceAttachmentPointer: Equatable, Codable {
+    public enum State: Int, Codable {
         case enqueued
         case downloading
         case failed
     }
 
-    var serverId: UInt64
-    var key: Data
-    var digest: Data
-    var size: UInt32
-    var contentType: String
+    public var serverId: UInt64
+    public var key: Data
+    public var digest: Data
+    public var size: UInt32
+    public var contentType: String
 
-    var uniqueId: String = UUID().uuidString
+    public var uniqueId: String = UUID().uuidString
 
-    var state: State = .enqueued
+    public var state: State = .enqueued
 
-    var attachmentData: Data? = nil
+    public var attachmentData: Data? = nil
 
-    init(serverId: UInt64, key: Data, digest: Data, size: UInt32, contentType: String) {
+    public init(serverId: UInt64, key: Data, digest: Data, size: UInt32, contentType: String) {
         self.serverId = serverId
         self.key = key
         self.digest = digest

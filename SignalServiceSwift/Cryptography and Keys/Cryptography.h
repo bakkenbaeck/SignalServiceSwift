@@ -46,7 +46,6 @@ typedef NS_ENUM(NSInteger, TSMACType) {
 // Truncated SHA256 digest for `data`
 + (NSData *)computeSHA256Digest:(NSData *)data truncatedToBytes:(NSUInteger)truncatedBytes;
 
-+ (NSString *)truncatedSHA1Base64EncodedWithoutPadding:(NSString *)string;
 + (NSString *)computeSHA1DigestForString:(NSString *)input;
 
 + (NSData *)computeSHA256HMAC:(NSData *)dataToHMAC withHMACKey:(NSData *)HMACKey;

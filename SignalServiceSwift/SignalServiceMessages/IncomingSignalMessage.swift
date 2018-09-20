@@ -25,7 +25,7 @@ public class IncomingSignalMessage: SignalMessage {
             attachmentPointerIds
     }
 
-    public init(body: String, chatId: String, senderId: String, timestamp: UInt64, store: SignalServiceStore) {
+    public init(body: String, chatId: String, senderId: String, timestamp: UInt64, store: SignalServiceStore?) {
         self.senderId = senderId
 
         super.init(body: body, chatId: chatId, store: store)

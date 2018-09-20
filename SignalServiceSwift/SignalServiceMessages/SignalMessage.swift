@@ -37,7 +37,7 @@ public class SignalMessage: Codable, Equatable, Hashable {
     /// Id of all our attachments.
     public var attachmentPointerIds: [String]
 
-    var store: SignalServiceStore?
+    var store: SignalServiceStore!
 
     private var cachedAttachment: Data?
 
@@ -45,13 +45,17 @@ public class SignalMessage: Codable, Equatable, Hashable {
         if let data = self.cachedAttachment {
             return data
         } else if let id = self.attachmentPointerIds.first {
-            self.cachedAttachment = self.store?.attachment(with: id)?.attachmentData
+            self.cachedAttachment = self.store.attachment(with: id)?.attachmentData
         }
 
         return self.cachedAttachment
     }
 
-    public init(body: String, chatId: String, store: SignalServiceStore) {
+    var isVisible: Bool {
+        return !self.body.isEmpty || self is InfoSignalMessage
+    }
+
+    public init(body: String, chatId: String, store: SignalServiceStore?) {
         self.body = body
         self.chatId = chatId
         self.attachmentPointerIds = []

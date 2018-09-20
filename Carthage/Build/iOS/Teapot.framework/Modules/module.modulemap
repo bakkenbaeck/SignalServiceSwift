@@ -1,4 +1,4 @@
 framework module Teapot {
-    header "Teapot-Swift.h"
-    requires objc
+  header "Teapot-Swift.h"
+  requires objc
 }

@@ -18,14 +18,14 @@ public class SignalChat: Equatable, Codable {
         case isMuted
     }
 
-    var store: SignalServiceStore?
+    var store: SignalServiceStore!
     var contactsDelegate: SignalRecipientsDisplayDelegate?
 
     var avatarId: String?
 
     var avatarServerId: UInt64 {
         if let avatarId = avatarId {
-            return self.store?.attachment(with: avatarId)?.serverId ?? 0
+            return self.store.attachment(with: avatarId)?.serverId ?? 0
         }
 
         return 0
@@ -39,7 +39,7 @@ public class SignalChat: Equatable, Codable {
 
         // group chat
         guard let id = self.avatarId,
-            let avatarPointer = self.store?.attachment(with: id),
+            let avatarPointer = self.store.attachment(with: id),
             let data = avatarPointer.attachmentData,
             let image = UIImage(data: data)
         else {
@@ -67,7 +67,7 @@ public class SignalChat: Equatable, Codable {
     var recipientIdentifiers: [String]
 
     public var recipients: [SignalAddress]? {
-        return self.isGroupChat ? self.store?.recipients(with: self.recipientIdentifiers) : self.store?.recipients(with: [self.recipientIdentifier!])
+        return self.isGroupChat ? self.store.recipients(with: self.recipientIdentifiers) : self.store.recipients(with: [self.recipientIdentifier!])
     }
 
     public var isGroupChat: Bool {
@@ -111,14 +111,11 @@ public class SignalChat: Equatable, Codable {
     public var isMuted: Bool = false
 
     public var visibleMessages: [SignalMessage] {
-        return self.messages.filter { message -> Bool in
-            !message.body.isEmpty || message is InfoSignalMessage
-        }
+        return self.messages.filter({ message -> Bool in message.isVisible })
     }
 
     public lazy var messages: [SignalMessage] = {
-        
-        return self.store?.messages(for: self, range: 0..<100) ?? []
+        return self.store.messages(for: self, range: 0..<100)
     }()
 
     public var isArchived: Bool {
@@ -139,6 +136,19 @@ public class SignalChat: Equatable, Codable {
         self.store = store
     }
 
+    public init(recipientIdentifier: String?, recipientIdentifiers: [String], name: String, draft: String?, isMuted: Bool, archivalDate: TimeInterval?) {
+
+        self.recipientIdentifier = recipientIdentifier
+        self.recipientIdentifiers = recipientIdentifiers
+        self.name = name
+        self.currentDraft = draft ?? ""
+        self.isMuted = isMuted
+
+        if let archivalDate = archivalDate {
+            self.lastArchivalDate = Date(timeIntervalSince1970: archivalDate)
+        }
+    }
+
     public static func == (lhs: SignalChat, rhs: SignalChat) -> Bool {
         return lhs.uniqueId == rhs.uniqueId
     }
@@ -156,7 +166,7 @@ public class SignalChat: Equatable, Codable {
 
         incomingMessages.forEach { incoming in
             incoming.isRead = false
-            try? self.store?.save(incoming)
+            try? self.store.save(incoming)
         }
     }
 }

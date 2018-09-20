@@ -11,10 +11,8 @@
 		9F0A19B620A09F7E0051B268 /* MessagesTextCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F0A19B120A09F7E0051B268 /* MessagesTextCell.swift */; };
 		9F0A19B920A09F7E0051B268 /* StatusCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F0A19B420A09F7E0051B268 /* StatusCell.swift */; };
 		9F0A19BB20A0A14D0051B268 /* TinyConstraints.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9F0A19BA20A0A14D0051B268 /* TinyConstraints.framework */; };
-		9F0A19BC20A0A15B0051B268 /* TinyConstraints.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9F0A19BA20A0A14D0051B268 /* TinyConstraints.framework */; };
 		9F0A19BD20A0A15B0051B268 /* TinyConstraints.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 9F0A19BA20A0A14D0051B268 /* TinyConstraints.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		9F0A19C420A0A2B00051B268 /* SweetUIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9F0A19C320A0A2AF0051B268 /* SweetUIKit.framework */; };
-		9F0A19C520A0A2B80051B268 /* SweetUIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9F0A19C320A0A2AF0051B268 /* SweetUIKit.framework */; };
 		9F0A19C620A0A2B80051B268 /* SweetUIKit.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 9F0A19C320A0A2AF0051B268 /* SweetUIKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		9F27B9EF2090B40C0032C7DD /* SignalLibraryStoreProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F27B9EE2090B40C0032C7DD /* SignalLibraryStoreProtocol.swift */; };
 		9F27B9F12090C61F0032C7DD /* InfoSignalMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F27B9F02090C61F0032C7DD /* InfoSignalMessage.swift */; };
@@ -323,8 +321,6 @@
 				9F0A19C420A0A2B00051B268 /* SweetUIKit.framework in Frameworks */,
 				9F723090208F2F1C00F568F7 /* CommonCrypto.framework in Frameworks */,
 				9F723091208F2F1C00F568F7 /* SwiftProtobuf.framework in Frameworks */,
-				9F0A19C520A0A2B80051B268 /* SweetUIKit.framework in Frameworks */,
-				9F0A19BC20A0A15B0051B268 /* TinyConstraints.framework in Frameworks */,
 				9FF2E49D208A2020001C666C /* EtherealCereal.framework in Frameworks */,
 				9FF2E497208A1F87001C666C /* SignalServiceSwift.framework in Frameworks */,
 			);
@@ -730,7 +726,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0930;
-				LastUpgradeCheck = 0930;
+				LastUpgradeCheck = 0940;
 				ORGANIZATIONNAME = "Bakken&Bæck";
 				TargetAttributes = {
 					9FE925DD208A08F6008ABCE4 = {
@@ -946,8 +942,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.bakkenbaeck.SQLiteDemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -969,8 +965,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.bakkenbaeck.SQLiteDemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
@@ -1125,7 +1121,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -1160,7 +1156,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.bakkenbaeck.SignalServiceSwift;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
@@ -1184,7 +1180,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.bakkenbaeck.SignalServiceSwiftTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_INCLUDE_PATHS = "";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -1208,7 +1204,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.bakkenbaeck.SignalServiceSwiftTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_INCLUDE_PATHS = "";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;

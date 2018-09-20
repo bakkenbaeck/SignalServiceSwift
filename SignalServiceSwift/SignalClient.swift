@@ -144,7 +144,7 @@ public class SignalClient {
         let networkClient = NetworkClient(baseURL: self.baseURL, username: sender.username, password: sender.password)
         self.messageSender = SignalMessageManager(sender: sender, networkClient: networkClient, signalContext: self.signalContext, store: self.store, delegate: self)
 
-        RunLoop.main.add(self.keepAliveTimer, forMode: .defaultRunLoopMode)
+        RunLoop.main.add(self.keepAliveTimer, forMode: .default)
     }
 
     public func sendGroupMessage(_ body: String, type: OutgoingSignalMessage.GroupMetaMessageType, to recipientAddresses: [SignalAddress], attachments: [Data] = []) {
@@ -180,7 +180,7 @@ public class SignalClient {
 
     public func sendMessage(_ body: String, to recipientAddress: SignalAddress, in chat: SignalChat, attachments: [Data] = []) {
         let message = OutgoingSignalMessage(recipientId: recipientAddress.name, chatId: chat.uniqueId, body: body, store: self.store)
-        try? self.store.save(message)
+        try! self.store.save(message)
 
         let dispatchGroup = DispatchGroup()
         for attachment in attachments {

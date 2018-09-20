@@ -46,7 +46,7 @@ public class InfoSignalMessage: SignalMessage {
     /// Id of the message sender.
     public var senderId: String
 
-    public init(senderId: String, chatId: String, messageType: MessageType, customMessage: String = "", additionalInfo: String? = nil, store: SignalServiceStore) {
+    public init(senderId: String, chatId: String, messageType: MessageType, customMessage: String = "", additionalInfo: String? = nil, store: SignalServiceStore?) {
         self.customMessage = customMessage
         self.additionalInfo = additionalInfo ?? ""
         self.senderId = senderId

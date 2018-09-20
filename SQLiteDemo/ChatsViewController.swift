@@ -50,10 +50,10 @@ class ChatsViewController: UIViewController {
         return dateFormatter
     }()
 
-    let teapot = Teapot(baseURL: URL(string: "https://chat.internal.service.toshi.org")!)
+    let teapot = Teapot(baseURL: URL(string: "https://token-chat-service-development.herokuapp.com/")!)
 
     lazy var signalClient: SignalClient = {
-        let client = SignalClient(baseURL: URL(string: "https://chat.internal.service.toshi.org")!, recipientsDelegate: self, persistenceStore: self.persistenceStore)
+        let client = SignalClient(baseURL: self.teapot.baseURL, recipientsDelegate: self, persistenceStore: self.persistenceStore)
         client.store.chatDelegate = self
 
         return client
@@ -77,7 +77,7 @@ class ChatsViewController: UIViewController {
 
             self.signalClient.startSocket()
             self.signalClient.shouldKeepSocketAlive = true
-            self.chats = self.signalClient.store.fetchAllChats()
+            self.chats = self.signalClient.store.retrieveAllChats()
 
         } else {
             self.user = User(privateKey: "0989d7b7ccfe3baf39ed441d001df834173e0729916210d14f60068d1d22c595")
@@ -131,7 +131,7 @@ class ChatsViewController: UIViewController {
                     self.signalClient.startSocket()
                     self.signalClient.shouldKeepSocketAlive = true
                     self.persistenceStore.storeUser(user)
-                    self.chats = self.signalClient.store.fetchAllChats()
+                    self.chats = self.signalClient.store.retrieveAllChats()
 
                 case .failure(_, _, let error):
                     NSLog(error.localizedDescription)
@@ -153,7 +153,7 @@ class ChatsViewController: UIViewController {
                     completion(timestamp)
                 }
             case .failure(_, _, let error):
-                NSLog(error.localizedDescription)
+                fatalError(error.localizedDescription)
             }
         }
     }
@@ -181,17 +181,8 @@ extension ChatsViewController: UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
-        return UITableViewAutomaticDimension
+        return UITableView.automaticDimension
     }
-
-//    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-//        let cell = ChatCell()
-//        self.configureCell(cell, at: indexPath)
-//
-//        cell.layoutIfNeeded()
-//
-//        return cell.systemLayoutSizeFitting(CGSize(width: self.tableView.bounds.width, height: .greatestFiniteMagnitude), withHorizontalFittingPriority: .required, verticalFittingPriority: .fittingSizeLevel).height
-//    }
 
     private func configureCell(_ cell: ChatCell, at indexPath: IndexPath) {
         let chat = self.chats[indexPath.row]
@@ -206,23 +197,36 @@ extension ChatsViewController: UITableViewDataSource {
 
 extension ChatsViewController: SignalServiceStoreChatDelegate {
     func signalServiceStoreWillChangeChats() {
+        self.tableView.beginUpdates()
     }
 
     func signalServiceStoreDidChangeChat(_ chat: SignalChat, at indexPath: IndexPath, for changeType: SignalServiceStore.ChangeType) {
+        switch changeType {
+        case .delete:
+            self.chats.remove(at: indexPath.row)
+            self.tableView.deleteRows(at: [indexPath], with: .automatic)
+        case .insert:
+            self.chats.insert(chat, at: indexPath.row)
+            self.tableView.insertRows(at: [indexPath], with: .right)
+        case .update:
+            self.chats.remove(at: indexPath.row)
+            self.chats.insert(chat, at: indexPath.row)
+            self.tableView.reloadRows(at: [indexPath], with: .fade)
+        }
     }
 
     func signalServiceStoreDidChangeChats() {
-        self.chats = self.signalClient.store.fetchAllChats()
-
-        DispatchQueue.main.async {
-            self.tableView.reloadData()
-        }
+        self.tableView.endUpdates()
     }
 }
 
 extension ChatsViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         self.performSegue(withIdentifier: "chat", sender: indexPath)
+    }
+
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        return true
     }
 }
 
@@ -231,8 +235,8 @@ extension ChatsViewController: MessagesViewControllerDelegate {
         let messages: [(String, [UIImage])] = [
             (SofaMessage(body: "This is testing message from our SignalClient.").content, []),
             (SofaMessage(body: "This is random message from SQLite demo.").content, []),
-            (SofaMessage(body: "What's up, doc?.").content, [#imageLiteral(resourceName: "doc")]),
-            (SofaMessage(body: "This is Ceti Alpha 5!!!!!!!").content, [#imageLiteral(resourceName: "cetialpha5")]),
+            (SofaMessage(body: "What's up, doc?.").content, [UIImage(named: "doc")!]),
+            (SofaMessage(body: "This is Ceti Alpha 5!!!!!!!").content, [UIImage(named: "cetialpha5")!]),
             (SofaMessage(body: "Hey, this is a test with a slightly longer text, and some utf-32 characters as well. 👨‍👩‍👧☺️😇 Am I right? 👨🏿‍🔬. I am right…").content, [])
         ]
 
@@ -243,7 +247,7 @@ extension ChatsViewController: MessagesViewControllerDelegate {
 
     func didRequestSendRandomMessage(in chat: SignalChat) {
         let (body, images) = ChatsViewController.randomMessage()
-        let attachments = images.compactMap { img in UIImagePNGRepresentation(img) }
+        let attachments = images.compactMap { img in img.pngData() }
 
         if chat.isGroupChat {
             self.signalClient.sendGroupMessage(body, type: .deliver, to: chat.recipients!, attachments: attachments)

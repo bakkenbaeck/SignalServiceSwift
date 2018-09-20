@@ -44,19 +44,6 @@ const NSUInteger kAES256_KeyByteLength = 32;
 
 #pragma mark SHA1
 
-+ (NSString *)truncatedSHA1Base64EncodedWithoutPadding:(NSString *)string {
-    /* used by TSContactManager to send hashed/truncated contact list to server */
-    NSMutableData *hashData = [NSMutableData dataWithLength:20];
-
-    CC_SHA1([string dataUsingEncoding:NSUTF8StringEncoding].bytes,
-            (unsigned int)[string dataUsingEncoding:NSUTF8StringEncoding].length,
-            hashData.mutableBytes);
-
-    NSData *truncatedData = [hashData subdataWithRange:NSMakeRange(0, 10)];
-
-    return [[truncatedData base64EncodedStringWithOptions:0] stringByReplacingOccurrencesOfString:@"=" withString:@""];
-}
-
 + (NSString *)computeSHA1DigestForString:(NSString *)input {
     // Here we are taking in our string hash, placing that inside of a C Char Array, then parsing it through the SHA1
     // encryption method.

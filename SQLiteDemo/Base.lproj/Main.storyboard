@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="jGP-LM-BY9">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="jGP-LM-BY9">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -57,7 +57,7 @@
                         <constraints>
                             <constraint firstItem="e3Q-fY-i7p" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="1EJ-7S-eM5"/>
                             <constraint firstItem="e3Q-fY-i7p" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="43T-mr-M2z"/>
-                            <constraint firstItem="e3Q-fY-i7p" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="SDc-DT-8tQ"/>
+                            <constraint firstItem="e3Q-fY-i7p" firstAttribute="bottom" secondItem="8bC-Xf-vdC" secondAttribute="bottom" id="SDc-DT-8tQ"/>
                             <constraint firstItem="e3Q-fY-i7p" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="Xur-sD-kh5"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
@@ -86,13 +86,14 @@
         <!--Messages View Controller-->
         <scene sceneID="N7R-CN-Nd6">
             <objects>
-                <viewController id="f6m-Hh-D2D" customClass="MessagesViewController" customModule="SQLiteDemo" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="hh2-uc-vby">
+                <viewController automaticallyAdjustsScrollViewInsets="NO" id="f6m-Hh-D2D" customClass="MessagesViewController" customModule="SQLiteDemo" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="hh2-uc-vby">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        <viewLayoutGuide key="safeArea" id="Krt-as-5s5"/>
                     </view>
+                    <extendedEdge key="edgesForExtendedLayout" top="YES"/>
+                    <nil key="simulatedBottomBarMetrics"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="UWh-qV-eHb" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

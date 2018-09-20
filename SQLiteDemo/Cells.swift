@@ -152,7 +152,7 @@ class ChatCell: UITableViewCell {
         self.setup()
     }
 
-    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         self.contentBackgroundColor = .clear
 
         super.init(style: style, reuseIdentifier: reuseIdentifier)

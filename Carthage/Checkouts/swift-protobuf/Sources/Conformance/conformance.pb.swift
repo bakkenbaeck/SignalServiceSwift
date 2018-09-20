@@ -80,6 +80,77 @@ enum Conformance_WireFormat: SwiftProtobuf.Enum {
 
 }
 
+#if swift(>=4.2)
+
+extension Conformance_WireFormat: CaseIterable {
+  // The compiler won't synthesize support with the UNRECOGNIZED case.
+  static var allCases: [Conformance_WireFormat] = [
+    .unspecified,
+    .protobuf,
+    .json,
+  ]
+}
+
+#endif  // swift(>=4.2)
+
+enum Conformance_TestCategory: SwiftProtobuf.Enum {
+  typealias RawValue = Int
+  case unspecifiedTest // = 0
+
+  /// Test binary wire format.
+  case binaryTest // = 1
+
+  /// Test json wire format.
+  case jsonTest // = 2
+
+  /// Similar to JSON_TEST. However, during parsing json, testee should ignore
+  /// unknown fields. This feature is optional. Each implementation can descide
+  /// whether to support it.  See
+  /// https://developers.google.com/protocol-buffers/docs/proto3#json_options
+  /// for more detail.
+  case jsonIgnoreUnknownParsingTest // = 3
+  case UNRECOGNIZED(Int)
+
+  init() {
+    self = .unspecifiedTest
+  }
+
+  init?(rawValue: Int) {
+    switch rawValue {
+    case 0: self = .unspecifiedTest
+    case 1: self = .binaryTest
+    case 2: self = .jsonTest
+    case 3: self = .jsonIgnoreUnknownParsingTest
+    default: self = .UNRECOGNIZED(rawValue)
+    }
+  }
+
+  var rawValue: Int {
+    switch self {
+    case .unspecifiedTest: return 0
+    case .binaryTest: return 1
+    case .jsonTest: return 2
+    case .jsonIgnoreUnknownParsingTest: return 3
+    case .UNRECOGNIZED(let i): return i
+    }
+  }
+
+}
+
+#if swift(>=4.2)
+
+extension Conformance_TestCategory: CaseIterable {
+  // The compiler won't synthesize support with the UNRECOGNIZED case.
+  static var allCases: [Conformance_TestCategory] = [
+    .unspecifiedTest,
+    .binaryTest,
+    .jsonTest,
+    .jsonIgnoreUnknownParsingTest,
+  ]
+}
+
+#endif  // swift(>=4.2)
+
 /// Represents a single test case's input.  The testee should:
 ///
 ///   1. parse this proto (which should always succeed)
@@ -123,6 +194,11 @@ struct Conformance_ConformanceRequest {
   /// protobuf_test_messages.proto2.TestAllTypesProto2.
   var messageType: String = String()
 
+  /// Each test is given a specific test category. Some category may need
+  /// spedific support in testee programs. Refer to the defintion of TestCategory
+  /// for more information.
+  var testCategory: Conformance_TestCategory = .unspecifiedTest
+
   var unknownFields = SwiftProtobuf.UnknownStorage()
 
   /// The payload (whether protobuf of JSON) is always for a
@@ -136,6 +212,7 @@ struct Conformance_ConformanceRequest {
     case protobufPayload(Data)
     case jsonPayload(String)
 
+  #if !swift(>=4.1)
     static func ==(lhs: Conformance_ConformanceRequest.OneOf_Payload, rhs: Conformance_ConformanceRequest.OneOf_Payload) -> Bool {
       switch (lhs, rhs) {
       case (.protobufPayload(let l), .protobufPayload(let r)): return l == r
@@ -143,6 +220,7 @@ struct Conformance_ConformanceRequest {
       default: return false
       }
     }
+  #endif
   }
 
   init() {}
@@ -248,6 +326,7 @@ struct Conformance_ConformanceResponse {
     /// wasn't supported, like JSON input/output.
     case skipped(String)
 
+  #if !swift(>=4.1)
     static func ==(lhs: Conformance_ConformanceResponse.OneOf_Result, rhs: Conformance_ConformanceResponse.OneOf_Result) -> Bool {
       switch (lhs, rhs) {
       case (.parseError(let l), .parseError(let r)): return l == r
@@ -259,6 +338,7 @@ struct Conformance_ConformanceResponse {
       default: return false
       }
     }
+  #endif
   }
 
   init() {}
@@ -276,6 +356,15 @@ extension Conformance_WireFormat: SwiftProtobuf._ProtoNameProviding {
   ]
 }
 
+extension Conformance_TestCategory: SwiftProtobuf._ProtoNameProviding {
+  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    0: .same(proto: "UNSPECIFIED_TEST"),
+    1: .same(proto: "BINARY_TEST"),
+    2: .same(proto: "JSON_TEST"),
+    3: .same(proto: "JSON_IGNORE_UNKNOWN_PARSING_TEST"),
+  ]
+}
+
 extension Conformance_ConformanceRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
   static let protoMessageName: String = _protobuf_package + ".ConformanceRequest"
   static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
@@ -283,6 +372,7 @@ extension Conformance_ConformanceRequest: SwiftProtobuf.Message, SwiftProtobuf._
     2: .standard(proto: "json_payload"),
     3: .standard(proto: "requested_output_format"),
     4: .standard(proto: "message_type"),
+    5: .standard(proto: "test_category"),
   ]
 
   mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -300,6 +390,7 @@ extension Conformance_ConformanceRequest: SwiftProtobuf.Message, SwiftProtobuf._
         if let v = v {self.payload = .jsonPayload(v)}
       case 3: try decoder.decodeSingularEnumField(value: &self.requestedOutputFormat)
       case 4: try decoder.decodeSingularStringField(value: &self.messageType)
+      case 5: try decoder.decodeSingularEnumField(value: &self.testCategory)
       default: break
       }
     }
@@ -319,14 +410,18 @@ extension Conformance_ConformanceRequest: SwiftProtobuf.Message, SwiftProtobuf._
     if !self.messageType.isEmpty {
       try visitor.visitSingularStringField(value: self.messageType, fieldNumber: 4)
     }
+    if self.testCategory != .unspecifiedTest {
+      try visitor.visitSingularEnumField(value: self.testCategory, fieldNumber: 5)
+    }
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  func _protobuf_generated_isEqualTo(other: Conformance_ConformanceRequest) -> Bool {
-    if self.payload != other.payload {return false}
-    if self.requestedOutputFormat != other.requestedOutputFormat {return false}
-    if self.messageType != other.messageType {return false}
-    if unknownFields != other.unknownFields {return false}
+  static func ==(lhs: Conformance_ConformanceRequest, rhs: Conformance_ConformanceRequest) -> Bool {
+    if lhs.payload != rhs.payload {return false}
+    if lhs.requestedOutputFormat != rhs.requestedOutputFormat {return false}
+    if lhs.messageType != rhs.messageType {return false}
+    if lhs.testCategory != rhs.testCategory {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
 }
@@ -399,9 +494,9 @@ extension Conformance_ConformanceResponse: SwiftProtobuf.Message, SwiftProtobuf.
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  func _protobuf_generated_isEqualTo(other: Conformance_ConformanceResponse) -> Bool {
-    if self.result != other.result {return false}
-    if unknownFields != other.unknownFields {return false}
+  static func ==(lhs: Conformance_ConformanceResponse, rhs: Conformance_ConformanceResponse) -> Bool {
+    if lhs.result != rhs.result {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
 }

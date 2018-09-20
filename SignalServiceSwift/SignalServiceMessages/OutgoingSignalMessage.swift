@@ -142,7 +142,7 @@ public class OutgoingSignalMessage: SignalMessage {
     public var messageState: MessageState = .none
     public var recipientId: String
 
-    public init(recipientId: String, chatId: String, body: String, groupMessageType: GroupMetaMessageType = .none, store: SignalServiceStore) {
+    public init(recipientId: String, chatId: String, body: String, groupMessageType: GroupMetaMessageType = .none, store: SignalServiceStore?) {
         self.recipientId = recipientId
         self.groupMetaMessageType = groupMessageType
 

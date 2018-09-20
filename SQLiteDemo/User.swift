@@ -31,9 +31,12 @@ class User: Codable {
         self.cereal.address
     }()
 
-    init(privateKey: String) {
-        self.privateKey = privateKey
+    convenience init(privateKey: String) {
+        self.init(privateKey: privateKey, password: UUID().uuidString)
+    }
 
-        self.password = UUID().uuidString
+    init(privateKey: String, password: String) {
+        self.privateKey = privateKey
+        self.password = password
     }
 }

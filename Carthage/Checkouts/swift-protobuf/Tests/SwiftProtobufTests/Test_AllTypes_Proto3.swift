@@ -675,6 +675,18 @@ class Test_AllTypes_Proto3: XCTestCase, PBTestHelpers {
 
         assertDecodeFails([146, 1, 2, 8, 128])
         assertDecodeFails([146, 1, 1, 128])
+
+        let c = MessageTestType.with {
+            $0.optionalNestedMessage.bb = 1
+        }
+        var d = c
+        XCTAssertEqual(c, d)
+        XCTAssertTrue(c.hasOptionalNestedMessage)
+        XCTAssertTrue(d.hasOptionalNestedMessage)
+        d.clearOptionalNestedMessage()
+        XCTAssertNotEqual(c, d)
+        XCTAssertTrue(c.hasOptionalNestedMessage)
+        XCTAssertFalse(d.hasOptionalNestedMessage)
     }
 
     func testEncoding_optionalForeignMessage() {
@@ -706,6 +718,19 @@ class Test_AllTypes_Proto3: XCTestCase, PBTestHelpers {
         assertDecodeFails([159, 1]) // Wire type 7
         assertDecodeFails([159, 1, 0])
         assertDecodeFails([154, 1, 4, 8, 1]) // Truncated
+
+        // Ensure storage is uniqued for clear.
+        let c = MessageTestType.with {
+            $0.optionalForeignMessage.c = 1
+        }
+        var d = c
+        XCTAssertEqual(c, d)
+        XCTAssertTrue(c.hasOptionalForeignMessage)
+        XCTAssertTrue(d.hasOptionalForeignMessage)
+        d.clearOptionalForeignMessage()
+        XCTAssertNotEqual(c, d)
+        XCTAssertTrue(c.hasOptionalForeignMessage)
+        XCTAssertFalse(d.hasOptionalForeignMessage)
     }
 
     func testEncoding_optionalImportMessage() {
@@ -714,6 +739,19 @@ class Test_AllTypes_Proto3: XCTestCase, PBTestHelpers {
         }
         assertDecodeSucceeds([162, 1, 4, 8, 1, 8, 3]) {$0.optionalImportMessage.d == 3}
         assertDecodeSucceeds([162, 1, 2, 8, 1, 162, 1, 2, 8, 4]) {$0.optionalImportMessage.d == 4}
+
+        // Ensure storage is uniqued for clear.
+        let c = MessageTestType.with {
+            $0.optionalImportMessage.d = 1
+        }
+        var d = c
+        XCTAssertEqual(c, d)
+        XCTAssertTrue(c.hasOptionalImportMessage)
+        XCTAssertTrue(d.hasOptionalImportMessage)
+        d.clearOptionalImportMessage()
+        XCTAssertNotEqual(c, d)
+        XCTAssertTrue(c.hasOptionalImportMessage)
+        XCTAssertFalse(d.hasOptionalImportMessage)
     }
 
     func testEncoding_optionalNestedEnum() {
@@ -1189,7 +1227,7 @@ class Test_AllTypes_Proto3: XCTestCase, PBTestHelpers {
 
         var m = MessageTestType()
         m.oneofUint32 = 77
-        XCTAssertEqual(m.debugDescription, "SwiftProtobufTests.Proto3Unittest_TestAllTypes:\noneof_uint32: 77\n");
+        XCTAssertEqual(m.debugDescription, "SwiftProtobufTests.Proto3Unittest_TestAllTypes:\noneof_uint32: 77\n")
         var m2 = MessageTestType()
         m2.oneofUint32 = 78
         XCTAssertNotEqual(m.hashValue, m2.hashValue)
@@ -1236,7 +1274,7 @@ class Test_AllTypes_Proto3: XCTestCase, PBTestHelpers {
         var m = MessageTestType()
         m.oneofNestedMessage = MessageTestType.NestedMessage()
         m.oneofNestedMessage.bb = 1
-        XCTAssertEqual(m.debugDescription, "SwiftProtobufTests.Proto3Unittest_TestAllTypes:\noneof_nested_message {\n  bb: 1\n}\n");
+        XCTAssertEqual(m.debugDescription, "SwiftProtobufTests.Proto3Unittest_TestAllTypes:\noneof_nested_message {\n  bb: 1\n}\n")
         var m2 = MessageTestType()
         m2.oneofNestedMessage = MessageTestType.NestedMessage()
         m2.oneofNestedMessage.bb = 2
@@ -1297,7 +1335,7 @@ class Test_AllTypes_Proto3: XCTestCase, PBTestHelpers {
 
         var m = MessageTestType()
         m.oneofString = "abc"
-        XCTAssertEqual(m.debugDescription, "SwiftProtobufTests.Proto3Unittest_TestAllTypes:\noneof_string: \"abc\"\n");
+        XCTAssertEqual(m.debugDescription, "SwiftProtobufTests.Proto3Unittest_TestAllTypes:\noneof_string: \"abc\"\n")
         var m2 = MessageTestType()
         m2.oneofString = "def"
         XCTAssertNotEqual(m.hashValue, m2.hashValue)
@@ -1367,7 +1405,7 @@ class Test_AllTypes_Proto3: XCTestCase, PBTestHelpers {
         var m = MessageTestType()
         m.oneofBytes = Data(bytes: [1, 2, 3])
 
-        XCTAssertEqual(m.debugDescription, "SwiftProtobufTests.Proto3Unittest_TestAllTypes:\noneof_bytes: \"\\001\\002\\003\"\n");
+        XCTAssertEqual(m.debugDescription, "SwiftProtobufTests.Proto3Unittest_TestAllTypes:\noneof_bytes: \"\\001\\002\\003\"\n")
         var m2 = MessageTestType()
         m2.oneofBytes = Data(bytes: [4, 5, 6])
         XCTAssertNotEqual(m.hashValue, m2.hashValue)
