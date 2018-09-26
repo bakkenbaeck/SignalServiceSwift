@@ -39,8 +39,7 @@ extension String {
 class ChatsViewController: UIViewController {
     let user: User
 
-    let testContact = SignalAddress(name: "0x2b307303d6ecca8ced81542518266ff7794b27fc", deviceId: 1)
-    let otherContact = SignalAddress(name: "0x10e300f7eac54d7d12ff0ce3063cb942afd8d25f", deviceId: 1)
+    let igorPhoneContact = SignalAddress(name: "0x94b7382e8cbd02fc7bfd2e233e42b778ac2ce224", deviceId: 1)
     let ellenContact = SignalAddress(name: "0xc0086796cbba5b4d97cc58d175b37c758975aef1", deviceId: 1)
 
     lazy var dateFormatter: DateFormatter = {
@@ -50,7 +49,7 @@ class ChatsViewController: UIViewController {
         return dateFormatter
     }()
 
-    let teapot = Teapot(baseURL: URL(string: "https://token-chat-service-development.herokuapp.com/")!)
+    let teapot = Teapot(baseURL: URL(string: "https://token-chat-service-development.herokuapp.com")!)
 
     lazy var signalClient: SignalClient = {
         let client = SignalClient(baseURL: self.teapot.baseURL, recipientsDelegate: self, persistenceStore: self.persistenceStore)
@@ -162,7 +161,7 @@ class ChatsViewController: UIViewController {
         // Group message test
 //        self.signalClient.sendGroupMessage("", type: .new, to: [self.testContact, self.otherContact, self.ellenContact, self.user.address])
 //        // 1:1 chat test.
-        let chat = self.signalClient.store.fetchOrCreateChat(with: self.ellenContact.name)
+        let chat = self.signalClient.store.fetchOrCreateChat(with: self.igorPhoneContact.name)
         self.didRequestSendRandomMessage(in: chat)
     }
 }
@@ -269,10 +268,10 @@ extension ChatsViewController: SignalRecipientsDisplayDelegate {
 
 class ContactManager {
     static func displayName(for address: String) -> String {
-        if address == "0x2b307303d6ecca8ced81542518266ff7794b27fc" {
-            return "Toshi iPhone X"
-        } else if address == "0xd102af8bf76e8d438a44e23bc83ea3ac8f53f2c7" {
-            return "Toshi SE"
+        if address == "0x94b7382e8cbd02fc7bfd2e233e42b778ac2ce224" {
+            return "Igor iPhone X"
+        } else if address == "0xcc4886677b6f60e346fe48968189c1b1fe9f3b33" {
+            return "Simulator X"
         } else if address == "0xc0086796cbba5b4d97cc58d175b37c758975aef1" {
             return "Ellen"
         } else {

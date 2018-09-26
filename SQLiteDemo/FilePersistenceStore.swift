@@ -331,7 +331,6 @@ class FilePersistenceStore {
         } catch {
             fatalError("Failed to store data in db with unknown error")
         }
-        NSLog("Did save new message: %@.", insert.asSQL())
     }
 
     private func update(_ update: Update) {
@@ -650,9 +649,13 @@ extension FilePersistenceStore: PersistenceStore {
     }
 
     func storeAttachment(_ attachment: SignalServiceAttachmentPointer) {
-        let insert: Insert = self.buildAttachmentOperation(attachment)
+        if (try! self.dbConnection.pluck(self.attachmentsTable.where(SignalAttachmentKeys.uniqueIdField == attachment.uniqueId)) != nil) {
+            self.updateAttachment(attachment)
+        } else  {
+            let insert: Insert = self.buildAttachmentOperation(attachment)
 
-        try! self.dbConnection.run(insert)
+            try! self.dbConnection.run(insert)
+        }
     }
 
     func retrieveMessages(with predicate: NSPredicate?, sortDescriptors: [NSSortDescriptor]?) -> [SignalMessage] {

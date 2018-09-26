@@ -133,7 +133,7 @@ public class SignalClient {
     public func startSocket() {
         guard let sender = self.store.fetchSender() else { return }
 
-        let socketURL = URL(string: "\(self.baseURL.absoluteString)/v1/websocket/?login=\(sender.username)&password=\(sender.password)")!
+        let socketURL = URL(string: "wss://\(self.baseURL.host!)/v1/websocket/?login=\(sender.username)&password=\(sender.password)")!
 
         self.socket = WebSocket(url: socketURL)
         self.socket?.delegate = self

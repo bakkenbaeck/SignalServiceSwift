@@ -53,7 +53,7 @@ class MessagesViewController: UIViewController {
         view.dataSource = self
         view.delegate = self
         view.separatorStyle = .none
-        // view.keyboardDismissMode = .interactive
+        view.keyboardDismissMode = .interactive
         view.contentInsetAdjustmentBehavior = .never
 
         view.register(UITableViewCell.self)
@@ -82,10 +82,17 @@ class MessagesViewController: UIViewController {
         self.shouldScrollToBottom = true
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
+        self.tableView.isHidden = true
+    }
+
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 
         self.scrollTableViewToBottom(animated: false)
+        self.tableView.isHidden = false
     }
 
     override func viewDidLayoutSubviews() {
@@ -93,7 +100,7 @@ class MessagesViewController: UIViewController {
 
         if self.shouldScrollToBottom {
             self.shouldScrollToBottom = false
-            self.tableView.setContentOffset(CGPoint(x: 0.0, y: .greatestFiniteMagnitude), animated: false)
+            self.scrollTableViewToBottom(animated: true)
         }
     }
 
