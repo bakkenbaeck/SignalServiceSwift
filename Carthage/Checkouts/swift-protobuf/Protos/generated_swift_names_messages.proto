@@ -5,6 +5,7 @@ syntax = "proto3";
 package protobuf_unittest_generated;
 message GeneratedSwiftReservedMessages {
   message adjusted { int32 adjusted = 1; }
+  message allCases { int32 allCases = 1; }
   message allocate { int32 allocate = 1; }
   message any { int32 any = 1; }
   message AnyExtensionField { int32 AnyExtensionField = 1; }
@@ -24,6 +25,7 @@ message GeneratedSwiftReservedMessages {
   message asciiZero { int32 asciiZero = 1; }
   message available { int32 available = 1; }
   message b { int32 b = 1; }
+  message base64Values { int32 base64Values = 1; }
   message BaseType { int32 BaseType = 1; }
   message binary { int32 binary = 1; }
   message BinaryDecoder { int32 BinaryDecoder = 1; }
@@ -249,12 +251,14 @@ message GeneratedSwiftReservedMessages {
   message hasExtensionValue { int32 hasExtensionValue = 1; }
   message hash { int32 hash = 1; }
   message Hashable { int32 Hashable = 1; }
+  message hasher { int32 hasher = 1; }
   message hashValue { int32 hashValue = 1; }
   message HashVisitor { int32 HashVisitor = 1; }
   message hasSourceContext { int32 hasSourceContext = 1; }
   message hasValue { int32 hasValue = 1; }
   message hour { int32 hour = 1; }
   message i { int32 i = 1; }
+  message ignoreUnknownFields { int32 ignoreUnknownFields = 1; }
   message index { int32 index = 1; }
   message init { int32 init = 1; }
   message inout { int32 inout = 1; }
@@ -270,6 +274,7 @@ message GeneratedSwiftReservedMessages {
   message intern { int32 intern = 1; }
   message Internal { int32 Internal = 1; }
   message InternalState { int32 InternalState = 1; }
+  message into { int32 into = 1; }
   message ints { int32 ints = 1; }
   message isA { int32 isA = 1; }
   message isEqual { int32 isEqual = 1; }
@@ -307,6 +312,7 @@ message GeneratedSwiftReservedMessages {
   message listValue { int32 listValue = 1; }
   message littleEndian { int32 littleEndian = 1; }
   message littleEndianBytes { int32 littleEndianBytes = 1; }
+  message localHasher { int32 localHasher = 1; }
   message M { int32 M = 1; }
   message major { int32 major = 1; }
   message makeIterator { int32 makeIterator = 1; }
@@ -529,6 +535,7 @@ message GeneratedSwiftReservedMessages {
   message unicodeScalars { int32 unicodeScalars = 1; }
   message UnicodeScalarView { int32 UnicodeScalarView = 1; }
   message union { int32 union = 1; }
+  message uniqueStorage { int32 uniqueStorage = 1; }
   message unknown { int32 unknown = 1; }
   message unknownFields { int32 unknownFields = 1; }
   message UnknownStorage { int32 UnknownStorage = 1; }

@@ -73,10 +73,9 @@ open class MockTeapot: Teapot {
         let endPoint = (path as NSString).lastPathComponent
         return self.endpointsToOverride[endPoint]
     }
-    
-    override func execute(verb: Teapot.Verb, path: String, parameters: RequestParameter?, headerFields: [String : String]?, timeoutInterval: TimeInterval, allowsCellular: Bool, completion: @escaping ((NetworkResult) -> Void)) -> URLSessionTask? {
 
-        guard checkHeadersAgainstExpected(headers: headerFields) else {
+    override func execute(verb: Teapot.Verb, path: String, parameters: RequestParameter?, headerFields: [String: String]?, timeoutInterval: TimeInterval, allowsCellular: Bool, completion: @escaping ((NetworkResult) -> Void)) -> URLSessionTask? {
+        guard self.checkHeadersAgainstExpected(headers: headerFields, for: path) else {
             let errorResult = NetworkResult(nil, HTTPURLResponse(url: URL(string: path)!, statusCode: 400, httpVersion: nil, headerFields: nil)!, TeapotError.incorrectHeaders(expected: headersToCheckFor, received: headerFields))
             completion(errorResult)
             return nil
@@ -118,8 +117,13 @@ open class MockTeapot: Teapot {
         }
     }
 
-    private func checkHeadersAgainstExpected(headers: [String: String]?) -> Bool {
-        guard !headersToCheckFor.isEmpty else {
+    private func checkHeadersAgainstExpected(headers: [String: String]?, for path: String) -> Bool {
+        guard self.endpointFileNameForPath(path) == nil else {
+            // Don't check headers on overridden endpoints
+            return true
+        }
+
+        guard !self.headersToCheckFor.isEmpty else {
             // nothing to check
             return true
         }
@@ -129,7 +133,7 @@ open class MockTeapot: Teapot {
             return false
         }
 
-        for (key, value) in headersToCheckFor {
+        for (key, value) in self.headersToCheckFor {
             let receivedValue = receivedHeaders[key]
             if receivedValue != value {
                 return false

@@ -1,0 +1,10 @@
+/* 
+  File.strings
+  SignalServiceSwift
+
+  Created by Igor Ranieri on 08.05.18.
+  Copyright © 2018 Bakken&Bæck. All rights reserved.
+*/
+
+"GROUP_TITLE_CHANGED" = "%@ renamed group to %@.";
+"GROUP_AVATAR_CHANGED" = "%@ changed the group cover photo.";

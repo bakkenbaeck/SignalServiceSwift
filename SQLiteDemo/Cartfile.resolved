@@ -1,5 +1,5 @@
 github "UseSweet/SweetUIKit" "1.14.0"
 github "bakkenbaeck/EtherealCereal" "0.3.0"
-github "bakkenbaeck/teapot" "1.5.1"
-github "roberthein/TinyConstraints" "3.1.0"
+github "bakkenbaeck/teapot" "e659858dd1eac0ca88e6462e55575df50384f982"
+github "roberthein/TinyConstraints" "3.2.1"
 github "stephencelis/SQLite.swift" "0.11.5"

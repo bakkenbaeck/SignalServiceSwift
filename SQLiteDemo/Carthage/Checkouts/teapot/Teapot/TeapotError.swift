@@ -20,14 +20,14 @@ public struct TeapotError: Error, CustomStringConvertible {
     }
 
     static func missingMockFile(_ fileName: String) -> TeapotError {
-        let errorDescription =  String(format: NSLocalizedString("mockteapot_missing_mock_file", bundle: Teapot.localizationBundle, comment: ""),  fileName)
+        let errorDescription = String(format: NSLocalizedString("mockteapot_missing_mock_file", bundle: Teapot.localizationBundle, comment: ""), fileName)
 
         return TeapotError(withType: .missingMockFile, description: errorDescription)
     }
 
     static func invalidMockFile(_ fileName: String) -> TeapotError {
-        let errorDescription =  String(format: NSLocalizedString("mockteapot_invalid_mock_file", bundle: Teapot.localizationBundle, comment: ""), fileName)
-        
+        let errorDescription = String(format: NSLocalizedString("mockteapot_invalid_mock_file", bundle: Teapot.localizationBundle, comment: ""), fileName)
+
         return TeapotError(withType: .invalidMockFile, description: errorDescription)
     }
 
@@ -35,6 +35,12 @@ public struct TeapotError: Error, CustomStringConvertible {
         let errorDescription = String(format: NSLocalizedString("mockteapot_invalid_headers", bundle: Teapot.localizationBundle, comment: ""), String(describing: received), String(describing: expected))
 
         return TeapotError(withType: .incorrectHeaders, description: errorDescription)
+    }
+
+    static func noResponse(withUnderlyingError error: Error?) -> TeapotError {
+        let errorDescription = String(format: NSLocalizedString("teapot_no_response_received", bundle: Teapot.localizationBundle, comment: ""))
+
+        return TeapotError(withType: .noResponse, description: errorDescription, underlyingError: error)
     }
 
     public enum ErrorType: Int {
@@ -46,6 +52,7 @@ public struct TeapotError: Error, CustomStringConvertible {
         case missingMockFile
         case invalidMockFile
         case incorrectHeaders
+        case noResponse
     }
 
     public let responseStatus: Int?
@@ -55,10 +62,18 @@ public struct TeapotError: Error, CustomStringConvertible {
     public var description: String
 
     public init(withType type: ErrorType, description: String, responseStatus: Int? = nil, underlyingError: Error? = nil) {
-        
         self.type = type
         self.description = description
         self.responseStatus = responseStatus
         self.underlyingError = underlyingError
+    }
+}
+
+extension TeapotError: Equatable {
+    public static func == (lhs: TeapotError, rhs: TeapotError) -> Bool {
+        return lhs.type == rhs.type
+            && lhs.description == rhs.description
+            && lhs.responseStatus == rhs.responseStatus
+            && (lhs.underlyingError as NSError?) == (rhs.underlyingError as NSError?)
     }
 }
